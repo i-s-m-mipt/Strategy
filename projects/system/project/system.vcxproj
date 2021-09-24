@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{bc536903-0c3d-47d5-aaf3-cbd6f9961e3f}</ProjectGuid>
+    <RootNamespace>system</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)..\output\debug\</OutDir>
+    <IntDir>$(ProjectDir)..\service\debug\</IntDir>
+    <IncludePath>C:\Libraries\boost;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>C:\Libraries\boost\libs;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)..\output\release\</OutDir>
+    <IntDir>$(ProjectDir)..\service\release\</IntDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <EnableMicrosoftCodeAnalysis>false</EnableMicrosoftCodeAnalysis>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>BOOST_BIND_GLOBAL_PLACEHOLDERS;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;SFML_STATIC;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE; _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS; WIN32; _DEBUG; _CONSOLE; _MBCS; %(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Libraries\boost;C:\Libraries\python\include;C:\Libraries\sfml\include;C:\Libraries\json\include;C:\Libraries\julia\include\julia</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableModules>false</EnableModules>
+      <DisableSpecificWarnings>4715</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Libraries\boost\stage\lib;C:\Libraries\python\libs;C:\Libraries\sfml\lib;C:\Libraries\julia\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libjulia.dll.a;libopenlibm.dll.a;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>BOOST_BIND_GLOBAL_PLACEHOLDERS;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WIN32;NDEBUG;_CONSOLE;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)\projects\shared\source;C:\Libraries\boost;C:\Libraries\python\include;C:\Libraries\json\include</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <EnableModules>false</EnableModules>
+      <DisableSpecificWarnings>4715</DisableSpecificWarnings>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Libraries\boost\stage\lib;C:\Libraries\python\libs</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libopenlibm.dll.a;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\shared\source\logger\logger.cpp" />
+    <ClCompile Include="..\..\shared\source\python\python.cpp" />
+    <ClCompile Include="..\source\main.cpp" />
+    <ClCompile Include="..\source\market\candle\candle.cpp" />
+    <ClCompile Include="..\source\market\indicators\ama\ama.cpp" />
+    <ClCompile Include="..\source\market\indicators\bbs\bbs.cpp" />
+    <ClCompile Include="..\source\market\indicators\dema\dema.cpp" />
+    <ClCompile Include="..\source\market\indicators\dpc\dpc.cpp" />
+    <ClCompile Include="..\source\market\indicators\ema\ema.cpp" />
+    <ClCompile Include="..\source\market\indicators\sar\sar.cpp" />
+    <ClCompile Include="..\source\market\indicators\sma\sma.cpp" />
+    <ClCompile Include="..\source\market\indicators\tema\tema.cpp" />
+    <ClCompile Include="..\source\market\indicators\vwma\vwma.cpp" />
+    <ClCompile Include="..\source\market\indicators\wma\wma.cpp" />
+    <ClCompile Include="..\source\market\market.cpp" />
+    <ClCompile Include="..\source\market\oscillators\aroon\aroon.cpp" />
+    <ClCompile Include="..\source\market\oscillators\cci\cci.cpp" />
+    <ClCompile Include="..\source\market\oscillators\chv\chv.cpp" />
+    <ClCompile Include="..\source\market\oscillators\cmo\cmo.cpp" />
+    <ClCompile Include="..\source\market\oscillators\dmi\dmi.cpp" />
+    <ClCompile Include="..\source\market\oscillators\emv\emv.cpp" />
+    <ClCompile Include="..\source\market\oscillators\eri\eri.cpp" />
+    <ClCompile Include="..\source\market\oscillators\kst\kst.cpp" />
+    <ClCompile Include="..\source\market\oscillators\lso\lso.cpp" />
+    <ClCompile Include="..\source\market\oscillators\macd\macd.cpp" />
+    <ClCompile Include="..\source\market\oscillators\mfi\mfi.cpp" />
+    <ClCompile Include="..\source\market\oscillators\plo\plo.cpp" />
+    <ClCompile Include="..\source\market\oscillators\roc\roc.cpp" />
+    <ClCompile Include="..\source\market\oscillators\rsi\rsi.cpp" />
+    <ClCompile Include="..\source\market\oscillators\rvi\rvi.cpp" />
+    <ClCompile Include="..\source\market\oscillators\trix\trix.cpp" />
+    <ClCompile Include="..\source\market\oscillators\uos\uos.cpp" />
+    <ClCompile Include="..\source\market\oscillators\vhf\vhf.cpp" />
+    <ClCompile Include="..\source\market\source\source.cpp" />
+    <ClCompile Include="..\source\system\system.cpp" />
+    <ClCompile Include="..\source\market\indicators\ics\ics.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\shared\source\logger\logger.hpp" />
+    <ClInclude Include="..\..\shared\source\python\python.hpp" />
+    <ClInclude Include="..\source\config\config.hpp" />
+    <ClInclude Include="..\source\market\candle\candle.hpp" />
+    <ClInclude Include="..\source\market\indicators\ama\ama.hpp" />
+    <ClInclude Include="..\source\market\indicators\bbs\bbs.hpp" />
+    <ClInclude Include="..\source\market\indicators\dema\dema.hpp" />
+    <ClInclude Include="..\source\market\indicators\detail.hpp" />
+    <ClInclude Include="..\source\market\indicators\dpc\dpc.hpp" />
+    <ClInclude Include="..\source\market\indicators\ema\ema.hpp" />
+    <ClInclude Include="..\source\market\indicators\indicators.hpp" />
+    <ClInclude Include="..\source\market\indicators\sar\sar.hpp" />
+    <ClInclude Include="..\source\market\indicators\sma\sma.hpp" />
+    <ClInclude Include="..\source\market\indicators\tema\tema.hpp" />
+    <ClInclude Include="..\source\market\indicators\vwma\vwma.hpp" />
+    <ClInclude Include="..\source\market\indicators\wma\wma.hpp" />
+    <ClInclude Include="..\source\market\market.hpp" />
+    <ClInclude Include="..\source\market\oscillators\aroon\aroon.hpp" />
+    <ClInclude Include="..\source\market\oscillators\cci\cci.hpp" />
+    <ClInclude Include="..\source\market\oscillators\chv\chv.hpp" />
+    <ClInclude Include="..\source\market\oscillators\cmo\cmo.hpp" />
+    <ClInclude Include="..\source\market\oscillators\detail.hpp" />
+    <ClInclude Include="..\source\market\oscillators\dmi\dmi.hpp" />
+    <ClInclude Include="..\source\market\oscillators\emv\emv.hpp" />
+    <ClInclude Include="..\source\market\oscillators\eri\eri.hpp" />
+    <ClInclude Include="..\source\market\oscillators\kst\kst.hpp" />
+    <ClInclude Include="..\source\market\oscillators\lso\lso.hpp" />
+    <ClInclude Include="..\source\market\oscillators\macd\macd.hpp" />
+    <ClInclude Include="..\source\market\oscillators\mfi\mfi.hpp" />
+    <ClInclude Include="..\source\market\oscillators\oscillators.hpp" />
+    <ClInclude Include="..\source\market\oscillators\plo\plo.hpp" />
+    <ClInclude Include="..\source\market\oscillators\roc\roc.hpp" />
+    <ClInclude Include="..\source\market\oscillators\rsi\rsi.hpp" />
+    <ClInclude Include="..\source\market\oscillators\rvi\rvi.hpp" />
+    <ClInclude Include="..\source\market\oscillators\trix\trix.hpp" />
+    <ClInclude Include="..\source\market\oscillators\uos\uos.hpp" />
+    <ClInclude Include="..\source\market\oscillators\vhf\vhf.hpp" />
+    <ClInclude Include="..\source\market\source\source.hpp" />
+    <ClInclude Include="..\source\system\system.hpp" />
+    <ClInclude Include="..\source\market\indicators\ics\ics.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
