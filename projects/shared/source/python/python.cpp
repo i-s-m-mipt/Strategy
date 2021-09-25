@@ -6,7 +6,7 @@ namespace solution
 	{
 		void Python::initialize()
 		{
-			RUN_LOGGER(logger);
+			LOGGER(logger);
 
 			try
 			{
@@ -34,7 +34,7 @@ namespace solution
 
 		void Python::uninitialize()
 		{
-			RUN_LOGGER(logger);
+			LOGGER(logger);
 
 			try
 			{
