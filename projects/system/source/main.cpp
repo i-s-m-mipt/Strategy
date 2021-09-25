@@ -11,7 +11,7 @@ using System = solution::system::System;
 
 int main(int argc, char ** argv)
 {
-	RUN_LOGGER(logger);
+	LOGGER(logger);
 
 	try
 	{
@@ -27,7 +27,7 @@ int main(int argc, char ** argv)
 	}
 	catch (const std::exception & exception)
 	{
-		logger.write(Logger::Severity::fatal, exception.what());
+		LOGGER_WRITE_FATAL(logger, exception.what());
 
 		// system("pause");
 
@@ -35,7 +35,7 @@ int main(int argc, char ** argv)
 	}
 	catch (...)
 	{
-		logger.write(Logger::Severity::fatal, "unknown exception");
+		LOGGER_WRITE_FATAL(logger, "unknown exception");
 
 		// system("pause");
 
