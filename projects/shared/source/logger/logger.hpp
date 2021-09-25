@@ -17,12 +17,6 @@
 #  define FUNCTION __func__
 #endif // #if defined(_MSC_VER) || defined(__GNUC__)
 
-#ifndef NDEBUG
-#  define ENABLE_LOGGER_RAII_TRACE true
-#else
-#  define ENABLE_LOGGER_RAII_TRACE false
-#endif
-
 #include <atomic>
 #include <cstddef>
 #include <cstdint>
@@ -62,6 +56,7 @@
 #include <boost/log/utility/setup/common_attributes.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/preprocessor/facilities/overload.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace solution
@@ -130,13 +125,14 @@ namespace solution
 
 			template < typename S, typename Enable =
 				std::enable_if_t < std::is_convertible_v < S, std::string > > >
-			explicit Logger(S && scope) : m_scope(std::forward < S > (scope))
+			explicit Logger(S && scope, bool has_trace = true) : 
+				m_scope(std::forward < S > (scope)), m_has_trace(has_trace)
 			{
 				try
 				{
 					std::call_once(is_initialized_once, &Logger::initialize);
 
-					if (ENABLE_LOGGER_RAII_TRACE)
+					if (m_has_trace)
 					{
 						write(Severity::trace, "EXECUTION ... ");
 					}
@@ -151,7 +147,7 @@ namespace solution
 			{
 				try
 				{
-					if (ENABLE_LOGGER_RAII_TRACE)
+					if (m_has_trace)
 					{
 						write(Severity::trace, "EXECUTION COMPLETE");
 					}
@@ -251,6 +247,10 @@ namespace solution
 		private:
 
 			const std::string m_scope;
+
+		private:
+
+			bool m_has_trace;
 		};
 
 		template < typename E >
@@ -279,20 +279,22 @@ namespace solution
 
 } // namespace solution 
 
-#define RUN_LOGGER(logger_name) \
- solution::shared::Logger logger_name(FUNCTION);
+#define LOGGER_2(logger, has_trace) solution::shared::Logger logger(FUNCTION, has_trace)
+
+#define LOGGER_1(logger) LOGGER_2(logger, true)
+
+#define LOGGER(...) BOOST_PP_OVERLOAD(LOGGER_, __VA_ARGS__)(__VA_ARGS__)
+
+#define LOGGER_WRITE(logger, message) logger.write(solution::shared::Logger::Severity::empty, message);
 
 #if defined(_DEBUG)
-#  define LOGGER_WRITE_DEBUG(logger_name, message) \
-   logger_name.write(solution::shared::Logger::Severity::debug, message);
+#  define LOGGER_WRITE_DEBUG(logger, message) logger.write(solution::shared::Logger::Severity::debug, message);
 #else
-#  define LOGGER_WRITE_DEBUG(logger_name, message) ;
+#  define LOGGER_WRITE_DEBUG(logger, message) ;
 #endif // #if defined(_DEBUG)
 
-#define RUN_NAMED_SCOPE_LOGGER(logger_name, scope_name) \
- solution::shared::Logger logger_name(scope_name);
-
-#define LOGGER_WRITE(logger_name, message) \
- logger_name.write(solution::shared::Logger::Severity::trace, message);
+#define LOGGER_WRITE_TRACE(logger, message) logger.write(solution::shared::Logger::Severity::trace, message);
+#define LOGGER_WRITE_ERROR(logger, message) logger.write(solution::shared::Logger::Severity::error, message);
+#define LOGGER_WRITE_FATAL(logger, message) logger.write(solution::shared::Logger::Severity::fatal, message);
 
 #endif // #ifndef SOLUTION_SHARED_LOGGER_HPP
