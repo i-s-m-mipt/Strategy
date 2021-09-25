@@ -100,7 +100,7 @@ namespace solution
     {
         struct Config
         {
-            
+            bool test = false;
         };
 
     } // namespace system
