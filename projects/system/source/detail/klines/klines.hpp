@@ -17,16 +17,6 @@ namespace solution
 		{
 			struct Kline
 			{
-			public:
-
-				using date_time_t = Date_Time;
-
-			public:
-
-				void update_date_time() noexcept;
-
-			public:
-
 				std::time_t time_open  = 0LL;
 				
 				double price_open  = 0.0;
@@ -34,21 +24,18 @@ namespace solution
 				double price_low   = 0.0;
 				double price_close = 0.0;
 
-				double volume = 0.0;
+				double volume_base = 0.0;
 
 				std::time_t time_close = 0LL;
 
-				double quote_asset_volume = 0.0;
+				double volume_quote = 0.0;
 
-				std::size_t n_trades = 0U;
+				std::size_t n_trades = 0ULL;
 
-				double taker_buy_base_asset_volume  = 0.0;
-				double taker_buy_quote_asset_volume = 0.0;
+				double volume_taker_base  = 0.0;
+				double volume_taker_quote = 0.0;
 
-				double ignore = 0.0;
-
-				date_time_t date_time_open;
-				date_time_t date_time_close;
+				double ignore = 0.0; // ignored
 			};
 
 			template < typename Iterator >
@@ -70,12 +57,12 @@ namespace solution
 						boost::spirit::qi::double_    >> separator >> // price_high
 						boost::spirit::qi::double_    >> separator >> // price_low
 						boost::spirit::qi::double_    >> separator >> // price_close
-						boost::spirit::qi::double_    >> separator >> // volume
+						boost::spirit::qi::double_    >> separator >> // volume_base
 						boost::spirit::qi::long_long  >> separator >> // time_close
-						boost::spirit::qi::double_    >> separator >> // quote_asset_volume
+						boost::spirit::qi::double_    >> separator >> // volume_quote
 						boost::spirit::qi::ulong_long >> separator >> // n_trades
-						boost::spirit::qi::double_    >> separator >> // taker_buy_base_asset_volume
-						boost::spirit::qi::double_    >> separator >> // taker_buy_quote_asset_volume
+						boost::spirit::qi::double_    >> separator >> // volume_taker_base
+						boost::spirit::qi::double_    >> separator >> // volume_taker_quote
 						boost::spirit::qi::double_;                   // ignore
 						
 				}
@@ -107,12 +94,12 @@ BOOST_FUSION_ADAPT_STRUCT
 		(double,      price_high)
 		(double,      price_low)
 		(double,      price_close)
-		(double,      volume)
+		(double,      volume_base)
 		(std::time_t, time_close)
-		(double,      quote_asset_volume)
+		(double,      volume_quote)
 		(std::size_t, n_trades)
-		(double,      taker_buy_base_asset_volume)
-		(double,      taker_buy_quote_asset_volume)
+		(double,      volume_taker_base)
+		(double,      volume_taker_quote)
 		(double,      ignore)
 )
 
