@@ -17,14 +17,14 @@ namespace solution
 		{
 			struct Trade
 			{
-				std::size_t id = 0ULL;
+				std::size_t id;
 
-				double price = 0.0;
+				double price;
 
-				double volume_base  = 0.0;
-				double volume_quote = 0.0;
+				double volume_base;
+				double volume_quote;
 
-				std::time_t time = 0LL;
+				std::time_t time;
 
 				std::string is_buyer_maker;
 
@@ -45,13 +45,13 @@ namespace solution
 				Trade_Parser() : Trade_Parser::base_type(start)
 				{
 					start %=
-						boost::spirit::qi::ulong_long >> separator >> // id
-						boost::spirit::qi::double_    >> separator >> // price
-						boost::spirit::qi::double_    >> separator >> // volume_base
-						boost::spirit::qi::double_    >> separator >> // volume_quote
-						boost::spirit::qi::long_long  >> separator >> // time
-						boost::spirit::qi::string     >> separator >> // is_buyer_maker
-						boost::spirit::qi::string;                    // is_best_match
+						boost::spirit::qi::ulong_long         >> separator >> // id
+						boost::spirit::qi::double_            >> separator >> // price
+						boost::spirit::qi::double_            >> separator >> // volume_base
+						boost::spirit::qi::double_            >> separator >> // volume_quote
+						boost::spirit::qi::long_long          >> separator >> // time
+						*~boost::spirit::qi::char_(separator) >> separator >> // is_buyer_maker
+						*~boost::spirit::qi::char_('\n');                     // is_best_match
 
 				}
 
@@ -65,8 +65,6 @@ namespace solution
 
 				rule_t start;
 			};
-
-			using trades_container_t = std::vector < Trade > ;
 
 		} // namespace detail
 
