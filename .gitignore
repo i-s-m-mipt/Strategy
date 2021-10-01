@@ -346,3 +346,4 @@ service/
 *.exp
 *.lib
 *.csv
+inputs.data
