@@ -144,7 +144,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>BOOST_BIND_GLOBAL_PLACEHOLDERS;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WIN32;NDEBUG;_CONSOLE;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>HAVE_SNPRINTF;BOOST_BIND_GLOBAL_PLACEHOLDERS;_WIN32_WINNT=0x0601;_CRT_SECURE_NO_WARNINGS;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;WIN32;NDEBUG;_CONSOLE;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\projects\shared\source;C:\Libraries\boost;C:\Libraries\python\include;C:\Libraries\json\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -158,88 +158,45 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Libraries\boost\stage\lib;C:\Libraries\python\libs</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libopenlibm.dll.a;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\shared\source\logger\logger.cpp" />
-    <ClCompile Include="..\..\shared\source\python\python.cpp" />
+    <ClCompile Include="..\..\shared\source\python\python.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\source\detail\detail.cpp" />
+    <ClCompile Include="..\source\detail\inputs\inputs.cpp" />
+    <ClCompile Include="..\source\detail\klines\klines.cpp" />
+    <ClCompile Include="..\source\detail\orders\orders.cpp" />
+    <ClCompile Include="..\source\detail\trades\trades.cpp" />
     <ClCompile Include="..\source\main.cpp" />
-    <ClCompile Include="..\source\market\candle\candle.cpp" />
-    <ClCompile Include="..\source\market\indicators\ama\ama.cpp" />
-    <ClCompile Include="..\source\market\indicators\bbs\bbs.cpp" />
-    <ClCompile Include="..\source\market\indicators\dema\dema.cpp" />
-    <ClCompile Include="..\source\market\indicators\dpc\dpc.cpp" />
-    <ClCompile Include="..\source\market\indicators\ema\ema.cpp" />
-    <ClCompile Include="..\source\market\indicators\sar\sar.cpp" />
-    <ClCompile Include="..\source\market\indicators\sma\sma.cpp" />
-    <ClCompile Include="..\source\market\indicators\tema\tema.cpp" />
-    <ClCompile Include="..\source\market\indicators\vwma\vwma.cpp" />
-    <ClCompile Include="..\source\market\indicators\wma\wma.cpp" />
-    <ClCompile Include="..\source\market\market.cpp" />
-    <ClCompile Include="..\source\market\oscillators\aroon\aroon.cpp" />
-    <ClCompile Include="..\source\market\oscillators\cci\cci.cpp" />
-    <ClCompile Include="..\source\market\oscillators\chv\chv.cpp" />
-    <ClCompile Include="..\source\market\oscillators\cmo\cmo.cpp" />
-    <ClCompile Include="..\source\market\oscillators\dmi\dmi.cpp" />
-    <ClCompile Include="..\source\market\oscillators\emv\emv.cpp" />
-    <ClCompile Include="..\source\market\oscillators\eri\eri.cpp" />
-    <ClCompile Include="..\source\market\oscillators\kst\kst.cpp" />
-    <ClCompile Include="..\source\market\oscillators\lso\lso.cpp" />
-    <ClCompile Include="..\source\market\oscillators\macd\macd.cpp" />
-    <ClCompile Include="..\source\market\oscillators\mfi\mfi.cpp" />
-    <ClCompile Include="..\source\market\oscillators\plo\plo.cpp" />
-    <ClCompile Include="..\source\market\oscillators\roc\roc.cpp" />
-    <ClCompile Include="..\source\market\oscillators\rsi\rsi.cpp" />
-    <ClCompile Include="..\source\market\oscillators\rvi\rvi.cpp" />
-    <ClCompile Include="..\source\market\oscillators\trix\trix.cpp" />
-    <ClCompile Include="..\source\market\oscillators\uos\uos.cpp" />
-    <ClCompile Include="..\source\market\oscillators\vhf\vhf.cpp" />
-    <ClCompile Include="..\source\market\source\source.cpp" />
+    <ClCompile Include="..\source\system\indicators\adx\adx.cpp" />
+    <ClCompile Include="..\source\system\indicators\ema\ema.cpp" />
+    <ClCompile Include="..\source\system\indicators\macd\macd.cpp" />
+    <ClCompile Include="..\source\system\indicators\mfi\mfi.cpp" />
+    <ClCompile Include="..\source\system\indicators\rsi\rsi.cpp" />
     <ClCompile Include="..\source\system\system.cpp" />
-    <ClCompile Include="..\source\market\indicators\ics\ics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\shared\source\logger\logger.hpp" />
-    <ClInclude Include="..\..\shared\source\python\python.hpp" />
+    <ClInclude Include="..\..\shared\source\python\python.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="..\source\config\config.hpp" />
-    <ClInclude Include="..\source\market\candle\candle.hpp" />
-    <ClInclude Include="..\source\market\indicators\ama\ama.hpp" />
-    <ClInclude Include="..\source\market\indicators\bbs\bbs.hpp" />
-    <ClInclude Include="..\source\market\indicators\dema\dema.hpp" />
-    <ClInclude Include="..\source\market\indicators\detail.hpp" />
-    <ClInclude Include="..\source\market\indicators\dpc\dpc.hpp" />
-    <ClInclude Include="..\source\market\indicators\ema\ema.hpp" />
-    <ClInclude Include="..\source\market\indicators\indicators.hpp" />
-    <ClInclude Include="..\source\market\indicators\sar\sar.hpp" />
-    <ClInclude Include="..\source\market\indicators\sma\sma.hpp" />
-    <ClInclude Include="..\source\market\indicators\tema\tema.hpp" />
-    <ClInclude Include="..\source\market\indicators\vwma\vwma.hpp" />
-    <ClInclude Include="..\source\market\indicators\wma\wma.hpp" />
-    <ClInclude Include="..\source\market\market.hpp" />
-    <ClInclude Include="..\source\market\oscillators\aroon\aroon.hpp" />
-    <ClInclude Include="..\source\market\oscillators\cci\cci.hpp" />
-    <ClInclude Include="..\source\market\oscillators\chv\chv.hpp" />
-    <ClInclude Include="..\source\market\oscillators\cmo\cmo.hpp" />
-    <ClInclude Include="..\source\market\oscillators\detail.hpp" />
-    <ClInclude Include="..\source\market\oscillators\dmi\dmi.hpp" />
-    <ClInclude Include="..\source\market\oscillators\emv\emv.hpp" />
-    <ClInclude Include="..\source\market\oscillators\eri\eri.hpp" />
-    <ClInclude Include="..\source\market\oscillators\kst\kst.hpp" />
-    <ClInclude Include="..\source\market\oscillators\lso\lso.hpp" />
-    <ClInclude Include="..\source\market\oscillators\macd\macd.hpp" />
-    <ClInclude Include="..\source\market\oscillators\mfi\mfi.hpp" />
-    <ClInclude Include="..\source\market\oscillators\oscillators.hpp" />
-    <ClInclude Include="..\source\market\oscillators\plo\plo.hpp" />
-    <ClInclude Include="..\source\market\oscillators\roc\roc.hpp" />
-    <ClInclude Include="..\source\market\oscillators\rsi\rsi.hpp" />
-    <ClInclude Include="..\source\market\oscillators\rvi\rvi.hpp" />
-    <ClInclude Include="..\source\market\oscillators\trix\trix.hpp" />
-    <ClInclude Include="..\source\market\oscillators\uos\uos.hpp" />
-    <ClInclude Include="..\source\market\oscillators\vhf\vhf.hpp" />
-    <ClInclude Include="..\source\market\source\source.hpp" />
+    <ClInclude Include="..\source\detail\detail.hpp" />
+    <ClInclude Include="..\source\detail\inputs\inputs.hpp" />
+    <ClInclude Include="..\source\detail\klines\klines.hpp" />
+    <ClInclude Include="..\source\detail\orders\orders.hpp" />
+    <ClInclude Include="..\source\detail\trades\trades.hpp" />
+    <ClInclude Include="..\source\system\indicators\adx\adx.hpp" />
+    <ClInclude Include="..\source\system\indicators\ema\ema.hpp" />
+    <ClInclude Include="..\source\system\indicators\indicators.hpp" />
+    <ClInclude Include="..\source\system\indicators\macd\macd.hpp" />
+    <ClInclude Include="..\source\system\indicators\mfi\mfi.hpp" />
+    <ClInclude Include="..\source\system\indicators\rsi\rsi.hpp" />
     <ClInclude Include="..\source\system\system.hpp" />
-    <ClInclude Include="..\source\market\indicators\ics\ics.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
