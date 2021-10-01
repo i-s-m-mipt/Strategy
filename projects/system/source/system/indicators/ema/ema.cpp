@@ -1,0 +1,52 @@
+#include "ema.hpp"
+
+namespace solution
+{
+	namespace system
+	{
+		namespace indicators
+		{
+			void EMA::initialize() const
+			{
+				LOGGER(logger);
+
+				try
+				{
+					if (m_timesteps == 0ULL)
+					{
+						throw std::domain_error("required: (timesteps > 0)");
+					}
+				}
+				catch (const std::exception & exception)
+				{
+					shared::catch_handler < indicator_exception > (logger, exception);
+				}
+			}
+
+			void EMA::operator()(inputs_container_t & inputs) const
+			{
+				LOGGER(logger);
+
+				try
+				{
+					inputs.front().EMA[m_name] = inputs.front().price_close;
+
+					auto k = 2.0 / (m_timesteps + 1.0);
+
+					for (auto i = 1U; i < std::size(inputs); ++i)
+					{
+						inputs[i].EMA[m_name] = k * inputs[i].price_close +
+							(1.0 - k) * inputs[i - 1U].EMA.at(m_name);
+					}
+				}
+				catch (const std::exception & exception)
+				{
+					shared::catch_handler < indicator_exception > (logger, exception);
+				}
+			}
+
+		} // namespace indicators
+
+	} // namespace system
+
+} // namespace solution
