@@ -15,7 +15,10 @@ namespace solution
 	{
 		namespace detail
 		{
-			// TODO
+			struct Order
+			{
+				// TODO
+			};
 
 		} // namespace detail
 
