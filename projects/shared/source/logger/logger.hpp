@@ -8,7 +8,7 @@
 #endif // #ifdef BOOST_HAS_PRAGMA_ONCE
 
 #ifndef _HAS_AUTO_PTR_ETC
-#define _HAS_AUTO_PTR_ETC 1
+#  define _HAS_AUTO_PTR_ETC 1
 #endif // #ifndef _HAS_AUTO_PTR_ETC
 
 #if defined(_MSC_VER) || defined(__GNUC__)
@@ -283,7 +283,11 @@ namespace solution
 
 #define LOGGER_1(logger) LOGGER_2(logger, true)
 
-#define LOGGER(...) BOOST_PP_OVERLOAD(LOGGER_, __VA_ARGS__)(__VA_ARGS__)
+#if !BOOST_PP_VARIADICS_MSVC
+#  define LOGGER(...) BOOST_PP_OVERLOAD(LOGGER_,__VA_ARGS__)(__VA_ARGS__)
+#else
+#  define LOGGER(...) BOOST_PP_CAT(BOOST_PP_OVERLOAD(LOGGER_,__VA_ARGS__)(__VA_ARGS__),BOOST_PP_EMPTY())
+#endif
 
 #define LOGGER_WRITE(logger, message) logger.write(solution::shared::Logger::Severity::empty, message);
 
