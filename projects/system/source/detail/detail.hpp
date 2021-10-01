@@ -7,13 +7,19 @@
 #  pragma once
 #endif // #ifdef BOOST_HAS_PRAGMA_ONCE
 
+#include <array>
 #include <cstdlib>
 #include <ctime>
 #include <exception>
 #include <iomanip>
+#include <map>
 #include <ostream>
 #include <stdexcept>
 #include <string>
+#include <tuple>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/io.hpp>
@@ -47,14 +53,6 @@ namespace solution
 
 			struct Date_Time
 			{
-			public:
-
-				std::time_t to_time_t() const noexcept;
-
-				void from_time_t(std::time_t time, bool has_milliseconds = false) noexcept;
-
-			public:
-
 				unsigned int year   = 0U;
 				unsigned int month  = 0U;
 				unsigned int day    = 0U;
@@ -73,7 +71,13 @@ namespace solution
 
 			std::ostream & operator<< (std::ostream & stream, const Date_Time & date_time);
 
-			std::time_t duration(const Date_Time & date_time_1, const Date_Time & date_time_2);
+			std::time_t to_time_t(const Date_Time & date_time) noexcept;
+
+			Date_Time from_time_t(std::time_t time, bool has_milliseconds = false) noexcept;
+
+			std::time_t duration(const Date_Time & date_time_1, const Date_Time & date_time_2) noexcept;
+
+			unsigned int day_of_week(const Date_Time & date_time) noexcept;
 
 		} // namespace detail
 
