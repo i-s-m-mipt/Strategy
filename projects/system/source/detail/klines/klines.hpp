@@ -17,25 +17,25 @@ namespace solution
 		{
 			struct Kline
 			{
-				std::time_t time_open  = 0LL;
+				std::time_t time_open;
 				
-				double price_open  = 0.0;
-				double price_high  = 0.0;
-				double price_low   = 0.0;
-				double price_close = 0.0;
+				double price_open;
+				double price_high;
+				double price_low;
+				double price_close;
 
-				double volume_base = 0.0;
+				double volume_base;
 
-				std::time_t time_close = 0LL;
+				std::time_t time_close;
 
-				double volume_quote = 0.0;
+				double volume_quote;
 
-				std::size_t n_trades = 0ULL;
+				std::size_t n_trades;
 
-				double volume_taker_base  = 0.0;
-				double volume_taker_quote = 0.0;
+				double volume_taker_base;
+				double volume_taker_quote;
 
-				double ignore = 0.0; // ignored
+				double ignore; // ignored
 			};
 
 			template < typename Iterator >
@@ -77,8 +77,6 @@ namespace solution
 
 				rule_t start;
 			};
-
-			using klines_container_t = std::vector < Kline > ;
 
 		} // namespace detail
 
