@@ -19,16 +19,17 @@ namespace solution
 			{
 			public:
 
-				using indicators_container_t = std::map < std::string, double > ;
+				using indicators_container_t = std::map < std::string, 
+					std::map < std::string, double > > ;
 
 			public:
 
 				struct Aggregated_Trade
 				{
-					double volume_buy_base;   // Trade, local normalization [0.0; 1.0]
-					double volume_buy_quote;  // Trade, local normalization [0.0; 1.0]
-					double volume_sell_base;  // Trade, local normalization [0.0; 1.0]
-					double volume_sell_quote; // Trade, local normalization [0.0; 1.0]
+					double volume_buy_base;
+					double volume_buy_quote;
+					double volume_sell_base;
+					double volume_sell_quote;
 				};
 
 				struct Order
@@ -36,43 +37,37 @@ namespace solution
 					// TODO
 				};
 
-			public: // klines
+			public:
 
-				unsigned int day;  // Kline, OHE [7]
-				unsigned int hour; // Kline, OHE [23]
+				unsigned int day;
+				unsigned int hour;
 
-				double price_open;  // Kline, local normalization [0.0; 1.0] (1)
-				double price_high;  // Kline, local normalization [0.0; 1.0] (1)
-				double price_low;   // Kline, local normalization [0.0; 1.0] (1)
-				double price_close; // Kline, local normalization [0.0; 1.0] (1)
+				double price_open;
+				double price_high;
+				double price_low;
+				double price_close;
 
-				double volume_base;  // Kline, local normalization [0.0; 1.0]
-				double volume_quote; // Kline, local normalization [0.0; 1.0]
+				double volume_base;
+				double volume_quote;
 
-				double volume_taker_base;  // Kline, local normalization [0.0; 1.0]
-				double volume_taker_quote; // Kline, local normalization [0.0; 1.0]
+				double volume_taker_base;
+				double volume_taker_quote;
 
-				double volume_maker_base;  // Kline, local normalization [0.0; 1.0]
-				double volume_maker_quote; // Kline, local normalization [0.0; 1.0]
+				double volume_maker_base;
+				double volume_maker_quote;
 
-			public: // indicators
+			public:
 
-				indicators_container_t EMA; // Input, local normalization [0.0; 1.0] (1)
+				indicators_container_t indicators;
 
-				indicators_container_t MACD; // Input, local normalization [-1.0; +1.0]
-
-				indicators_container_t ADX; // Input, global normalization [0.0; 1.0]
-				indicators_container_t MFI; // Input, global normalization [0.0; 1.0]
-				indicators_container_t RSI; // Input, global normalization [0.0; 1.0]
-
-			public: // trades
+			public:
 
 				std::vector < Aggregated_Trade > lower_price_aggregated_trades;
 				std::vector < Aggregated_Trade > upper_price_aggregated_trades;
 				
-			public: // orders
+			public:
 
-				// TODO
+				// TODO (orders)
 
 			public:
 
