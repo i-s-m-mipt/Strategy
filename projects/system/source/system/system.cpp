@@ -110,29 +110,13 @@ namespace solution
 					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_maker_base  << delimeter;
 					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_maker_quote << delimeter;
 
-					for (const auto & [name, value] : input.EMA)
+					for (const auto & [type, variants] : input.indicators)
 					{
-						sout << std::setprecision(6) << std::fixed << std::noshowpos << value << delimeter;
-					}
-
-					for (const auto & [name, value] : input.MACD)
-					{
-						sout << std::setprecision(6) << std::fixed << std::showpos << value << delimeter;
-					}
-
-					for (const auto & [name, value] : input.ADX)
-					{
-						sout << std::setprecision(3) << std::fixed << std::noshowpos << value << delimeter;
-					}
-
-					for (const auto & [name, value] : input.MFI)
-					{
-						sout << std::setprecision(3) << std::fixed << std::noshowpos << value << delimeter;
-					}
-
-					for (const auto & [name, value] : input.RSI)
-					{
-						sout << std::setprecision(3) << std::fixed << std::noshowpos << value << delimeter;
+						for (const auto & [name, value] : variants)
+						{
+							sout << std::setprecision(6) << std::fixed << 
+								std::noshowpos << value << delimeter;
+						}
 					}
 
 					// TODO (save price_aggregated_trades)
