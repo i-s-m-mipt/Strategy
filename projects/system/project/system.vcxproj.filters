@@ -58,6 +58,18 @@
     <Filter Include="source\system\strategies">
       <UniqueIdentifier>{616018c0-f7ba-47f7-8a5e-be5d30c01632}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\system\backtester">
+      <UniqueIdentifier>{7b5e86b8-77c8-42c2-a07b-cde5951c4a91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\system\strategies\soft">
+      <UniqueIdentifier>{4d58f3e2-a235-4bf0-a80b-338260f4c552}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\system\strategies\hard">
+      <UniqueIdentifier>{cbd56975-0e55-4c84-81be-573a0611c70b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\system\strategies\hard\macd_mfi">
+      <UniqueIdentifier>{e78333d1-e8d3-48e4-8474-a6e381d0d200}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.cpp">
@@ -101,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="..\source\system\indicators\rsi\rsi.cpp">
       <Filter>source\system\indicators\rsi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.cpp">
+      <Filter>source\system\strategies\hard\macd_mfi</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +163,12 @@
     </ClInclude>
     <ClInclude Include="..\source\system\indicators\rsi\rsi.hpp">
       <Filter>source\system\indicators\rsi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.hpp">
+      <Filter>source\system\strategies\hard\macd_mfi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\system\strategies\strategies.hpp">
+      <Filter>source\system\strategies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

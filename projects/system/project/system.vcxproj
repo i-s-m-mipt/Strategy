@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -177,6 +177,7 @@
     <ClCompile Include="..\source\system\indicators\macd\macd.cpp" />
     <ClCompile Include="..\source\system\indicators\mfi\mfi.cpp" />
     <ClCompile Include="..\source\system\indicators\rsi\rsi.cpp" />
+    <ClCompile Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.cpp" />
     <ClCompile Include="..\source\system\system.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +197,8 @@
     <ClInclude Include="..\source\system\indicators\macd\macd.hpp" />
     <ClInclude Include="..\source\system\indicators\mfi\mfi.hpp" />
     <ClInclude Include="..\source\system\indicators\rsi\rsi.hpp" />
+    <ClInclude Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.hpp" />
+    <ClInclude Include="..\source\system\strategies\strategies.hpp" />
     <ClInclude Include="..\source\system\system.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
