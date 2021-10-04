@@ -87,7 +87,7 @@ namespace solution
 
 					for (auto i = 1U + m_timesteps; i < std::size(inputs); ++i)
 					{
-						inputs[i].ADX[m_name] = adx[i - 1U];
+						inputs[i].indicators[type][m_name] = adx[i - 1U];
 					}
 				}
 				catch (const std::exception & exception)

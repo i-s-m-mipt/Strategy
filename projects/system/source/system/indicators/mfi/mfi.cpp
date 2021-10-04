@@ -58,7 +58,7 @@ namespace solution
 							}
 						}
 
-						inputs[i - 1U].MFI[m_name] = 100.0 - 100.0 / (1.0 + 
+						inputs[i - 1U].indicators[type][m_name] = 100.0 - 100.0 / (1.0 + 
 							(positive_money_flow / std::max(negative_money_flow, epsilon)));
 					}
 				}

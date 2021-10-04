@@ -76,7 +76,7 @@ namespace solution
 							value = 100.0 * ema_U / (ema_U + ema_D);
 						}
 
-						inputs[i].RSI[m_name] = value;
+						inputs[i].indicators[type][m_name] = value;
 					}
 				}
 				catch (const std::exception & exception)

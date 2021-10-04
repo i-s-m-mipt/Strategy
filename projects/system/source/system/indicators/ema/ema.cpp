@@ -29,14 +29,14 @@ namespace solution
 
 				try
 				{
-					inputs.front().EMA[m_name] = inputs.front().price_close;
+					inputs.front().indicators[type][m_name] = inputs.front().price_close;
 
 					auto k = 2.0 / (m_timesteps + 1.0);
 
 					for (auto i = 1U; i < std::size(inputs); ++i)
 					{
-						inputs[i].EMA[m_name] = k * inputs[i].price_close +
-							(1.0 - k) * inputs[i - 1U].EMA.at(m_name);
+						inputs[i].indicators[type][m_name] = k * inputs[i].price_close +
+							(1.0 - k) * inputs[i - 1U].indicators.at(type).at(m_name);
 					}
 				}
 				catch (const std::exception & exception)

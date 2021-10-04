@@ -33,6 +33,10 @@ namespace solution
 
 				void operator()(inputs_container_t & inputs) const;
 
+			public:
+
+				static inline const std::string type = "RSI";
+
 			private:
 
 				static inline const auto min =   0.0;

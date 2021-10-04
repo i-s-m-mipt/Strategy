@@ -39,6 +39,10 @@ namespace solution
 
 				void operator()(inputs_container_t & inputs) const;
 
+			public:
+
+				static inline const std::string type = "MACD";
+
 			private:
 
 				const std::string m_name;

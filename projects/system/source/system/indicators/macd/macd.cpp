@@ -83,7 +83,8 @@ namespace solution
 
 					for (auto i = 0U; i < std::size(inputs); ++i)
 					{
-						inputs[i].MACD[m_name] = (ema_short[i] - ema_long[i]) - ema_signal[i];
+						inputs[i].indicators[type][m_name] = 
+							(ema_short[i] - ema_long[i]) - ema_signal[i];
 					}
 				}
 				catch (const std::exception & exception)
