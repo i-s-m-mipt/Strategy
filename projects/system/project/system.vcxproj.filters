@@ -117,6 +117,9 @@
     <ClCompile Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.cpp">
       <Filter>source\system\strategies\hard\macd_mfi</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\system\backtester\backtester.cpp">
+      <Filter>source\system\backtester</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\system\system.hpp">
@@ -169,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="..\source\system\strategies\strategies.hpp">
       <Filter>source\system\strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\system\backtester\backtester.hpp">
+      <Filter>source\system\backtester</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
