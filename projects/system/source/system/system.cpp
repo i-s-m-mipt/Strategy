@@ -155,7 +155,7 @@ namespace solution
 
 				for (const auto & [date_time, reward] : result.rewards)
 				{
-					fout << detail::to_time_t(date_time) << delimeter;
+					fout << std::noshowpos << detail::to_time_t(date_time) << delimeter;
 
 					fout << std::setprecision(3) << std::fixed << std::showpos <<
 						reward << '\n';
