@@ -28,6 +28,8 @@ namespace solution
 				config.min_movement                  = raw_config[Key::Config::min_movement                 ].get < double > ();
 				config.transaction                   = raw_config[Key::Config::transaction                  ].get < double > ();
 				config.commission                    = raw_config[Key::Config::commission                   ].get < double > ();
+				config.test_strategy                 = raw_config[Key::Config::test_strategy                ].get < std::string > ();
+				config.required_backtest             = raw_config[Key::Config::required_backtest            ].get < bool > ();
 			}
 			catch (const std::exception & exception)
 			{
@@ -134,6 +136,37 @@ namespace solution
 			}
 		}
 
+		void System::Data::save_result(const Result & result)
+		{
+			LOGGER(logger);
+
+			try
+			{
+				auto path = File::reward_data;
+
+				std::fstream fout(path.string(), std::ios::out);
+
+				if (!fout)
+				{
+					throw system_exception("cannot open file " + path.string());
+				}
+
+				const auto delimeter = ',';
+
+				for (const auto & [date_time, reward] : result.rewards)
+				{
+					fout << detail::to_time_t(date_time) << delimeter;
+
+					fout << std::setprecision(3) << std::fixed << std::showpos <<
+						reward << '\n';
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
 		void System::Data::load(const path_t & path, json_t & object)
 		{
 			LOGGER(logger);
@@ -183,12 +216,18 @@ namespace solution
 			try
 			{
 				std::filesystem::create_directory(inputs_directory);
+				std::filesystem::create_directory(result_directory);
 
 				load();
 
 				if (m_config.required_inputs)
 				{
 					handle_inputs();
+				}
+
+				if (m_config.required_backtest)
+				{
+					handle_backtest();
 				}
 			}
 			catch (const std::exception & exception)
@@ -222,6 +261,8 @@ namespace solution
 				load_assets();
 
 				load_indicators();
+
+				load_strategies();
 			}
 			catch (const std::exception & exception)
 			{
@@ -278,6 +319,21 @@ namespace solution
 			}
 		}
 
+		void System::load_strategies()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				m_strategies[strategies::hard::MACD_MFI::type] =
+					std::make_shared < strategies::hard::MACD_MFI > ();
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
 		void System::handle_inputs() const
 		{
 			LOGGER(logger);
@@ -287,6 +343,23 @@ namespace solution
 				auto inputs = load_inputs();
 
 				save_inputs(inputs);
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::handle_backtest() const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				Backtester backtester(m_config, load_inputs(),
+					m_strategies.at(m_config.test_strategy));
+
+				save_result(backtester.run());
 			}
 			catch (const std::exception & exception)
 			{
@@ -797,6 +870,20 @@ namespace solution
 			try
 			{
 				Data::save_inputs(inputs, m_config);
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::save_result(const Result & result) const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				Data::save_result(result);
 			}
 			catch (const std::exception & exception)
 			{

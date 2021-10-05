@@ -14,6 +14,7 @@
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
+#include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -23,6 +24,8 @@
 #include <boost/asio.hpp>
 
 #include <nlohmann/json.hpp>
+
+#include "backtester/backtester.hpp"
 
 #include "indicators/adx/adx.hpp"
 #include "indicators/ema/ema.hpp"
@@ -82,6 +85,11 @@ namespace solution
 			using indicators_container_t = std::vector < 
 				std::function < void(inputs_container_t &) > > ;
 
+			using Strategy = strategies::Strategy_Base;
+
+			using strategies_container_t = std::unordered_map <
+				std::string, std::shared_ptr < Strategy > > ;
+
 			using Kline = detail::Kline;
 			using Order = detail::Order;
 			using Trade = detail::Trade;
@@ -89,6 +97,8 @@ namespace solution
 			using klines_container_t = std::vector < Kline > ;
 			using orders_container_t = std::vector < Order > ;
 			using trades_container_t = std::vector < Trade > ;
+
+			using Result = Backtester::Result;
 
 			using thread_pool_t = boost::asio::thread_pool;
 
@@ -120,6 +130,8 @@ namespace solution
 					static inline const path_t assets_data = "system/assets.data";
 
 					static inline const path_t inputs_data = "system/inputs/inputs.data";
+					static inline const path_t reward_data = "system/result/reward.data";
+					static inline const path_t trades_data = "system/result/trades.data";
 				};
 
 			private:
@@ -142,6 +154,8 @@ namespace solution
 						static inline const std::string min_movement                  = "min_movement";
 						static inline const std::string transaction                   = "transaction";
 						static inline const std::string commission                    = "commission";
+						static inline const std::string test_strategy                 = "test_strategy";
+						static inline const std::string required_backtest             = "required_backtest";
 					};
 				};
 
@@ -154,6 +168,8 @@ namespace solution
 			public:
 
 				static void save_inputs(const inputs_container_t & inputs, const Config & config);
+
+				static void save_result(const Result & result);
 
 			private:
 
@@ -208,9 +224,13 @@ namespace solution
 
 			void load_indicators();
 
+			void load_strategies();
+
 		private:
 
 			void handle_inputs() const;
+
+			void handle_backtest() const;
 
 		private:
 
@@ -262,6 +282,8 @@ namespace solution
 
 			void save_inputs(const inputs_container_t & inputs) const;
 
+			void save_result(const Result & result) const;
+
 		public:
 
 			void run();
@@ -279,6 +301,7 @@ namespace solution
 			static inline const path_t klines_directory = "system/klines";
 			static inline const path_t orders_directory = "system/orders";
 			static inline const path_t trades_directory = "system/trades";
+			static inline const path_t result_directory = "system/result";
 			
 		private:
 
@@ -291,6 +314,8 @@ namespace solution
 			assets_container_t m_assets;
 
 			indicators_container_t m_indicators;
+
+			strategies_container_t m_strategies;
 
 			thread_pool_t m_thread_pool;
 		};
