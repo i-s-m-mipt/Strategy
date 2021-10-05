@@ -26,6 +26,10 @@ namespace solution
 				public:
 
 					virtual State handle(const inputs_container_t & inputs, double transaction) const override final;
+				
+				public:
+
+					static inline const std::string type = "MACD_MFI";
 				};
 
 			} // namespace hard
