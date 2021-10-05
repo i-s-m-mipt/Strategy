@@ -122,6 +122,10 @@ namespace solution
 
             double transaction;
             double commission;
+
+            std::string test_strategy;
+
+            bool required_backtest;
         };
 
     } // namespace system

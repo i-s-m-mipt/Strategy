@@ -12,5 +12,7 @@
     "skipped_timesteps": 500,
     "min_movement": 0.005,
     "transaction": 100.0,
-    "commission": 0.0005
+    "commission": 0.0005,
+    "test_strategy": "MACD_MFI",
+    "required_backtest": false
 }
