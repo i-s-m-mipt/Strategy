@@ -379,51 +379,42 @@ namespace solution
 
 			try
 			{
-				LOGGER(logger);
+				trades_container_t trades;
 
-				try
+				for (auto year = m_config.inputs_year_begin; year <= m_config.inputs_year_end; ++year)
 				{
-					trades_container_t trades;
-
-					for (auto year = m_config.inputs_year_begin; year <= m_config.inputs_year_end; ++year)
+					for (std::time_t month = 1LL; month <= 12LL; ++month)
 					{
-						for (std::time_t month = 1LL; month <= 12LL; ++month)
+						auto path = trades_directory; path /= make_trades_file_name(year, month);
+
+						if (!std::filesystem::exists(path))
 						{
-							auto path = trades_directory; path /= make_trades_file_name(year, month);
+							LOGGER_WRITE_ERROR(logger, "file " + path.string() + " doesn't exist");
 
-							if (!std::filesystem::exists(path))
-							{
-								LOGGER_WRITE_ERROR(logger, "file " + path.string() + " doesn't exist");
+							continue;
+						}
 
-								continue;
-							}
+						std::fstream fin(path.string(), std::ios::in);
 
-							std::fstream fin(path.string(), std::ios::in);
+						if (!fin)
+						{
+							throw system_exception("cannot open file " + path.string());
+						}
 
-							if (!fin)
-							{
-								throw system_exception("cannot open file " + path.string());
-							}
+						std::string line;
 
-							std::string line;
-
-							while (std::getline(fin, line))
-							{
-								trades.push_back(parse_trade(line));
-							}
+						while (std::getline(fin, line))
+						{
+							trades.push_back(parse_trade(line));
 						}
 					}
-
-					std::sort(std::begin(trades), std::end(trades),
-						[](const auto & lhs, const auto & rhs)
-							{ return (lhs.time < rhs.time); });
-
-					return trades;
 				}
-				catch (const std::exception & exception)
-				{
-					shared::catch_handler < system_exception > (logger, exception);
-				}
+
+				std::sort(std::begin(trades), std::end(trades),
+					[](const auto & lhs, const auto & rhs)
+						{ return (lhs.time < rhs.time); });
+
+				return trades;
 			}
 			catch (const std::exception & exception)
 			{
