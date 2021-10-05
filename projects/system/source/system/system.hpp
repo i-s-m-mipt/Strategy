@@ -30,6 +30,10 @@
 #include "indicators/mfi/mfi.hpp"
 #include "indicators/rsi/rsi.hpp"
 
+#include "strategies/strategies.hpp"
+
+#include "strategies/hard/macd_mfi/macd_mfi.hpp"
+
 #include "../config/config.hpp"
 
 #include "../detail/detail.hpp"
