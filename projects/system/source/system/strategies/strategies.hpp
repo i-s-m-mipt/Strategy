@@ -11,6 +11,12 @@
 #include <stdexcept>
 #include <string>
 
+#include "../indicators/adx/adx.hpp"
+#include "../indicators/ema/ema.hpp"
+#include "../indicators/macd/macd.hpp"
+#include "../indicators/mfi/mfi.hpp"
+#include "../indicators/rsi/rsi.hpp"
+
 #include "../../detail/inputs/inputs.hpp"
 
 #include "logger/logger.hpp"
@@ -57,9 +63,9 @@ namespace solution
 
 				public:
 
-					Type type;
+					Type type = Type::C;
 
-					double position;
+					double position = 0.0;
 				};
 
 			public:
@@ -68,7 +74,7 @@ namespace solution
 
 			public:
 
-				virtual State handle(const inputs_container_t & inputs, State input_state) const = 0;
+				virtual State handle(const inputs_container_t & inputs, double transaction) const = 0;
 			};
 
 		} // namespace strategies

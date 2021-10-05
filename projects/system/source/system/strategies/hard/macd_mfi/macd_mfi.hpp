@@ -25,8 +25,7 @@ namespace solution
 
 				public:
 
-					virtual State handle(const inputs_container_t & inputs, 
-						State input_state) const override final;
+					virtual State handle(const inputs_container_t & inputs, double transaction) const override final;
 				};
 
 			} // namespace hard
