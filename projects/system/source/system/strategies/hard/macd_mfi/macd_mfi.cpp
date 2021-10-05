@@ -16,18 +16,23 @@ namespace solution
 					{
 						State state;
 
-						state.position = 0.0;
+						const auto & current_input  = inputs.back();
+						const auto & previous_input = inputs[std::size(inputs) - 2];
 
-						const auto & input = inputs.back();
+						if (current_input. indicators.at(indicators::MACD::type).at("slow") *
+							previous_input.indicators.at(indicators::MACD::type).at("slow") < 0.0)
+						{
+							state.position = 0.0;
+						}
 
-						if (input.indicators.at(indicators::MFI ::type).at("default") < 20.0 &&
-							input.indicators.at(indicators::MACD::type).at("slow")    >  0.0)
+						if (current_input.indicators.at(indicators::MFI ::type).at("default") < 20.0 &&
+							current_input.indicators.at(indicators::MACD::type).at("slow")    >  0.0)
 						{
 							state.position = transaction;
 						}
 
-						if (input.indicators.at(indicators::MFI ::type).at("default") > 80.0 &&
-							input.indicators.at(indicators::MACD::type).at("slow")    <  0.0)
+						if (current_input.indicators.at(indicators::MFI ::type).at("default") > 80.0 &&
+							current_input.indicators.at(indicators::MACD::type).at("slow")    <  0.0)
 						{
 							state.position = -transaction;
 						}
