@@ -318,6 +318,8 @@ namespace solution
 
 			try
 			{
+				const auto epsilon = std::numeric_limits < double > ::epsilon();
+
 				klines_container_t klines;
 
 				for (auto year = m_config.inputs_year_begin; year <= m_config.inputs_year_end; ++year)
@@ -344,7 +346,29 @@ namespace solution
 
 						while (std::getline(fin, line))
 						{
-							klines.push_back(parse_kline(line));
+							auto kline = parse_kline(line);
+
+							if (kline.price_open < epsilon)
+							{
+								throw std::domain_error("required: (price_open > 0.0)");
+							}
+
+							if (kline.price_high < epsilon)
+							{
+								throw std::domain_error("required: (price_high > 0.0)");
+							}
+
+							if (kline.price_low < epsilon)
+							{
+								throw std::domain_error("required: (price_low > 0.0)");
+							}
+
+							if (kline.price_close < epsilon)
+							{
+								throw std::domain_error("required: (price_close > 0.0)");
+							}
+
+							klines.push_back(std::move(kline));
 						}
 					}
 				}
@@ -579,6 +603,8 @@ namespace solution
 				for (auto i = 0ULL; i < std::size(klines); ++i)
 				{
 					auto date_time = detail::from_time_t(klines[i].time_open, true);
+
+					inputs[i].date_time = date_time;
 
 					inputs[i].day  = detail::day_of_week(date_time);
 					inputs[i].hour = date_time.hour;
