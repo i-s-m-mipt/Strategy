@@ -96,10 +96,10 @@ namespace solution
 						sout << std::noshowpos << (j == input.hour ? 1 : 0) << delimeter;
 					}
 
-					sout << std::setprecision(6) << std::fixed << std::showpos << input.price_open  << delimeter;
-					sout << std::setprecision(6) << std::fixed << std::showpos << input.price_high  << delimeter;
-					sout << std::setprecision(6) << std::fixed << std::showpos << input.price_low   << delimeter;
-					sout << std::setprecision(6) << std::fixed << std::showpos << input.price_close << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_open  << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_high  << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_low   << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_close << delimeter;
 
 					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_base  << delimeter;
 					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_quote << delimeter;
@@ -114,7 +114,7 @@ namespace solution
 					{
 						for (const auto & [name, value] : variants)
 						{
-							sout << std::setprecision(6) << std::fixed << 
+							sout << std::setprecision(6) << std::fixed << // ?
 								std::noshowpos << value << delimeter;
 						}
 					}

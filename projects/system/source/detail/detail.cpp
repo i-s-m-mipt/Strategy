@@ -102,7 +102,7 @@ namespace solution
 
 				auto time = std::mktime(&tm);
 
-				return static_cast <unsigned int> (std::localtime(&time)->tm_wday);
+				return static_cast < unsigned int > (std::localtime(&time)->tm_wday);
 			}
 
 		} // namespace detail
