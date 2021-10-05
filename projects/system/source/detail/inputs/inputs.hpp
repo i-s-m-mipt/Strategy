@@ -39,6 +39,8 @@ namespace solution
 
 			public:
 
+				Date_Time date_time;
+
 				unsigned int day;
 				unsigned int hour;
 
