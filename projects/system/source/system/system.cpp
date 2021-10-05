@@ -26,6 +26,8 @@ namespace solution
 				config.timesteps_prediction          = raw_config[Key::Config::timesteps_prediction         ].get < std::size_t > ();
 				config.skipped_timesteps             = raw_config[Key::Config::skipped_timesteps            ].get < std::size_t > ();
 				config.min_movement                  = raw_config[Key::Config::min_movement                 ].get < double > ();
+				config.transaction                   = raw_config[Key::Config::transaction                  ].get < double > ();
+				config.commission                    = raw_config[Key::Config::commission                   ].get < double > ();
 			}
 			catch (const std::exception & exception)
 			{

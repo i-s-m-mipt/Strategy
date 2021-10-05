@@ -140,6 +140,8 @@ namespace solution
 						static inline const std::string timesteps_prediction          = "timesteps_prediction";
 						static inline const std::string skipped_timesteps             = "skipped_timesteps";
 						static inline const std::string min_movement                  = "min_movement";
+						static inline const std::string transaction                   = "transaction";
+						static inline const std::string commission                    = "commission";
 					};
 				};
 

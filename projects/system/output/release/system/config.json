@@ -10,5 +10,7 @@
     "timesteps_prehistory": 60,
     "timesteps_prediction": 6,
     "skipped_timesteps": 500,
-    "min_movement": 0.005
+    "min_movement": 0.005,
+    "transaction": 100.0,
+    "commission": 0.0005
 }

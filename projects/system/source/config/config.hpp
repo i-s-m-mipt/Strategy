@@ -119,6 +119,9 @@ namespace solution
             std::size_t skipped_timesteps;
 
             double min_movement;
+
+            double transaction;
+            double commission;
         };
 
     } // namespace system
