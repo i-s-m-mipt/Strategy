@@ -1,5 +1,5 @@
-#ifndef SOLUTION_SYSTEM_STRATEGIES_HARD_HPP
-#define SOLUTION_SYSTEM_STRATEGIES_HARD_HPP
+#ifndef SOLUTION_SYSTEM_STRATEGIES_HARD_MACD_MFI_HPP
+#define SOLUTION_SYSTEM_STRATEGIES_HARD_MACD_MFI_HPP
 
 #include <boost/config.hpp>
 
@@ -25,7 +25,8 @@ namespace solution
 
 				public:
 
-					virtual State handle(const inputs_container_t & inputs, double transaction) const override final;
+					virtual State handle(const inputs_container_t & inputs, 
+						double transaction) const override final;
 				
 				public:
 
@@ -40,4 +41,4 @@ namespace solution
 
 } // namespace solution
 
-#endif // #ifndef SOLUTION_SYSTEM_STRATEGIES_HARD_HPP
+#endif // #ifndef SOLUTION_SYSTEM_STRATEGIES_HARD_MACD_MFI_HPP
