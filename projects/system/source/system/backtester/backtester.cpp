@@ -45,6 +45,9 @@ namespace solution
 
 				Result result;
 
+				LOGGER_WRITE(logger, std::to_string(std::size(m_inputs)));
+				LOGGER_WRITE(logger, std::to_string(result.rewards.max_size()));
+
 				result.rewards.reserve(std::size(m_inputs));
 
 				auto reward = 0.0;
