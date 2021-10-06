@@ -3,8 +3,9 @@
     "required_inputs": false,
     "inputs_year_begin": 2018,
     "inputs_year_end": 2021,
-    "inputs_timeframe": 5,
-    "inputs_asset": "XRPUSDT",
+    "inputs_timeframe": 1,
+    "inputs_timeframe_type": "h",
+    "inputs_asset": "BTCUSDT",
     "price_aggregated_trade_step": 0.001,
     "price_aggregated_trades_depth": 10,
     "timesteps_prehistory": 60,
@@ -13,6 +14,6 @@
     "min_movement": 0.005,
     "transaction": 100.0,
     "commission": 0.001,
-    "test_strategy": "EMA_288",
+    "test_strategy": "MACD_MFI",
     "required_backtest": true
 }
