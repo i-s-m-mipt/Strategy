@@ -17,7 +17,7 @@ namespace solution
 		{
 			namespace hard
 			{
-				class EMA_288 : public Strategy_Base
+				class EMA_288 : public Strategy
 				{
 				public:
 

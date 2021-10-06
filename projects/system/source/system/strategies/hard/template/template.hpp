@@ -17,7 +17,7 @@ namespace solution
 		{
 			namespace hard
 			{
-				class TEMPLATE : public Strategy_Base
+				class TEMPLATE : public Strategy
 				{
 				public:
 

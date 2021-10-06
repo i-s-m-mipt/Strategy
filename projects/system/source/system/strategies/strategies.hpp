@@ -42,7 +42,7 @@ namespace solution
 				~strategy_exception() noexcept = default;
 			};
 
-			class Strategy_Base
+			class Strategy
 			{
 			public:
 
@@ -70,11 +70,15 @@ namespace solution
 
 			public:
 
-				virtual ~Strategy_Base() noexcept = default;
+				virtual ~Strategy() noexcept = default;
 
 			public:
 
-				virtual State handle(const inputs_container_t & inputs, double transaction) const = 0;
+				virtual State handle(const inputs_container_t & inputs, 
+					double transaction) const;
+
+				virtual State handle(const inputs_container_t & inputs, 
+					double transaction, const State & state) const;
 			};
 
 		} // namespace strategies

@@ -50,7 +50,7 @@ namespace solution
 
 			using inputs_container_t = detail::inputs_container_t;
 
-			using Strategy = strategies::Strategy_Base;
+			using Strategy = strategies::Strategy;
 
 		public:
 

@@ -86,7 +86,7 @@ namespace solution
 			using indicators_container_t = std::vector < 
 				std::function < void(inputs_container_t &) > > ;
 
-			using Strategy = strategies::Strategy_Base;
+			using Strategy = strategies::Strategy;
 
 			using strategies_container_t = std::unordered_map <
 				std::string, std::shared_ptr < Strategy > > ;

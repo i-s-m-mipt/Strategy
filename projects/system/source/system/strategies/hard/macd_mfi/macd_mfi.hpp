@@ -17,7 +17,7 @@ namespace solution
 		{
 			namespace hard
 			{
-				class MACD_MFI : public Strategy_Base
+				class MACD_MFI : public Strategy
 				{
 				public:
 
