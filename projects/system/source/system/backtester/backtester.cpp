@@ -63,7 +63,7 @@ namespace solution
 						std::next(std::begin(m_inputs), i + 1ULL - m_config.timesteps_prehistory),
 						std::next(std::begin(m_inputs), i + 1ULL));
 
-					auto required_state = m_strategy->handle(prehistory, transaction);
+					auto required_state = m_strategy->handle(prehistory, transaction, current_state);
 
 					if (required_state.position == 0.0 && current_state.position != 0.0)
 					{

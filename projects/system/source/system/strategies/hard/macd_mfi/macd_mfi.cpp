@@ -8,13 +8,14 @@ namespace solution
 		{
 			namespace hard
 			{
-				MACD_MFI::State MACD_MFI::handle(const inputs_container_t & inputs, double transaction) const
+				MACD_MFI::State MACD_MFI::handle(const inputs_container_t & inputs, 
+					double transaction, const State & input_state) const
 				{
 					LOGGER(logger, false);
 
 					try
 					{
-						State state;
+						State state = input_state;
 
 						const auto & current_input  = inputs.back();
 
