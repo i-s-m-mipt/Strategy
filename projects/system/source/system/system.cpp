@@ -120,7 +120,7 @@ namespace solution
 						for (const auto & [name, value] : variants)
 						{
 							sout << std::setprecision(6) << std::fixed << // ?
-								std::noshowpos << value << delimeter;
+								std::showpos << value << delimeter;
 						}
 					}
 
@@ -305,15 +305,15 @@ namespace solution
 
 			try
 			{
-				m_indicators.push_back(indicators::ADX ("default",  14          ));
-				m_indicators.push_back(indicators::EMA ("6",         6          ));
-				m_indicators.push_back(indicators::EMA ("12",       12          ));
-				m_indicators.push_back(indicators::EMA ("48",       48          ));
+				//m_indicators.push_back(indicators::ADX ("default",  14          ));
+				//m_indicators.push_back(indicators::EMA ("6",         6          ));
+				//m_indicators.push_back(indicators::EMA ("12",       12          ));
+				//m_indicators.push_back(indicators::EMA ("48",       48          ));
 				m_indicators.push_back(indicators::EMA ("288",     288          ));
-				m_indicators.push_back(indicators::MACD("default",  12,  26,   9));
+				//m_indicators.push_back(indicators::MACD("default",  12,  26,   9));
 				m_indicators.push_back(indicators::MACD("slow",     60, 130,  45));
 				m_indicators.push_back(indicators::MFI ("default",  14          ));
-				m_indicators.push_back(indicators::RSI ("default",  14          ));
+				//m_indicators.push_back(indicators::RSI ("default",  14          ));
 			}
 			catch (const std::exception & exception)
 			{
