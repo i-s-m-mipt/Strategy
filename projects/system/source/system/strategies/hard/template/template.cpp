@@ -10,7 +10,7 @@ namespace solution
 			{
 				TEMPLATE::State TEMPLATE::handle(const inputs_container_t & inputs, double transaction) const
 				{
-					LOGGER(logger);
+					LOGGER(logger, false);
 
 					try
 					{

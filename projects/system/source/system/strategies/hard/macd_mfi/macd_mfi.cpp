@@ -10,13 +10,14 @@ namespace solution
 			{
 				MACD_MFI::State MACD_MFI::handle(const inputs_container_t & inputs, double transaction) const
 				{
-					LOGGER(logger);
+					LOGGER(logger, false);
 
 					try
 					{
 						State state;
 
 						const auto & current_input  = inputs.back();
+
 						const auto & previous_input = inputs[std::size(inputs) - 2];
 
 						if (current_input. indicators.at(indicators::MACD::type).at("slow") *
