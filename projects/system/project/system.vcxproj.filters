@@ -132,6 +132,9 @@
     <ClCompile Include="..\source\system\strategies\hard\ema_288\ema_288.cpp">
       <Filter>source\system\strategies\hard\ema_288</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\system\strategies\strategies.cpp">
+      <Filter>source\system\strategies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\system\system.hpp">

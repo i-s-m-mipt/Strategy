@@ -181,6 +181,7 @@
     <ClCompile Include="..\source\system\strategies\hard\ema_288\ema_288.cpp" />
     <ClCompile Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.cpp" />
     <ClCompile Include="..\source\system\strategies\hard\template\template.cpp" />
+    <ClCompile Include="..\source\system\strategies\strategies.cpp" />
     <ClCompile Include="..\source\system\system.cpp" />
   </ItemGroup>
   <ItemGroup>
