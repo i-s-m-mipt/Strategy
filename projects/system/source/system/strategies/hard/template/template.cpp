@@ -8,7 +8,8 @@ namespace solution
 		{
 			namespace hard
 			{
-				TEMPLATE::State TEMPLATE::handle(const inputs_container_t & inputs, double transaction) const
+				TEMPLATE::State TEMPLATE::handle(const inputs_container_t & inputs, 
+					double transaction, const State & input_state) const
 				{
 					LOGGER(logger, false);
 
