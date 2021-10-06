@@ -305,9 +305,10 @@ namespace solution
 			try
 			{
 				m_indicators.push_back(indicators::ADX ("default",  14          )); // 1 indicator(s)
-				m_indicators.push_back(indicators::EMA ("15",       15          )); // 1 indicator(s)
-				m_indicators.push_back(indicators::EMA ("50",       50          )); // 1 indicator(s)
-				m_indicators.push_back(indicators::EMA ("200",     200          )); // 1 indicator(s)
+				m_indicators.push_back(indicators::EMA ("6",         6          )); // 1 indicator(s)
+				m_indicators.push_back(indicators::EMA ("12",       12          )); // 1 indicator(s)
+				m_indicators.push_back(indicators::EMA ("48",       48          )); // 1 indicator(s)
+				m_indicators.push_back(indicators::EMA ("288",     288          )); // 1 indicator(s)
 				m_indicators.push_back(indicators::MACD("default",  12,  26,   9)); // 1 indicator(s)
 				m_indicators.push_back(indicators::MACD("slow",     60, 130,  45)); // 1 indicator(s)
 				m_indicators.push_back(indicators::MFI ("default",  14          )); // 1 indicator(s)
@@ -327,6 +328,8 @@ namespace solution
 			{
 				m_strategies[strategies::hard::MACD_MFI::type] =
 					std::make_shared < strategies::hard::MACD_MFI > ();
+				m_strategies[strategies::hard::EMA_288::type] =
+					std::make_shared < strategies::hard::EMA_288 > ();
 			}
 			catch (const std::exception & exception)
 			{

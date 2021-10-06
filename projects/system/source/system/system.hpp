@@ -36,6 +36,7 @@
 #include "strategies/strategies.hpp"
 
 #include "strategies/hard/macd_mfi/macd_mfi.hpp"
+#include "strategies/hard/ema_288/ema_288.hpp"
 
 #include "../config/config.hpp"
 

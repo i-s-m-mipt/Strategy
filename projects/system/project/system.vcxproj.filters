@@ -70,6 +70,12 @@
     <Filter Include="source\system\strategies\hard\macd_mfi">
       <UniqueIdentifier>{e78333d1-e8d3-48e4-8474-a6e381d0d200}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\system\strategies\hard\template">
+      <UniqueIdentifier>{c64513ae-ec4c-4662-a91a-90d7a6986010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\system\strategies\hard\ema_288">
+      <UniqueIdentifier>{29778cb4-a02b-413b-aa73-337ff4a9ebd3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.cpp">
@@ -119,6 +125,12 @@
     </ClCompile>
     <ClCompile Include="..\source\system\backtester\backtester.cpp">
       <Filter>source\system\backtester</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\system\strategies\hard\template\template.cpp">
+      <Filter>source\system\strategies\hard\template</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\system\strategies\hard\ema_288\ema_288.cpp">
+      <Filter>source\system\strategies\hard\ema_288</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +187,12 @@
     </ClInclude>
     <ClInclude Include="..\source\system\backtester\backtester.hpp">
       <Filter>source\system\backtester</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\system\strategies\hard\template\template.hpp">
+      <Filter>source\system\strategies\hard\template</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\system\strategies\hard\ema_288\ema_288.hpp">
+      <Filter>source\system\strategies\hard\ema_288</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
