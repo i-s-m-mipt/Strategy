@@ -1,6 +1,6 @@
 {
     "test": true,
-    "required_inputs": true,
+    "required_inputs": false,
     "inputs_year_begin": 2018,
     "inputs_year_end": 2021,
     "inputs_timeframe": 5,
@@ -12,7 +12,7 @@
     "skipped_timesteps": 500,
     "min_movement": 0.005,
     "transaction": 100.0,
-    "commission": 0.0005,
-    "test_strategy": "MACD_MFI",
+    "commission": 0.001,
+    "test_strategy": "EMA_288",
     "required_backtest": true
 }
