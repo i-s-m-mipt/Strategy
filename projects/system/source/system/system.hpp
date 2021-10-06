@@ -179,15 +179,6 @@ namespace solution
 				static void save(const path_t & path, const json_t & object);
 			};
 
-		private:
-
-			struct State
-			{
-				static inline const std::string C = "C";
-				static inline const std::string L = "L";
-				static inline const std::string S = "S";
-			};
-
 		public:
 
 			System() : m_thread_pool(2U * std::thread::hardware_concurrency())

@@ -13,7 +13,7 @@ namespace solution
 			}
 
 			Strategy::State Strategy::handle(const inputs_container_t & inputs,
-				double transaction, const State & state) const
+				double transaction, const State & input_state) const
 			{
 				return State();
 			}

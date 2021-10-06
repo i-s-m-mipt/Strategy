@@ -58,12 +58,29 @@ namespace solution
 					{
 						L, // Long
 						S, // Short
-						C  // Close
+						N  // Null
 					};
 
 				public:
 
-					Type type = Type::C;
+					bool is_long() const noexcept
+					{
+						return (type == Type::L || position > 0.0);
+					}
+
+					bool is_short() const noexcept
+					{
+						return (type == Type::S || position < 0.0);
+					}
+
+					bool is_null() const noexcept
+					{
+						return (type == Type::N || position == 0.0);
+					}
+
+				public:
+
+					Type type = Type::N;
 
 					double position = 0.0;
 				};
@@ -78,7 +95,7 @@ namespace solution
 					double transaction) const;
 
 				virtual State handle(const inputs_container_t & inputs, 
-					double transaction, const State & state) const;
+					double transaction, const State & input_state) const;
 			};
 
 		} // namespace strategies
