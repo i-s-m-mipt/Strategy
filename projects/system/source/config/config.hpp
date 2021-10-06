@@ -107,6 +107,7 @@ namespace solution
             std::time_t inputs_year_begin;
             std::time_t inputs_year_end;
             std::size_t inputs_timeframe;
+            std::string inputs_timeframe_type;
             std::string inputs_asset;
 
             double price_aggregated_trade_step;

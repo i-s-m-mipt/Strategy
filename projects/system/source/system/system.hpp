@@ -146,6 +146,7 @@ namespace solution
 						static inline const std::string inputs_year_begin             = "inputs_year_begin";
 						static inline const std::string inputs_year_end               = "inputs_year_end";
 						static inline const std::string inputs_timeframe              = "inputs_timeframe";
+						static inline const std::string inputs_timeframe_type         = "inputs_timeframe_type";
 						static inline const std::string inputs_asset                  = "inputs_asset";
 						static inline const std::string price_aggregated_trade_step   = "price_aggregated_trade_step";
 						static inline const std::string price_aggregated_trades_depth = "price_aggregated_trades_depth";

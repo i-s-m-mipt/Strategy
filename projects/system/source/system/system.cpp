@@ -19,6 +19,7 @@ namespace solution
 				config.inputs_year_begin             = raw_config[Key::Config::inputs_year_begin            ].get < std::time_t > ();
 				config.inputs_year_end               = raw_config[Key::Config::inputs_year_end              ].get < std::time_t > ();
 				config.inputs_timeframe              = raw_config[Key::Config::inputs_timeframe             ].get < std::size_t > ();
+				config.inputs_timeframe_type         = raw_config[Key::Config::inputs_timeframe_type        ].get < std::string > ();
 				config.inputs_asset                  = raw_config[Key::Config::inputs_asset                 ].get < std::string > ();
 				config.price_aggregated_trade_step   = raw_config[Key::Config::price_aggregated_trade_step  ].get < double > ();
 				config.price_aggregated_trades_depth = raw_config[Key::Config::price_aggregated_trades_depth].get < std::size_t > ();
@@ -534,8 +535,10 @@ namespace solution
 
 				std::stringstream sout;
 
-				sout << m_config.inputs_asset << delimeter << m_config.inputs_timeframe << 'm' << delimeter <<
-					year << delimeter << std::setw(2) << std::setfill('0') << std::right << month << Extension::csv;
+				sout << 
+					m_config.inputs_asset << delimeter << m_config.inputs_timeframe << 
+					m_config.inputs_timeframe_type << delimeter << year << delimeter << 
+					std::setw(2) << std::setfill('0') << std::right << month << Extension::csv;
 
 				return sout.str();
 			}
