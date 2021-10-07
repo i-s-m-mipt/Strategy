@@ -12,17 +12,17 @@ namespace solution
 
 				try
 				{
-					if (m_timesteps_long == 0ULL)
+					if (m_timesteps_long == 0)
 					{
 						throw std::domain_error("required: (timesteps_long > 0)");
 					}
 
-					if (m_timesteps_short == 0ULL)
+					if (m_timesteps_short == 0)
 					{
 						throw std::domain_error("required: (timesteps_short > 0)");
 					}
 
-					if (m_timesteps_signal == 0ULL)
+					if (m_timesteps_signal == 0)
 					{
 						throw std::domain_error("required: (timesteps_signal > 0)");
 					}

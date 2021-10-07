@@ -38,8 +38,6 @@ namespace solution
 
 			try
 			{
-				const auto epsilon = std::numeric_limits < double > ::epsilon();
-
 				const auto transaction = m_config.transaction;
 				const auto commission  = m_config.commission;
 
@@ -55,13 +53,13 @@ namespace solution
 				Strategy::State current_state;
 
 				for (auto i = m_config.skipped_timesteps + m_config.timesteps_prehistory;
-					i < std::size(m_inputs) - 1ULL; ++i)
+					i < std::size(m_inputs) - 1; ++i)
 				{
 					auto current_reward = 0.0;
 
 					inputs_container_t prehistory(
-						std::next(std::begin(m_inputs), i + 1ULL - m_config.timesteps_prehistory),
-						std::next(std::begin(m_inputs), i + 1ULL));
+						std::next(std::begin(m_inputs), i + 1 - m_config.timesteps_prehistory),
+						std::next(std::begin(m_inputs), i + 1));
 
 					auto required_state = m_strategy->handle(prehistory, transaction, current_state);
 

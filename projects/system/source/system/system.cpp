@@ -750,10 +750,10 @@ namespace solution
 
 				const auto epsilon = std::numeric_limits < double > ::epsilon();
 
-				for (auto i = m_config.timesteps_prehistory - 1ULL; i < std::size(klines); ++i)
+				for (auto i = m_config.timesteps_prehistory - 1; i < std::size(klines); ++i)
 				{
 					auto begin = std::lower_bound(std::begin(trades), std::end(trades), 
-						klines[i + 1ULL - m_config.timesteps_prehistory].time_open,
+						klines[i + 1 - m_config.timesteps_prehistory].time_open,
 							[](const auto & trade, auto time) { return (trade.time < time); });
 
 					auto end = std::upper_bound(std::begin(trades), std::end(trades), klines[i].time_close,
@@ -767,7 +767,7 @@ namespace solution
 
 					for (auto iterator = begin; iterator != end; ++iterator)
 					{
-						if (iterator->time < klines[i + 1ULL - m_config.timesteps_prehistory].time_open ||
+						if (iterator->time < klines[i + 1 - m_config.timesteps_prehistory].time_open ||
 							iterator->time > klines[i].time_close)
 						{
 							LOGGER_WRITE_FATAL(logger, std::string("trade time: ") + std::to_string(iterator->time));

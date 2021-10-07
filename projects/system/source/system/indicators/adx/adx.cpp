@@ -12,7 +12,7 @@ namespace solution
 
 				try
 				{
-					if (m_timesteps == 0ULL)
+					if (m_timesteps == 0)
 					{
 						throw std::domain_error("required: (timesteps > 0)");
 					}
