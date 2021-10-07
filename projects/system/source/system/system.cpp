@@ -172,7 +172,7 @@ namespace solution
 
 				for (const auto & [date_time, reward] : result.rewards)
 				{
-					fout << std::noshowpos << detail::to_time_t(date_time) << delimeter;
+					fout << std::noshowpos << date_time << delimeter;
 
 					fout << std::setprecision(3) << std::fixed << std::showpos << reward << '\n';
 				}
@@ -202,8 +202,8 @@ namespace solution
 
 				for (const auto & trade : result.trades)
 				{
-					fout << std::noshowpos << detail::to_time_t(trade.begin) << delimeter;
-					fout << std::noshowpos << detail::to_time_t(trade.end)   << delimeter;
+					fout << std::noshowpos << trade.begin << delimeter;
+					fout << std::noshowpos << trade.end   << delimeter;
 
 					switch (trade.type) 
 					{
@@ -373,15 +373,17 @@ namespace solution
 
 			try
 			{
-				//m_indicators.push_back(indicators::ADX ("default",  14          ));
-				//m_indicators.push_back(indicators::EMA ("6",         6          ));
-				//m_indicators.push_back(indicators::EMA ("12",       12          ));
-				//m_indicators.push_back(indicators::EMA ("48",       48          ));
+				m_indicators.push_back(indicators::ADX ("default",  14          ));
+				m_indicators.push_back(indicators::EMA ("6",         6          ));
+				m_indicators.push_back(indicators::EMA ("12",       12          ));
+				m_indicators.push_back(indicators::EMA ("48",       48          ));
+				m_indicators.push_back(indicators::EMA ("120",     120          ));
+				m_indicators.push_back(indicators::EMA ("240",     240          ));
 				m_indicators.push_back(indicators::EMA ("288",     288          ));
-				//m_indicators.push_back(indicators::MACD("default",  12,  26,   9));
+				m_indicators.push_back(indicators::MACD("default",  12,  26,   9));
 				m_indicators.push_back(indicators::MACD("slow",     60, 130,  45));
 				m_indicators.push_back(indicators::MFI ("default",  14          ));
-				//m_indicators.push_back(indicators::RSI ("default",  14          ));
+				m_indicators.push_back(indicators::RSI ("default",  14          ));
 			}
 			catch (const std::exception & exception)
 			{
@@ -395,10 +397,14 @@ namespace solution
 
 			try
 			{
+				m_strategies[strategies::hard::BUY_HOLD::type] =
+					std::make_shared < strategies::hard::BUY_HOLD > ();
 				m_strategies[strategies::hard::MACD_MFI::type] =
 					std::make_shared < strategies::hard::MACD_MFI > ();
 				m_strategies[strategies::hard::EMA_288::type] =
 					std::make_shared < strategies::hard::EMA_288 > ();
+				m_strategies[strategies::hard::EMA_ADX::type] =
+					std::make_shared < strategies::hard::EMA_ADX > ();
 			}
 			catch (const std::exception & exception)
 			{

@@ -76,6 +76,12 @@
     <Filter Include="source\system\strategies\hard\ema_288">
       <UniqueIdentifier>{29778cb4-a02b-413b-aa73-337ff4a9ebd3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\system\strategies\hard\ema_adx">
+      <UniqueIdentifier>{ec9e76a4-47e0-4b61-9c4b-426d6cbfaa5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\system\strategies\hard\buy_hold">
+      <UniqueIdentifier>{33d59a2f-1b74-421a-b972-85940fbd8d70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.cpp">
@@ -134,6 +140,12 @@
     </ClCompile>
     <ClCompile Include="..\source\system\strategies\strategies.cpp">
       <Filter>source\system\strategies</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\system\strategies\hard\ema_adx\ema_adx.cpp">
+      <Filter>source\system\strategies\hard\ema_adx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\system\strategies\hard\buy_hold\buy_hold.cpp">
+      <Filter>source\system\strategies\hard\buy_hold</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +208,12 @@
     </ClInclude>
     <ClInclude Include="..\source\system\strategies\hard\ema_288\ema_288.hpp">
       <Filter>source\system\strategies\hard\ema_288</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\system\strategies\hard\ema_adx\ema_adx.hpp">
+      <Filter>source\system\strategies\hard\ema_adx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\system\strategies\hard\buy_hold\buy_hold.hpp">
+      <Filter>source\system\strategies\hard\buy_hold</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
