@@ -8,13 +8,14 @@ namespace solution
 		{
 			namespace hard
 			{
-				EMA_288::State EMA_288::handle(const inputs_container_t & inputs, double transaction) const
+				EMA_288::State EMA_288::handle(const inputs_container_t & inputs, 
+					double transaction, const State & input_state) const
 				{
 					LOGGER(logger, false);
 
 					try
 					{
-						State state;
+						State state = input_state;
 
 						const auto & current_input  = inputs.back();
 
