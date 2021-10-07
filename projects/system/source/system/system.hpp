@@ -125,7 +125,7 @@ namespace solution
 
 				using json_t = nlohmann::json;
 
-			private:
+			public:
 
 				struct File
 				{
@@ -135,6 +135,14 @@ namespace solution
 					static inline const path_t inputs_data = "system/inputs/inputs.data";
 					static inline const path_t reward_data = "system/result/reward.data";
 					static inline const path_t trades_data = "system/result/trades.data";
+
+					static inline const path_t reward_BH_data = "system/result/reward_BH.data";
+					static inline const path_t reward_HS_data = "system/result/reward_HS.data";
+					static inline const path_t reward_SS_data = "system/result/reward_SS.data";
+
+					static inline const path_t trades_BH_data = "system/result/trades_BH.data";
+					static inline const path_t trades_HS_data = "system/result/trades_HS.data";
+					static inline const path_t trades_SS_data = "system/result/trades_SS.data";
 				};
 
 			private:

@@ -434,10 +434,25 @@ namespace solution
 
 			try
 			{
-				Backtester backtester(m_config, load_inputs(),
-					m_strategies.at(m_config.test_strategy));
+				{
+					Backtester backtester(m_config, load_inputs(),
+						m_strategies.at(m_config.test_strategy));
 
-				save_result(backtester.run());
+					save_result(backtester.run());
+				}
+				
+				std::filesystem::rename(Data::File::reward_data, Data::File::reward_HS_data);
+				std::filesystem::rename(Data::File::trades_data, Data::File::trades_HS_data);
+
+				{
+					Backtester backtester(m_config, load_inputs(),
+						m_strategies.at(strategies::hard::BUY_HOLD::type));
+
+					save_result(backtester.run());
+				}
+
+				std::filesystem::rename(Data::File::reward_data, Data::File::reward_BH_data);
+				std::filesystem::rename(Data::File::trades_data, Data::File::trades_BH_data);
 			}
 			catch (const std::exception & exception)
 			{
