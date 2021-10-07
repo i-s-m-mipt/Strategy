@@ -65,17 +65,17 @@ namespace solution
 
 					bool is_long() const noexcept
 					{
-						return (type == Type::L || position > 0.0);
+						return (/*type == Type::L || */position > 0.0);
 					}
 
 					bool is_short() const noexcept
 					{
-						return (type == Type::S || position < 0.0);
+						return (/*type == Type::S || */position < 0.0);
 					}
 
 					bool is_null() const noexcept
 					{
-						return (type == Type::N || position == 0.0);
+						return (/*type == Type::N || */position == 0.0);
 					}
 
 				public:
