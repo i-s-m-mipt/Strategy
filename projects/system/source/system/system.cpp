@@ -143,6 +143,21 @@ namespace solution
 
 			try
 			{
+				save_reward(result);
+				save_trades(result);
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::Data::save_reward(const Result & result)
+		{
+			LOGGER(logger);
+
+			try
+			{
 				auto path = File::reward_data;
 
 				std::fstream fout(path.string(), std::ios::out);
@@ -158,8 +173,60 @@ namespace solution
 				{
 					fout << std::noshowpos << detail::to_time_t(date_time) << delimeter;
 
-					fout << std::setprecision(3) << std::fixed << std::showpos <<
-						reward << '\n';
+					fout << std::setprecision(3) << std::fixed << std::showpos << reward << '\n';
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::Data::save_trades(const Result & result)
+		{
+			LOGGER(logger);
+
+			try
+			{
+				auto path = File::trades_data;
+
+				std::fstream fout(path.string(), std::ios::out);
+
+				if (!fout)
+				{
+					throw system_exception("cannot open file " + path.string());
+				}
+
+				const auto delimeter = ',';
+
+				for (const auto & trade : result.trades)
+				{
+					fout << std::noshowpos << detail::to_time_t(trade.begin) << delimeter;
+					fout << std::noshowpos << detail::to_time_t(trade.end)   << delimeter;
+
+					switch (trade.type) 
+					{
+					case Result::Trade::Type::L:
+					{
+						fout << "long" << delimeter;
+
+						break;
+					}
+					case Result::Trade::Type::S:
+					{
+						fout << "short" << delimeter;
+
+						break;
+					}
+					default:
+					{
+						fout << "unknown" << delimeter;
+
+						break;
+					}
+					}
+
+					fout << std::setprecision(3) << std::fixed << std::showpos << trade.reward << '\n';
 				}
 			}
 			catch (const std::exception & exception)

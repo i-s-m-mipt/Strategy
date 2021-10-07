@@ -175,6 +175,12 @@ namespace solution
 
 			private:
 
+				static void save_reward(const Result & result);
+
+				static void save_trades(const Result & result);
+
+			private:
+
 				static void load(const path_t & path, json_t & object);
 
 				static void save(const path_t & path, const json_t & object);
