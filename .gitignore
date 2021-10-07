@@ -348,3 +348,4 @@ service/
 *.csv
 inputs.data
 reward.data
+trades.data
