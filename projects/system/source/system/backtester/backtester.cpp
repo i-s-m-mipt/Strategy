@@ -38,6 +38,8 @@ namespace solution
 
 			try
 			{
+				const auto epsilon = std::numeric_limits < double > ::epsilon();
+
 				const auto transaction = m_config.transaction;
 				const auto commission  = m_config.commission;
 
@@ -65,22 +67,13 @@ namespace solution
 
 					if (required_state.position == 0.0 && current_state.position != 0.0)
 					{
-						current_reward = -commission * (
-							std::abs(current_state.position));
+						current_reward = -commission * (std::abs(current_state.position));
 
 						current_state = required_state;
 					}
 
-					if (required_state.position > 0.0 && current_state.position <= 0.0)
-					{
-						current_reward = -commission * (
-							std::abs(current_state.position) +
-							std::abs(required_state.position));
-
-						current_state = required_state;
-					}
-
-					if (required_state.position < 0.0 && current_state.position >= 0.0)
+					if (required_state.position > 0.0 && current_state.position <= 0.0 ||
+						required_state.position < 0.0 && current_state.position >= 0.0)
 					{
 						current_reward = -commission * (
 							std::abs(current_state.position) +
