@@ -29,6 +29,7 @@ namespace solution
 				config.min_movement                  = raw_config[Key::Config::min_movement                 ].get < double > ();
 				config.transaction                   = raw_config[Key::Config::transaction                  ].get < double > ();
 				config.commission                    = raw_config[Key::Config::commission                   ].get < double > ();
+				config.stop_loss                     = raw_config[Key::Config::stop_loss                    ].get < double > ();
 				config.test_strategy                 = raw_config[Key::Config::test_strategy                ].get < std::string > ();
 				config.required_backtest             = raw_config[Key::Config::required_backtest            ].get < bool > ();
 			}

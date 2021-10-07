@@ -156,6 +156,7 @@ namespace solution
 						static inline const std::string min_movement                  = "min_movement";
 						static inline const std::string transaction                   = "transaction";
 						static inline const std::string commission                    = "commission";
+						static inline const std::string stop_loss                     = "stop_loss";
 						static inline const std::string test_strategy                 = "test_strategy";
 						static inline const std::string required_backtest             = "required_backtest";
 					};

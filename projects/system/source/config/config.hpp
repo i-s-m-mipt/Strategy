@@ -123,6 +123,7 @@ namespace solution
 
             double transaction;
             double commission;
+            double stop_loss;
 
             std::string test_strategy;
 
