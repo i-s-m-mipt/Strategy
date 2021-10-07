@@ -56,7 +56,29 @@ namespace solution
 
 			struct Result
 			{
+			public:
+
+				struct Trade
+				{
+				public:
+
+					using Type = Strategy::State::Type;
+
+				public:
+
+					std::size_t begin;
+					std::size_t duration;
+
+					double reward;
+
+					Type type;
+				};
+
+			public:
+
 				std::vector < std::pair < Date_Time, double > > rewards;
+
+				std::vector < Trade > trades;
 			};
 
 		public:
