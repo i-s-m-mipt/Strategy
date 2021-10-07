@@ -50,7 +50,8 @@ namespace solution
 
 				result.rewards.reserve(std::size(m_inputs));
 
-				auto reward = 0.0;
+				auto total_reward = 0.0;
+				auto trade_reward = 0.0;
 
 				Strategy::State current_state;
 
@@ -59,38 +60,73 @@ namespace solution
 				{
 					auto current_reward = 0.0;
 
+					if (!current_state.is_null() && trade_reward < -transaction * m_config.stop_loss)
+					{
+						current_reward = -commission * std::abs(current_state.position);
+
+						current_state = Strategy::State();
+
+						result.trades.back().end = m_inputs[i].date_time;
+						result.trades.back().reward = trade_reward - current_reward;
+
+						trade_reward = 0.0;
+					}
+
 					inputs_container_t prehistory(
 						std::next(std::begin(m_inputs), i + 1 - m_config.timesteps_prehistory),
 						std::next(std::begin(m_inputs), i + 1));
 
 					auto required_state = m_strategy->handle(prehistory, transaction, current_state);
 
-					if (required_state.position == 0.0 && current_state.position != 0.0)
+					if (required_state.is_null() && !current_state.is_null())
 					{
-						current_reward = -commission * (std::abs(current_state.position));
+						current_reward = -commission * std::abs(current_state.position);
 
 						current_state = required_state;
+
+						result.trades.back().end = m_inputs[i].date_time;
+						result.trades.back().reward = trade_reward - current_reward;
+
+						trade_reward = 0.0;
 					}
 
-					if (required_state.position > 0.0 && current_state.position <= 0.0 ||
-						required_state.position < 0.0 && current_state.position >= 0.0)
+					if ((required_state.is_long()  && !current_state.is_long()) ||
+						(required_state.is_short() && !current_state.is_short()))
 					{
-						current_reward = -commission * (
-							std::abs(current_state.position) +
-							std::abs(required_state.position));
+						if (!current_state.is_null())
+						{
+							current_reward = -commission * std::abs(current_state.position);
+
+							result.trades.back().end = m_inputs[i].date_time;
+							result.trades.back().reward = trade_reward - current_reward;
+
+							trade_reward = 0.0;
+						}
+
+						current_reward -= commission * std::abs(required_state.position);
 
 						current_state = required_state;
+						
+						result.trades.push_back(Result::Trade());
+
+						result.trades.back().begin = m_inputs[i].date_time;
+						result.trades.back().type = (current_state.is_long() ?
+							Result::Trade::Type::L : Result::Trade::Type::S);
 					}
 
-					auto price_deviation = (m_inputs[i + 1].price_close - 
-						m_inputs[i].price_close) / std::max(m_inputs[i].price_close, epsilon);
+					if (!current_state.is_null())
+					{
+						auto price_deviation = (m_inputs[i + 1].price_close -
+							m_inputs[i].price_close) / std::max(m_inputs[i].price_close, epsilon);
 
-					current_reward         += price_deviation * current_state.position;
-					current_state.position += price_deviation * current_state.position;
+						current_reward         += price_deviation * current_state.position;
+						current_state.position += price_deviation * current_state.position;
+					}
 
-					reward += current_reward;
+					total_reward += current_reward;
+					trade_reward += current_reward;
 
-					result.rewards.push_back(std::make_pair(m_inputs[i].date_time, reward));
+					result.rewards.push_back(std::make_pair(m_inputs[i].date_time, total_reward));
 				}
 
 				return result;

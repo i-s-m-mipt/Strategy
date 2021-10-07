@@ -66,8 +66,8 @@ namespace solution
 
 				public:
 
-					std::size_t begin;
-					std::size_t duration;
+					Date_Time begin;
+					Date_Time end;
 
 					double reward;
 
