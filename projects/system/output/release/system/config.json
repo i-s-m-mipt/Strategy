@@ -12,9 +12,9 @@
     "timesteps_prediction": 6,
     "skipped_timesteps": 500,
     "min_movement": 0.005,
-    "transaction": 100.0,
+    "transaction": 1000.0,
     "commission": 0.001,
     "stop_loss": 0.20,
-    "test_strategy": "MACD_MFI",
+    "test_strategy": "EMA_ADX",
     "required_backtest": true
 }
