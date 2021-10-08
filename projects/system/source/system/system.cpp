@@ -174,6 +174,8 @@ namespace solution
 				{
 					fout << std::noshowpos << date_time << delimeter;
 
+					fout << std::noshowpos << detail::to_time_t(date_time) << delimeter;
+
 					fout << std::setprecision(3) << std::fixed << std::showpos << reward << '\n';
 				}
 			}
@@ -204,6 +206,9 @@ namespace solution
 				{
 					fout << std::noshowpos << trade.begin << delimeter;
 					fout << std::noshowpos << trade.end   << delimeter;
+
+					fout << std::noshowpos << detail::to_time_t(trade.begin) << delimeter;
+					fout << std::noshowpos << detail::to_time_t(trade.end)   << delimeter;
 
 					switch (trade.type) 
 					{
