@@ -458,6 +458,8 @@ namespace solution
 
 				std::filesystem::rename(Data::File::reward_data, Data::File::reward_BH_data);
 				std::filesystem::rename(Data::File::trades_data, Data::File::trades_BH_data);
+
+				make_report();
 			}
 			catch (const std::exception & exception)
 			{
@@ -984,6 +986,28 @@ namespace solution
 			try
 			{
 				Data::save_result(result);
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::make_report() const
+		{
+			LOGGER(logger);
+
+			shared::Python python;
+
+			try
+			{
+				boost::python::exec("from system import make_report", python.global(), python.global());
+
+				python.global()["make_report"]();
+			}
+			catch (const boost::python::error_already_set &)
+			{
+				LOGGER_WRITE_ERROR(logger, shared::Python::exception());
 			}
 			catch (const std::exception & exception)
 			{

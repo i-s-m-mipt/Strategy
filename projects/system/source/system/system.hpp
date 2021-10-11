@@ -294,6 +294,10 @@ namespace solution
 
 			void save_result(const Result & result) const;
 
+		private:
+
+			void make_report() const;
+
 		public:
 
 			void run();
