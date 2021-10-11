@@ -183,6 +183,7 @@
     <ClCompile Include="..\source\system\strategies\hard\ema_adx\ema_adx.cpp" />
     <ClCompile Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.cpp" />
     <ClCompile Include="..\source\system\strategies\hard\template\template.cpp" />
+    <ClCompile Include="..\source\system\strategies\hard\volume_bias\volume_bias.cpp" />
     <ClCompile Include="..\source\system\strategies\strategies.cpp" />
     <ClCompile Include="..\source\system\system.cpp" />
   </ItemGroup>
@@ -209,6 +210,7 @@
     <ClInclude Include="..\source\system\strategies\hard\ema_adx\ema_adx.hpp" />
     <ClInclude Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.hpp" />
     <ClInclude Include="..\source\system\strategies\hard\template\template.hpp" />
+    <ClInclude Include="..\source\system\strategies\hard\volume_bias\volume_bias.hpp" />
     <ClInclude Include="..\source\system\strategies\strategies.hpp" />
     <ClInclude Include="..\source\system\system.hpp" />
   </ItemGroup>

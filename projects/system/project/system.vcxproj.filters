@@ -82,6 +82,9 @@
     <Filter Include="source\system\strategies\hard\buy_hold">
       <UniqueIdentifier>{33d59a2f-1b74-421a-b972-85940fbd8d70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\system\strategies\hard\volume_bias">
+      <UniqueIdentifier>{d9c6ca2e-fc89-4775-a030-a76d1057422e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.cpp">
@@ -146,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="..\source\system\strategies\hard\buy_hold\buy_hold.cpp">
       <Filter>source\system\strategies\hard\buy_hold</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\system\strategies\hard\volume_bias\volume_bias.cpp">
+      <Filter>source\system\strategies\hard\volume_bias</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +220,9 @@
     </ClInclude>
     <ClInclude Include="..\source\system\strategies\hard\buy_hold\buy_hold.hpp">
       <Filter>source\system\strategies\hard\buy_hold</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\system\strategies\hard\volume_bias\volume_bias.hpp">
+      <Filter>source\system\strategies\hard\volume_bias</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

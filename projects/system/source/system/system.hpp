@@ -36,9 +36,10 @@
 #include "strategies/strategies.hpp"
 
 #include "strategies/hard/buy_hold/buy_hold.hpp"
-#include "strategies/hard/macd_mfi/macd_mfi.hpp"
 #include "strategies/hard/ema_288/ema_288.hpp"
 #include "strategies/hard/ema_adx/ema_adx.hpp"
+#include "strategies/hard/macd_mfi/macd_mfi.hpp"
+#include "strategies/hard/volume_bias/volume_bias.hpp"
 
 #include "../config/config.hpp"
 

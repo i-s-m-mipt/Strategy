@@ -404,12 +404,14 @@ namespace solution
 			{
 				m_strategies[strategies::hard::BUY_HOLD::type] =
 					std::make_shared < strategies::hard::BUY_HOLD > ();
-				m_strategies[strategies::hard::MACD_MFI::type] =
-					std::make_shared < strategies::hard::MACD_MFI > ();
 				m_strategies[strategies::hard::EMA_288::type] =
 					std::make_shared < strategies::hard::EMA_288 > ();
 				m_strategies[strategies::hard::EMA_ADX::type] =
 					std::make_shared < strategies::hard::EMA_ADX > ();
+				m_strategies[strategies::hard::MACD_MFI::type] =
+					std::make_shared < strategies::hard::MACD_MFI > ();
+				m_strategies[strategies::hard::VOLUME_BIAS::type] =
+					std::make_shared < strategies::hard::VOLUME_BIAS > ();
 			}
 			catch (const std::exception & exception)
 			{
