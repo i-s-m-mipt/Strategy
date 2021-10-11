@@ -441,16 +441,6 @@ namespace solution
 			{
 				{
 					Backtester backtester(m_config, load_inputs(),
-						m_strategies.at(m_config.test_strategy));
-
-					save_result(backtester.run());
-				}
-				
-				std::filesystem::rename(Data::File::reward_data, Data::File::reward_HS_data);
-				std::filesystem::rename(Data::File::trades_data, Data::File::trades_HS_data);
-
-				{
-					Backtester backtester(m_config, load_inputs(),
 						m_strategies.at(strategies::hard::BUY_HOLD::type));
 
 					save_result(backtester.run());
@@ -458,6 +448,13 @@ namespace solution
 
 				std::filesystem::rename(Data::File::reward_data, Data::File::reward_BH_data);
 				std::filesystem::rename(Data::File::trades_data, Data::File::trades_BH_data);
+
+				{
+					Backtester backtester(m_config, load_inputs(),
+						m_strategies.at(m_config.test_strategy));
+
+					save_result(backtester.run());
+				}
 
 				make_report();
 			}
@@ -1003,7 +1000,11 @@ namespace solution
 			{
 				boost::python::exec("from system import make_report", python.global(), python.global());
 
-				python.global()["make_report"]();
+				python.global()["make_report"](
+					Data::File::reward_data.   string().c_str(),
+					Data::File::trades_data.   string().c_str(),
+					Data::File::reward_BH_data.string().c_str(),
+					Data::File::config_json.   string().c_str());
 			}
 			catch (const boost::python::error_already_set &)
 			{
