@@ -164,7 +164,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\shared\source\logger\logger.cpp" />
     <ClCompile Include="..\..\shared\source\python\python.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\source\detail\detail.cpp" />
     <ClCompile Include="..\source\detail\inputs\inputs.cpp" />
@@ -189,7 +189,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\shared\source\logger\logger.hpp" />
     <ClInclude Include="..\..\shared\source\python\python.hpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="..\source\config\config.hpp" />
     <ClInclude Include="..\source\detail\detail.hpp" />

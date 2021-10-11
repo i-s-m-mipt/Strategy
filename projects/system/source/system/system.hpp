@@ -50,7 +50,7 @@
 #include "../detail/trades/trades.hpp"
 
 #include "logger/logger.hpp"
-//#include "python/python.hpp"
+#include "python/python.hpp"
 
 namespace solution 
 {
