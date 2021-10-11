@@ -347,3 +347,5 @@ service/
 *.lib
 *.csv
 *.data
+*.png
+*.pdf
