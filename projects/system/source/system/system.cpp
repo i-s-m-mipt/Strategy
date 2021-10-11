@@ -110,11 +110,11 @@ namespace solution
 					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_base  << delimeter;
 					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_quote << delimeter;
 
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_taker_base  << delimeter;
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_taker_quote << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_buy_base  << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_buy_quote << delimeter;
 
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_maker_base  << delimeter;
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_maker_quote << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_sell_base  << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_sell_quote << delimeter;
 
 					for (const auto & [type, variants] : input.indicators)
 					{
@@ -789,11 +789,11 @@ namespace solution
 					inputs[i].volume_base  = klines[i].volume_base;
 					inputs[i].volume_quote = klines[i].volume_quote;
 
-					inputs[i].volume_taker_base  = klines[i].volume_taker_base;
-					inputs[i].volume_taker_quote = klines[i].volume_taker_quote;
+					inputs[i].volume_buy_base  = klines[i].volume_buy_base;
+					inputs[i].volume_buy_quote = klines[i].volume_buy_quote;
 
-					inputs[i].volume_maker_base  = klines[i].volume_base  - klines[i].volume_taker_base;
-					inputs[i].volume_maker_quote = klines[i].volume_quote - klines[i].volume_taker_quote;
+					inputs[i].volume_sell_base  = klines[i].volume_base  - klines[i].volume_buy_base;
+					inputs[i].volume_sell_quote = klines[i].volume_quote - klines[i].volume_buy_quote;
 				}
 
 				update_indicators(inputs);

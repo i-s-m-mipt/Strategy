@@ -32,8 +32,8 @@ namespace solution
 
 				std::size_t n_trades;
 
-				double volume_taker_base;
-				double volume_taker_quote;
+				double volume_buy_base;
+				double volume_buy_quote;
 
 				double ignore; // ignored
 			};
@@ -61,8 +61,8 @@ namespace solution
 						boost::spirit::qi::long_long  >> separator >> // time_close
 						boost::spirit::qi::double_    >> separator >> // volume_quote
 						boost::spirit::qi::ulong_long >> separator >> // n_trades
-						boost::spirit::qi::double_    >> separator >> // volume_taker_base
-						boost::spirit::qi::double_    >> separator >> // volume_taker_quote
+						boost::spirit::qi::double_    >> separator >> // volume_buy_base
+						boost::spirit::qi::double_    >> separator >> // volume_buy_quote
 						boost::spirit::qi::double_;                   // ignore
 						
 				}
@@ -96,8 +96,8 @@ BOOST_FUSION_ADAPT_STRUCT
 		(std::time_t, time_close)
 		(double,      volume_quote)
 		(std::size_t, n_trades)
-		(double,      volume_taker_base)
-		(double,      volume_taker_quote)
+		(double,      volume_buy_base)
+		(double,      volume_buy_quote)
 		(double,      ignore)
 )
 

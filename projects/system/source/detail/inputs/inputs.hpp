@@ -52,11 +52,11 @@ namespace solution
 				double volume_base;
 				double volume_quote;
 
-				double volume_taker_base;
-				double volume_taker_quote;
+				double volume_buy_base;
+				double volume_buy_quote;
 
-				double volume_maker_base;
-				double volume_maker_quote;
+				double volume_sell_base;
+				double volume_sell_quote;
 
 			public:
 
