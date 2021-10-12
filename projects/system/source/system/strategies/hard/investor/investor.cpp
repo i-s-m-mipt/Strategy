@@ -1,4 +1,4 @@
-#include "buy_hold.hpp"
+#include "investor.hpp"
 
 namespace solution
 {
@@ -8,16 +8,16 @@ namespace solution
 		{
 			namespace hard
 			{
-				BUY_HOLD::State BUY_HOLD::handle(const inputs_container_t & inputs, 
-					double transaction, const State & input_state) const
+				Strategy::State Investor::handle(const inputs_container_t & inputs,
+					const State & input_state, double transaction) const
 				{
 					LOGGER(logger, false);
 
 					try
 					{
-						State state;
+						State state = input_state;
 
-						state.position = transaction;
+						state.position = +transaction;
 
 						return state;
 					}
