@@ -67,23 +67,14 @@
     <Filter Include="source\system\strategies\hard">
       <UniqueIdentifier>{cbd56975-0e55-4c84-81be-573a0611c70b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\strategies\hard\macd_mfi">
-      <UniqueIdentifier>{e78333d1-e8d3-48e4-8474-a6e381d0d200}</UniqueIdentifier>
-    </Filter>
     <Filter Include="source\system\strategies\hard\template">
       <UniqueIdentifier>{c64513ae-ec4c-4662-a91a-90d7a6986010}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\strategies\hard\ema_288">
-      <UniqueIdentifier>{29778cb4-a02b-413b-aa73-337ff4a9ebd3}</UniqueIdentifier>
+    <Filter Include="source\system\strategies\hard\assimilator">
+      <UniqueIdentifier>{2408500f-d826-47a2-a70f-d0286a97ee1f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\strategies\hard\ema_adx">
-      <UniqueIdentifier>{ec9e76a4-47e0-4b61-9c4b-426d6cbfaa5f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\system\strategies\hard\buy_hold">
-      <UniqueIdentifier>{33d59a2f-1b74-421a-b972-85940fbd8d70}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\system\strategies\hard\volume_bias">
-      <UniqueIdentifier>{d9c6ca2e-fc89-4775-a030-a76d1057422e}</UniqueIdentifier>
+    <Filter Include="source\system\strategies\hard\investor">
+      <UniqueIdentifier>{22858c8c-c193-4ad8-afef-af878b50b331}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,29 +120,20 @@
     <ClCompile Include="..\source\system\indicators\rsi\rsi.cpp">
       <Filter>source\system\indicators\rsi</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.cpp">
-      <Filter>source\system\strategies\hard\macd_mfi</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\system\backtester\backtester.cpp">
       <Filter>source\system\backtester</Filter>
     </ClCompile>
     <ClCompile Include="..\source\system\strategies\hard\template\template.cpp">
       <Filter>source\system\strategies\hard\template</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\system\strategies\hard\ema_288\ema_288.cpp">
-      <Filter>source\system\strategies\hard\ema_288</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\system\strategies\strategies.cpp">
       <Filter>source\system\strategies</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\system\strategies\hard\ema_adx\ema_adx.cpp">
-      <Filter>source\system\strategies\hard\ema_adx</Filter>
+    <ClCompile Include="..\source\system\strategies\hard\investor\investor.cpp">
+      <Filter>source\system\strategies\hard\investor</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\system\strategies\hard\buy_hold\buy_hold.cpp">
-      <Filter>source\system\strategies\hard\buy_hold</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\system\strategies\hard\volume_bias\volume_bias.cpp">
-      <Filter>source\system\strategies\hard\volume_bias</Filter>
+    <ClCompile Include="..\source\system\strategies\hard\assimilator\assimilator.cpp">
+      <Filter>source\system\strategies\hard\assimilator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,9 +182,6 @@
     <ClInclude Include="..\source\system\indicators\rsi\rsi.hpp">
       <Filter>source\system\indicators\rsi</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.hpp">
-      <Filter>source\system\strategies\hard\macd_mfi</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\system\strategies\strategies.hpp">
       <Filter>source\system\strategies</Filter>
     </ClInclude>
@@ -212,17 +191,11 @@
     <ClInclude Include="..\source\system\strategies\hard\template\template.hpp">
       <Filter>source\system\strategies\hard\template</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\system\strategies\hard\ema_288\ema_288.hpp">
-      <Filter>source\system\strategies\hard\ema_288</Filter>
+    <ClInclude Include="..\source\system\strategies\hard\investor\investor.hpp">
+      <Filter>source\system\strategies\hard\investor</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\system\strategies\hard\ema_adx\ema_adx.hpp">
-      <Filter>source\system\strategies\hard\ema_adx</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\system\strategies\hard\buy_hold\buy_hold.hpp">
-      <Filter>source\system\strategies\hard\buy_hold</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\system\strategies\hard\volume_bias\volume_bias.hpp">
-      <Filter>source\system\strategies\hard\volume_bias</Filter>
+    <ClInclude Include="..\source\system\strategies\hard\assimilator\assimilator.hpp">
+      <Filter>source\system\strategies\hard\assimilator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

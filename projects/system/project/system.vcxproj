@@ -178,12 +178,9 @@
     <ClCompile Include="..\source\system\indicators\macd\macd.cpp" />
     <ClCompile Include="..\source\system\indicators\mfi\mfi.cpp" />
     <ClCompile Include="..\source\system\indicators\rsi\rsi.cpp" />
-    <ClCompile Include="..\source\system\strategies\hard\buy_hold\buy_hold.cpp" />
-    <ClCompile Include="..\source\system\strategies\hard\ema_288\ema_288.cpp" />
-    <ClCompile Include="..\source\system\strategies\hard\ema_adx\ema_adx.cpp" />
-    <ClCompile Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.cpp" />
+    <ClCompile Include="..\source\system\strategies\hard\assimilator\assimilator.cpp" />
+    <ClCompile Include="..\source\system\strategies\hard\investor\investor.cpp" />
     <ClCompile Include="..\source\system\strategies\hard\template\template.cpp" />
-    <ClCompile Include="..\source\system\strategies\hard\volume_bias\volume_bias.cpp" />
     <ClCompile Include="..\source\system\strategies\strategies.cpp" />
     <ClCompile Include="..\source\system\system.cpp" />
   </ItemGroup>
@@ -205,12 +202,9 @@
     <ClInclude Include="..\source\system\indicators\macd\macd.hpp" />
     <ClInclude Include="..\source\system\indicators\mfi\mfi.hpp" />
     <ClInclude Include="..\source\system\indicators\rsi\rsi.hpp" />
-    <ClInclude Include="..\source\system\strategies\hard\buy_hold\buy_hold.hpp" />
-    <ClInclude Include="..\source\system\strategies\hard\ema_288\ema_288.hpp" />
-    <ClInclude Include="..\source\system\strategies\hard\ema_adx\ema_adx.hpp" />
-    <ClInclude Include="..\source\system\strategies\hard\macd_mfi\macd_mfi.hpp" />
+    <ClInclude Include="..\source\system\strategies\hard\assimilator\assimilator.hpp" />
+    <ClInclude Include="..\source\system\strategies\hard\investor\investor.hpp" />
     <ClInclude Include="..\source\system\strategies\hard\template\template.hpp" />
-    <ClInclude Include="..\source\system\strategies\hard\volume_bias\volume_bias.hpp" />
     <ClInclude Include="..\source\system\strategies\strategies.hpp" />
     <ClInclude Include="..\source\system\system.hpp" />
   </ItemGroup>
