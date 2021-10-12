@@ -21,16 +21,21 @@ namespace solution
 				{
 				public:
 
+					explicit TEMPLATE(const Config & config) noexcept :
+						Strategy(config)
+					{}
+
 					virtual ~TEMPLATE() noexcept = default;
 
 				public:
 
-					virtual State handle(const inputs_container_t & inputs, 
-						double transaction, const State & input_state) const override final;
-				
-				public:
+					virtual std::string type() const noexcept override final
+					{
+						return "TEMPLATE";
+					}
 
-					static inline const std::string type = "TEMPLATE";
+					virtual State handle(const inputs_container_t & inputs, 
+						const State & input_state, double transaction) const override final;
 				};
 
 			} // namespace hard

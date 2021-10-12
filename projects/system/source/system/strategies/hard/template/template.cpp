@@ -8,14 +8,14 @@ namespace solution
 		{
 			namespace hard
 			{
-				TEMPLATE::State TEMPLATE::handle(const inputs_container_t & inputs, 
-					double transaction, const State & input_state) const
+				Strategy::State TEMPLATE::handle(const inputs_container_t & inputs, 
+					const State & input_state, double transaction) const
 				{
 					LOGGER(logger, false);
 
 					try
 					{
-						State state;
+						State state = input_state;
 
 						// TODO
 
