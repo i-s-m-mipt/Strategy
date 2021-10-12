@@ -7,7 +7,9 @@
 #  pragma once
 #endif // #ifdef BOOST_HAS_PRAGMA_ONCE
 
+#include <cmath>
 #include <exception>
+#include <fstream>
 #include <stdexcept>
 #include <string>
 
@@ -17,6 +19,7 @@
 #include "../indicators/mfi/mfi.hpp"
 #include "../indicators/rsi/rsi.hpp"
 
+#include "../../config/config.hpp"
 #include "../../detail/inputs/inputs.hpp"
 
 #include "logger/logger.hpp"
@@ -54,48 +57,44 @@ namespace solution
 				{
 				public:
 
-					enum class Type
+					auto is_long() const noexcept
 					{
-						L, // Long
-						S, // Short
-						N  // Null
-					};
-
-				public:
-
-					bool is_long() const noexcept
-					{
-						return (/*type == Type::L || */position > 0.0);
+						return (position > 0.0);
 					}
 
-					bool is_short() const noexcept
+					auto is_short() const noexcept
 					{
-						return (/*type == Type::S || */position < 0.0);
+						return (position < 0.0);
 					}
 
-					bool is_null() const noexcept
+					auto is_null() const noexcept
 					{
-						return (/*type == Type::N || */position == 0.0);
+						return (position == 0.0);
 					}
 
 				public:
-
-					Type type = Type::N;
 
 					double position = 0.0;
 				};
 
 			public:
 
+				explicit Strategy(const Config & config) noexcept : 
+					m_config(config)
+				{}
+
 				virtual ~Strategy() noexcept = default;
 
 			public:
 
-				virtual State handle(const inputs_container_t & inputs, 
-					double transaction) const;
+				virtual std::string type() const noexcept = 0;
 
 				virtual State handle(const inputs_container_t & inputs, 
-					double transaction, const State & input_state) const;
+					const State & input_state, double transaction) const = 0;
+
+			protected:
+
+				const Config & m_config;
 			};
 
 		} // namespace strategies
