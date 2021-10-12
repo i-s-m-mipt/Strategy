@@ -402,16 +402,11 @@ namespace solution
 
 			try
 			{
-				m_strategies[strategies::hard::BUY_HOLD::type] =
-					std::make_shared < strategies::hard::BUY_HOLD > ();
-				m_strategies[strategies::hard::EMA_288::type] =
-					std::make_shared < strategies::hard::EMA_288 > ();
-				m_strategies[strategies::hard::EMA_ADX::type] =
-					std::make_shared < strategies::hard::EMA_ADX > ();
-				m_strategies[strategies::hard::MACD_MFI::type] =
-					std::make_shared < strategies::hard::MACD_MFI > ();
-				m_strategies[strategies::hard::VOLUME_BIAS::type] =
-					std::make_shared < strategies::hard::VOLUME_BIAS > ();
+				auto strategy_0 = std::make_shared < strategies::hard::Investor    > (m_config);
+				auto strategy_1 = std::make_shared < strategies::hard::Assimilator > (m_config);
+
+				m_strategies[strategy_0->type()] = strategy_0;
+				m_strategies[strategy_1->type()] = strategy_1;
 			}
 			catch (const std::exception & exception)
 			{
@@ -443,7 +438,7 @@ namespace solution
 			{
 				{
 					Backtester backtester(m_config, load_inputs(),
-						m_strategies.at(strategies::hard::BUY_HOLD::type));
+						m_strategies.at(strategies::hard::Investor::name));
 
 					save_result(backtester.run());
 				}
