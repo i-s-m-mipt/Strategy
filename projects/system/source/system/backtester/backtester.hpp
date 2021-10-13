@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "../strategies/strategies.hpp"
+#include "../strategies/hard/investor/investor.hpp"
 
 #include "../../config/config.hpp"
 #include "../../detail/detail.hpp"
@@ -62,7 +63,12 @@ namespace solution
 				{
 				public:
 
-					using Type = Strategy::State::Type;
+					enum class Type
+					{
+						L, // Long
+						S, // Short
+						N  // Null
+					};
 
 				public:
 
@@ -115,7 +121,15 @@ namespace solution
 
 		private:
 
-			Config m_config;
+			Result handle_investor() const;
+
+			Result handle_manager() const;
+
+		private:
+
+			const Config & m_config;
+
+		private:
 
 			inputs_container_t m_inputs;
 
