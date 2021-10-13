@@ -57,7 +57,7 @@ namespace solution
 
 			try
 			{
-				const auto begin = m_config.skipped_timesteps + m_config.timesteps_prehistory;
+				const auto begin = m_config.skipped_timesteps + m_config.timesteps_prehistory - 1;
 
 				const auto epsilon = std::numeric_limits < double > ::epsilon();
 
