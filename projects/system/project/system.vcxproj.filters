@@ -67,14 +67,14 @@
     <Filter Include="source\system\strategies\hard">
       <UniqueIdentifier>{cbd56975-0e55-4c84-81be-573a0611c70b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\strategies\hard\template">
-      <UniqueIdentifier>{c64513ae-ec4c-4662-a91a-90d7a6986010}</UniqueIdentifier>
-    </Filter>
     <Filter Include="source\system\strategies\hard\assimilator">
       <UniqueIdentifier>{2408500f-d826-47a2-a70f-d0286a97ee1f}</UniqueIdentifier>
     </Filter>
     <Filter Include="source\system\strategies\hard\investor">
       <UniqueIdentifier>{22858c8c-c193-4ad8-afef-af878b50b331}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\system\indicators\awvb">
+      <UniqueIdentifier>{2ea0c697-bc8e-46a7-afac-a8b54e3dec40}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -123,9 +123,6 @@
     <ClCompile Include="..\source\system\backtester\backtester.cpp">
       <Filter>source\system\backtester</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\system\strategies\hard\template\template.cpp">
-      <Filter>source\system\strategies\hard\template</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\system\strategies\strategies.cpp">
       <Filter>source\system\strategies</Filter>
     </ClCompile>
@@ -134,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="..\source\system\strategies\hard\assimilator\assimilator.cpp">
       <Filter>source\system\strategies\hard\assimilator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\system\indicators\awvb\awvb.cpp">
+      <Filter>source\system\indicators\awvb</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,14 +188,14 @@
     <ClInclude Include="..\source\system\backtester\backtester.hpp">
       <Filter>source\system\backtester</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\system\strategies\hard\template\template.hpp">
-      <Filter>source\system\strategies\hard\template</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\system\strategies\hard\investor\investor.hpp">
       <Filter>source\system\strategies\hard\investor</Filter>
     </ClInclude>
     <ClInclude Include="..\source\system\strategies\hard\assimilator\assimilator.hpp">
       <Filter>source\system\strategies\hard\assimilator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\system\indicators\awvb\awvb.hpp">
+      <Filter>source\system\indicators\awvb</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

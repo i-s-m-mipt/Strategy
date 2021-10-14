@@ -174,13 +174,13 @@
     <ClCompile Include="..\source\main.cpp" />
     <ClCompile Include="..\source\system\backtester\backtester.cpp" />
     <ClCompile Include="..\source\system\indicators\adx\adx.cpp" />
+    <ClCompile Include="..\source\system\indicators\awvb\awvb.cpp" />
     <ClCompile Include="..\source\system\indicators\ema\ema.cpp" />
     <ClCompile Include="..\source\system\indicators\macd\macd.cpp" />
     <ClCompile Include="..\source\system\indicators\mfi\mfi.cpp" />
     <ClCompile Include="..\source\system\indicators\rsi\rsi.cpp" />
     <ClCompile Include="..\source\system\strategies\hard\assimilator\assimilator.cpp" />
     <ClCompile Include="..\source\system\strategies\hard\investor\investor.cpp" />
-    <ClCompile Include="..\source\system\strategies\hard\template\template.cpp" />
     <ClCompile Include="..\source\system\strategies\strategies.cpp" />
     <ClCompile Include="..\source\system\system.cpp" />
   </ItemGroup>
@@ -197,6 +197,7 @@
     <ClInclude Include="..\source\detail\trades\trades.hpp" />
     <ClInclude Include="..\source\system\backtester\backtester.hpp" />
     <ClInclude Include="..\source\system\indicators\adx\adx.hpp" />
+    <ClInclude Include="..\source\system\indicators\awvb\awvb.hpp" />
     <ClInclude Include="..\source\system\indicators\ema\ema.hpp" />
     <ClInclude Include="..\source\system\indicators\indicators.hpp" />
     <ClInclude Include="..\source\system\indicators\macd\macd.hpp" />
@@ -204,7 +205,6 @@
     <ClInclude Include="..\source\system\indicators\rsi\rsi.hpp" />
     <ClInclude Include="..\source\system\strategies\hard\assimilator\assimilator.hpp" />
     <ClInclude Include="..\source\system\strategies\hard\investor\investor.hpp" />
-    <ClInclude Include="..\source\system\strategies\hard\template\template.hpp" />
     <ClInclude Include="..\source\system\strategies\strategies.hpp" />
     <ClInclude Include="..\source\system\system.hpp" />
   </ItemGroup>
