@@ -17,37 +17,37 @@ namespace solution
 					{
 						State state = input_state;
 
-						auto total_buy_volume  = 0.0;
-						auto total_sell_volume = 0.0;
-
-						for (const auto& input : inputs)
+						if (m_config.awvb_timesteps_wvb != std::size(inputs))
 						{
-							total_buy_volume  += input.volume_buy_base;
-							total_sell_volume += input.volume_sell_base;
+							throw std::domain_error("invalid prehistory size");
 						}
 
-						std::fstream fout("tmp.txt", std::ios::out | std::ios::app);
+						auto deviation = 0.0;
 
-						if (total_buy_volume > total_sell_volume)
+						for (auto i = 0ULL; i < std::size(inputs); ++i)
 						{
-							fout << inputs.back().date_time << " : +\n";
-						}
-						else
-						{
-							fout << inputs.back().date_time << " : -\n";
+							deviation += (inputs[i].volume_buy_base - inputs[i].volume_sell_base) *
+								(inputs[i].price_high - inputs[i].price_low) / inputs[i].price_open;
 						}
 
-						if (std::abs(total_buy_volume - total_sell_volume) /
-							(total_buy_volume + total_sell_volume) > 0.01)
+						auto awvb = inputs.back().indicators.at(indicators::AWVB::type).at("default");
+
+						if (std::abs(deviation - awvb) / std::abs(awvb) >
+							m_config.assimilator_min_deviation)
 						{
-							if (total_buy_volume > total_sell_volume)
+							if (deviation > awvb)
 							{
-								state.position = transaction;
+								state.position = +transaction;
 							}
-							else
+
+							if (deviation < awvb)
 							{
 								state.position = -transaction;
 							}
+						}
+						else
+						{
+							state.position = 0.0;
 						}
 
 						return state;
