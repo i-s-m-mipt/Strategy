@@ -169,6 +169,8 @@ namespace solution
 						static inline const std::string awvb_timesteps_sma            = "awvb_timesteps_sma";
 						static inline const std::string required_research             = "required_research";
 						static inline const std::string assimilator_min_deviation     = "assimilator_min_deviation";
+						static inline const std::string required_backtest_fit         = "required_backtest_fit";
+						static inline const std::string has_reinvestment              = "has_reinvestment";
 					};
 				};
 
@@ -240,7 +242,9 @@ namespace solution
 
 			void handle_inputs() const;
 
-			void handle_backtest() const;
+			void handle_backtest();
+
+			void handle_backtest_fit();
 
 			void handle_research() const;
 
@@ -329,8 +333,6 @@ namespace solution
 
 		private:
 
-			Config m_config;
-
 			assets_container_t m_assets;
 
 			indicators_container_t m_indicators;
@@ -338,6 +340,10 @@ namespace solution
 			strategies_container_t m_strategies;
 
 			thread_pool_t m_thread_pool;
+
+		private:
+
+			mutable Config m_config;
 		};
 
 	} // namespace system

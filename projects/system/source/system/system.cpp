@@ -36,6 +36,8 @@ namespace solution
 				config.awvb_timesteps_sma            = raw_config[Key::Config::awvb_timesteps_sma           ].get < std::size_t > ();
 				config.required_research             = raw_config[Key::Config::required_research            ].get < bool > ();
 				config.assimilator_min_deviation     = raw_config[Key::Config::assimilator_min_deviation    ].get < double > ();
+				config.required_backtest_fit         = raw_config[Key::Config::required_backtest_fit        ].get < bool > ();
+				config.has_reinvestment              = raw_config[Key::Config::has_reinvestment             ].get < bool > ();
 			}
 			catch (const std::exception & exception)
 			{
@@ -387,19 +389,19 @@ namespace solution
 
 			try
 			{
-				m_indicators.push_back(indicators::ADX ("default",  14          ));
+				//m_indicators.push_back(indicators::ADX ("default",  14          ));
 				m_indicators.push_back(indicators::AWVB("default",
 					m_config.awvb_timesteps_wvb, m_config.awvb_timesteps_sma));
-				m_indicators.push_back(indicators::EMA ("6",         6          ));
-				m_indicators.push_back(indicators::EMA ("12",       12          ));
-				m_indicators.push_back(indicators::EMA ("48",       48          ));
-				m_indicators.push_back(indicators::EMA ("120",     120          ));
-				m_indicators.push_back(indicators::EMA ("240",     240          ));
-				m_indicators.push_back(indicators::EMA ("288",     288          ));
-				m_indicators.push_back(indicators::MACD("default",  12,  26,   9));
-				m_indicators.push_back(indicators::MACD("slow",     60, 130,  45));
-				m_indicators.push_back(indicators::MFI ("default",  14          ));
-				m_indicators.push_back(indicators::RSI ("default",  14          ));
+				//m_indicators.push_back(indicators::EMA ("6",         6          ));
+				//m_indicators.push_back(indicators::EMA ("12",       12          ));
+				//m_indicators.push_back(indicators::EMA ("48",       48          ));
+				//m_indicators.push_back(indicators::EMA ("120",     120          ));
+				//m_indicators.push_back(indicators::EMA ("240",     240          ));
+				//m_indicators.push_back(indicators::EMA ("288",     288          ));
+				//m_indicators.push_back(indicators::MACD("default",  12,  26,   9));
+				//m_indicators.push_back(indicators::MACD("slow",     60, 130,  45));
+				//m_indicators.push_back(indicators::MFI ("default",  14          ));
+				//m_indicators.push_back(indicators::RSI ("default",  14          ));
 			}
 			catch (const std::exception & exception)
 			{
@@ -441,12 +443,17 @@ namespace solution
 			}
 		}
 
-		void System::handle_backtest() const
+		void System::handle_backtest()
 		{
 			LOGGER(logger);
 
 			try
 			{
+				if (m_config.required_backtest_fit)
+				{
+					handle_backtest_fit();
+				}
+
 				{
 					Backtester backtester(m_config, load_inputs(),
 						m_strategies.at(strategies::hard::Investor::name));
@@ -465,6 +472,79 @@ namespace solution
 				}
 
 				make_report();
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::handle_backtest_fit()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				auto max_reward = 0.0;
+
+				auto best_timesteps_wvb = 0ULL;
+				auto best_timesteps_sma = 0ULL;
+				auto best_deviation     = 0.00;
+
+				for (auto timesteps_wvb = 1ULL; timesteps_wvb <= 10; ++timesteps_wvb)
+				{
+					for (auto timesteps_sma = 10ULL; timesteps_sma <= 100; timesteps_sma += 10)
+					{
+						for (auto deviation = 0.05; deviation <= 0.50; deviation += 0.05)
+						{
+							m_config.timesteps_prehistory = timesteps_wvb;
+
+							m_config.awvb_timesteps_wvb = timesteps_wvb;
+							m_config.awvb_timesteps_sma = timesteps_sma;
+
+							m_config.assimilator_min_deviation = deviation;
+
+							m_indicators.clear();
+							m_strategies.clear();
+
+							load_indicators();
+							load_strategies();
+
+							Backtester backtester(m_config, load_inputs(),
+								m_strategies.at(m_config.test_strategy));
+
+							auto reward = backtester.run().rewards.back().second;
+
+							if (reward > max_reward)
+							{
+								max_reward = reward;
+
+								best_timesteps_wvb = timesteps_wvb;
+								best_timesteps_sma = timesteps_sma;
+
+								best_deviation = deviation;
+
+								std::cout << "WVB: " << timesteps_wvb << "\n";
+								std::cout << "SMA: " << timesteps_sma << "\n";
+								std::cout << "DEV: " << deviation << "\n";
+								std::cout << "Reward: " << reward << "\n\n";
+							}
+						}
+					}
+				}
+
+				m_config.timesteps_prehistory = best_timesteps_wvb;
+
+				m_config.awvb_timesteps_wvb = best_timesteps_wvb;
+				m_config.awvb_timesteps_sma = best_timesteps_sma;
+
+				m_config.assimilator_min_deviation = best_deviation;
+
+				m_indicators.clear();
+				m_strategies.clear();
+
+				load_indicators();
+				load_strategies();
 			}
 			catch (const std::exception & exception)
 			{
@@ -524,7 +604,7 @@ namespace solution
 
 						if (!std::filesystem::exists(path))
 						{
-							LOGGER_WRITE_ERROR(logger, "file " + path.string() + " doesn't exist");
+							LOGGER_WRITE_DEBUG(logger, "file " + path.string() + " doesn't exist");
 
 							continue;
 						}
@@ -609,7 +689,7 @@ namespace solution
 
 						if (!std::filesystem::exists(path))
 						{
-							LOGGER_WRITE_ERROR(logger, "file " + path.string() + " doesn't exist");
+							LOGGER_WRITE_DEBUG(logger, "file " + path.string() + " doesn't exist");
 
 							continue;
 						}

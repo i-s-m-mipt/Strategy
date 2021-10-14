@@ -135,6 +135,10 @@ namespace solution
             bool required_research;
 
             double assimilator_min_deviation;
+
+            bool required_backtest_fit;
+
+            bool has_reinvestment;
         };
 
     } // namespace system

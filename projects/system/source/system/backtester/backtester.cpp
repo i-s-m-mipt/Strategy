@@ -126,7 +126,10 @@ namespace solution
 
 				for (auto i = begin; i < std::size(m_inputs) - 1; ++i)
 				{
-					transaction = m_config.transaction + total_reward;
+					if (m_config.has_reinvestment)
+					{
+						transaction = m_config.transaction + total_reward;
+					}
 
 					auto current_reward = 0.0;
 
