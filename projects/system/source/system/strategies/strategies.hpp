@@ -14,6 +14,7 @@
 #include <string>
 
 #include "../indicators/adx/adx.hpp"
+#include "../indicators/awvb/awvb.hpp"
 #include "../indicators/ema/ema.hpp"
 #include "../indicators/macd/macd.hpp"
 #include "../indicators/mfi/mfi.hpp"
