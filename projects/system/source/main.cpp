@@ -21,7 +21,7 @@ int main(int argc, char ** argv)
 			system.run();
 		}
 		
-		// system("pause");
+		system("pause");
 
 		return EXIT_SUCCESS;
 	}
@@ -29,7 +29,7 @@ int main(int argc, char ** argv)
 	{
 		LOGGER_WRITE_FATAL(logger, exception.what());
 
-		// system("pause");
+		system("pause");
 
 		return EXIT_FAILURE;
 	}
@@ -37,7 +37,7 @@ int main(int argc, char ** argv)
 	{
 		LOGGER_WRITE_FATAL(logger, "unknown exception");
 
-		// system("pause");
+		system("pause");
 
 		return EXIT_FAILURE;
 	}

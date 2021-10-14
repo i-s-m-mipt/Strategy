@@ -128,6 +128,13 @@ namespace solution
             std::string test_strategy;
 
             bool required_backtest;
+
+            std::size_t awvb_timesteps_wvb;
+            std::size_t awvb_timesteps_sma;
+
+            bool required_research;
+
+            double assimilator_min_deviation;
         };
 
     } // namespace system

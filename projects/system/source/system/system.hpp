@@ -28,6 +28,7 @@
 #include "backtester/backtester.hpp"
 
 #include "indicators/adx/adx.hpp"
+#include "indicators/awvb/awvb.hpp"
 #include "indicators/ema/ema.hpp"
 #include "indicators/macd/macd.hpp"
 #include "indicators/mfi/mfi.hpp"
@@ -136,6 +137,8 @@ namespace solution
 
 					static inline const path_t reward_BH_data = "system/result/reward_BH.data";
 					static inline const path_t trades_BH_data = "system/result/trades_BH.data";
+
+					static inline const path_t research_data = "system/result/research.data";
 				};
 
 			private:
@@ -162,6 +165,10 @@ namespace solution
 						static inline const std::string stop_loss                     = "stop_loss";
 						static inline const std::string test_strategy                 = "test_strategy";
 						static inline const std::string required_backtest             = "required_backtest";
+						static inline const std::string awvb_timesteps_wvb            = "awvb_timesteps_wvb";
+						static inline const std::string awvb_timesteps_sma            = "awvb_timesteps_sma";
+						static inline const std::string required_research             = "required_research";
+						static inline const std::string assimilator_min_deviation     = "assimilator_min_deviation";
 					};
 				};
 
@@ -235,6 +242,8 @@ namespace solution
 
 			void handle_backtest() const;
 
+			void handle_research() const;
+
 		private:
 
 			inputs_container_t load_inputs() const;
@@ -290,6 +299,10 @@ namespace solution
 		private:
 
 			void make_report() const;
+
+		private:
+
+			void research_volumes(const inputs_container_t & inputs) const;
 
 		public:
 

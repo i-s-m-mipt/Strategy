@@ -32,6 +32,10 @@ namespace solution
 				config.stop_loss                     = raw_config[Key::Config::stop_loss                    ].get < double > ();
 				config.test_strategy                 = raw_config[Key::Config::test_strategy                ].get < std::string > ();
 				config.required_backtest             = raw_config[Key::Config::required_backtest            ].get < bool > ();
+				config.awvb_timesteps_wvb            = raw_config[Key::Config::awvb_timesteps_wvb           ].get < std::size_t > ();
+				config.awvb_timesteps_sma            = raw_config[Key::Config::awvb_timesteps_sma           ].get < std::size_t > ();
+				config.required_research             = raw_config[Key::Config::required_research            ].get < bool > ();
+				config.assimilator_min_deviation     = raw_config[Key::Config::assimilator_min_deviation    ].get < double > ();
 			}
 			catch (const std::exception & exception)
 			{
@@ -303,6 +307,11 @@ namespace solution
 				{
 					handle_backtest();
 				}
+
+				if (m_config.required_research)
+				{
+					handle_research();
+				}
 			}
 			catch (const std::exception & exception)
 			{
@@ -379,6 +388,8 @@ namespace solution
 			try
 			{
 				m_indicators.push_back(indicators::ADX ("default",  14          ));
+				m_indicators.push_back(indicators::AWVB("default",
+					m_config.awvb_timesteps_wvb, m_config.awvb_timesteps_sma));
 				m_indicators.push_back(indicators::EMA ("6",         6          ));
 				m_indicators.push_back(indicators::EMA ("12",       12          ));
 				m_indicators.push_back(indicators::EMA ("48",       48          ));
@@ -454,6 +465,22 @@ namespace solution
 				}
 
 				make_report();
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::handle_research() const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				auto inputs = load_inputs();
+
+				research_volumes(inputs);
 			}
 			catch (const std::exception & exception)
 			{
@@ -1006,6 +1033,82 @@ namespace solution
 			catch (const boost::python::error_already_set &)
 			{
 				LOGGER_WRITE_ERROR(logger, shared::Python::exception());
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::research_volumes(const inputs_container_t & inputs) const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				const auto timesteps_wvb = m_config.awvb_timesteps_wvb;
+				const auto timesteps_sma = m_config.awvb_timesteps_sma;
+
+				const auto delimeter = ',';
+
+				std::fstream fout(Data::File::research_data, std::ios::out);
+
+				if (!fout)
+				{
+					throw system_exception("cannot open file " + 
+						Data::File::research_data.string());
+				}
+
+				std::vector < std::pair < Date_Time, double > > deviations;
+
+				deviations.reserve(std::size(inputs));
+
+				for (auto i = timesteps_wvb - 1; i < std::size(inputs); ++i)
+				{
+					auto deviation = 0.0;
+
+					for (auto j = i + 1 - timesteps_wvb; j <= i; ++j)
+					{
+						deviation += (inputs[j].volume_buy_base - inputs[j].volume_sell_base) * 
+							(inputs[j].price_high - inputs[j].price_low) / inputs[j].price_open;
+					}
+
+					deviations.push_back(std::make_pair(inputs[i].date_time, deviation));
+				}
+
+				for (auto i = timesteps_sma - 1; i < std::size(deviations); ++i)
+				{
+					auto sma = 0.0;
+
+					for (auto j = i + 1 - timesteps_sma; j <= i; ++j)
+					{
+						sma += deviations[j].second;
+					}
+
+					sma /= timesteps_sma;
+
+					char state = 'N';
+
+					if (std::abs(deviations[i].second - sma) / std::abs(sma) >
+						m_config.assimilator_min_deviation)
+					{
+						if (deviations[i].second < sma)
+						{
+							state = 'S';
+						}
+
+						if (deviations[i].second > sma)
+						{
+							state = 'L';
+						}
+					}
+
+					fout << deviations[i].first  << delimeter << 
+						std::setw(9) << std::setfill(' ') << std::right << 
+						std::setprecision(3) << std::fixed << std::showpos << deviations[i].second << delimeter << 
+						std::setw(9) << std::setfill(' ') << std::right << 
+						std::setprecision(3) << std::fixed << std::showpos << sma << delimeter << state << "\n";
+				}
 			}
 			catch (const std::exception & exception)
 			{
