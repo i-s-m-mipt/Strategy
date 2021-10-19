@@ -7,46 +7,24 @@
 #  pragma once
 #endif // #ifdef BOOST_HAS_PRAGMA_ONCE
 
-#include <algorithm>
-#include <cstdlib>
 #include <ctime>
+#include <cstdlib>
 #include <exception>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
+#include <iostream>
 #include <memory>
-#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include <boost/asio.hpp>
 
 #include <nlohmann/json.hpp>
 
-#include "backtester/backtester.hpp"
-
-#include "indicators/adx/adx.hpp"
-#include "indicators/awvb/awvb.hpp"
-#include "indicators/ema/ema.hpp"
-#include "indicators/macd/macd.hpp"
-#include "indicators/mfi/mfi.hpp"
-#include "indicators/rsi/rsi.hpp"
-
-#include "strategies/strategies.hpp"
-
-#include "strategies/hard/investor/investor.hpp"
-#include "strategies/hard/assimilator/assimilator.hpp"
-
 #include "../config/config.hpp"
-
-#include "../detail/detail.hpp"
-
-#include "../detail/inputs/inputs.hpp"
-#include "../detail/klines/klines.hpp"
-#include "../detail/orders/orders.hpp"
-#include "../detail/trades/trades.hpp"
+#include "../source/source.hpp"
 
 #include "logger/logger.hpp"
 #include "python/python.hpp"
@@ -76,45 +54,11 @@ namespace solution
 
 			using path_t = std::filesystem::path;
 
-			using Date_Time = detail::Date_Time;
-
 			using assets_container_t = std::vector < std::string > ;
 
-			using Input = detail::Input;
-
-			using inputs_container_t = detail::inputs_container_t;
-
-			using indicators_container_t = std::vector < 
-				std::function < void(inputs_container_t &) > > ;
-
-			using Strategy = strategies::Strategy;
-
-			using strategies_container_t = std::unordered_map <
-				std::string, std::shared_ptr < Strategy > > ;
-
-			using Kline = detail::Kline;
-			using Order = detail::Order;
-			using Trade = detail::Trade;
-
-			using klines_container_t = std::vector < Kline > ;
-			using orders_container_t = std::vector < Order > ;
-			using trades_container_t = std::vector < Trade > ;
-
-			using Result = Backtester::Result;
+			using sources_container_t = std::vector < std::shared_ptr < Source > > ;
 
 			using thread_pool_t = boost::asio::thread_pool;
-
-		private:
-
-			struct Extension
-			{
-				using extension_t = std::string;
-
-				static inline const extension_t txt = ".txt";
-				static inline const extension_t csv = ".csv";
-
-				static inline const extension_t empty = "";
-			};
 
 		private:
 
@@ -126,19 +70,17 @@ namespace solution
 
 			public:
 
+				struct Directory
+				{
+					static inline const path_t config = "system/config";
+				};
+
+			public:
+
 				struct File
 				{
-					static inline const path_t config_json = "system/config.json";
-					static inline const path_t assets_data = "system/assets.data";
-
-					static inline const path_t inputs_data = "system/inputs/inputs.data";
-					static inline const path_t reward_data = "system/result/reward.data";
-					static inline const path_t trades_data = "system/result/trades.data";
-
-					static inline const path_t reward_BH_data = "system/result/reward_BH.data";
-					static inline const path_t trades_BH_data = "system/result/trades_BH.data";
-
-					static inline const path_t research_data = "system/result/research.data";
+					static inline const path_t assets_data = "assets.data";
+					static inline const path_t config_json = "config.json";
 				};
 
 			private:
@@ -163,7 +105,8 @@ namespace solution
 						static inline const std::string transaction                   = "transaction";
 						static inline const std::string commission                    = "commission";
 						static inline const std::string stop_loss                     = "stop_loss";
-						static inline const std::string test_strategy                 = "test_strategy";
+						static inline const std::string test_hard_strategy            = "test_hard_strategy";
+						static inline const std::string test_soft_strategy            = "test_soft_strategy";
 						static inline const std::string required_backtest             = "required_backtest";
 						static inline const std::string awvb_timesteps_wvb            = "awvb_timesteps_wvb";
 						static inline const std::string awvb_timesteps_sma            = "awvb_timesteps_sma";
@@ -176,21 +119,13 @@ namespace solution
 
 			public:
 
-				static void load_config(Config & config);
+				static void load_config(const path_t & path, Config & config);
 
 				static void load_assets(assets_container_t & assets);
 
 			public:
 
-				static void save_inputs(const inputs_container_t & inputs, const Config & config);
-
-				static void save_result(const Result & result);
-
-			private:
-
-				static void save_reward(const Result & result);
-
-				static void save_trades(const Result & result);
+				static void save_config(const path_t & path, const Config & config);
 
 			private:
 
@@ -228,85 +163,17 @@ namespace solution
 
 			void load();
 
-		private:
+			void save() const;
 
-			void load_config();
+		private:
 
 			void load_assets();
 
-			void load_indicators();
-
-			void load_strategies();
+			void load_sources();
 
 		private:
 
-			void handle_inputs() const;
-
-			void handle_backtest();
-
-			void handle_backtest_fit();
-
-			void handle_research() const;
-
-		private:
-
-			inputs_container_t load_inputs() const;
-
-		private:
-
-			klines_container_t load_klines() const;
-
-			orders_container_t load_orders() const;
-
-			trades_container_t load_trades() const;
-
-		private:
-
-			std::string make_klines_file_name(std::time_t year, std::time_t month) const;
-
-			std::string make_orders_file_name(std::time_t year, std::time_t month) const;
-
-			std::string make_trades_file_name(std::time_t year, std::time_t month) const;
-
-		private:
-
-			Kline parse_kline(const std::string & line) const;
-
-			Order parse_order(const std::string & line) const;
-
-			Trade parse_trade(const std::string & line) const;
-
-		private:
-
-			inputs_container_t make_inputs(
-				const klines_container_t & klines,
-				const orders_container_t & orders,
-				const trades_container_t & trades) const;
-
-		private:
-
-			void update_indicators(inputs_container_t & inputs) const;
-
-			void update_price_aggregated_trades(
-				      inputs_container_t & inputs,
-				const klines_container_t & klines,
-				const trades_container_t & trades) const;
-
-			void update_movement_tags(inputs_container_t & inputs) const;
-
-		private:
-
-			void save_inputs(const inputs_container_t & inputs) const;
-
-			void save_result(const Result & result) const;
-
-		private:
-
-			void make_report() const;
-
-		private:
-
-			void research_volumes(const inputs_container_t & inputs) const;
+			void save_sources() const;
 
 		public:
 
@@ -321,29 +188,11 @@ namespace solution
 
 		private:
 
-			static inline const path_t inputs_directory = "system/inputs";
-			static inline const path_t klines_directory = "system/klines";
-			static inline const path_t orders_directory = "system/orders";
-			static inline const path_t trades_directory = "system/trades";
-			static inline const path_t result_directory = "system/result";
-			
-		private:
-
-			static inline const std::time_t seconds_in_day = 86400LL;
-
-		private:
-
 			assets_container_t m_assets;
 
-			indicators_container_t m_indicators;
-
-			strategies_container_t m_strategies;
+			sources_container_t m_sources;
 
 			thread_pool_t m_thread_pool;
-
-		private:
-
-			mutable Config m_config;
 		};
 
 	} // namespace system
