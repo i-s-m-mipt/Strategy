@@ -31,50 +31,29 @@
     <Filter Include="source\detail\inputs">
       <UniqueIdentifier>{3ac4a670-1016-4025-8692-df3661186b31}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\indicators">
-      <UniqueIdentifier>{040c9110-554b-4aa4-ba26-2c6ff195ceb3}</UniqueIdentifier>
+    <Filter Include="source\source">
+      <UniqueIdentifier>{4e67dead-1a8a-4417-bb72-0e17a8ee3a88}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\connectors">
-      <UniqueIdentifier>{49bd6d43-cdc4-46f7-a702-a2ca4d3fde2d}</UniqueIdentifier>
+    <Filter Include="source\source\backtester">
+      <UniqueIdentifier>{141ed367-b1af-4bdf-874f-fa8c7775b553}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\indicators\ema">
-      <UniqueIdentifier>{c03b9d42-54de-45f9-a35e-b2de3e9e009b}</UniqueIdentifier>
+    <Filter Include="source\source\indicators">
+      <UniqueIdentifier>{d50dc808-e45c-4cf4-8b27-716b58d6dbdb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\indicators\macd">
-      <UniqueIdentifier>{d7480691-c45f-466f-9504-f5e370f9a0da}</UniqueIdentifier>
+    <Filter Include="source\source\strategies">
+      <UniqueIdentifier>{f446fbd1-9f96-46a4-b158-88df3f3d7732}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\indicators\adx">
-      <UniqueIdentifier>{7a325920-bedf-4e16-87d9-8cb56f3e629a}</UniqueIdentifier>
+    <Filter Include="source\source\indicators\awvb">
+      <UniqueIdentifier>{3f80981d-0f52-4445-862d-9505429d96bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\indicators\mfi">
-      <UniqueIdentifier>{74989eb6-2971-43f3-96cd-2942198f672a}</UniqueIdentifier>
+    <Filter Include="source\source\strategies\hard">
+      <UniqueIdentifier>{53d9c271-6d05-4f0d-a896-e60b58fe7a46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\indicators\rsi">
-      <UniqueIdentifier>{e8e0d785-4205-4c3f-8a8c-d0c7381d4d5d}</UniqueIdentifier>
+    <Filter Include="source\source\strategies\soft">
+      <UniqueIdentifier>{a9610081-cce7-44dc-9eff-5696dbdb5fdc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\system\interfaces">
-      <UniqueIdentifier>{79ad7edb-aff7-4814-b638-d99eb95829a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\system\strategies">
-      <UniqueIdentifier>{616018c0-f7ba-47f7-8a5e-be5d30c01632}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\system\backtester">
-      <UniqueIdentifier>{7b5e86b8-77c8-42c2-a07b-cde5951c4a91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\system\strategies\soft">
-      <UniqueIdentifier>{4d58f3e2-a235-4bf0-a80b-338260f4c552}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\system\strategies\hard">
-      <UniqueIdentifier>{cbd56975-0e55-4c84-81be-573a0611c70b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\system\strategies\hard\assimilator">
-      <UniqueIdentifier>{2408500f-d826-47a2-a70f-d0286a97ee1f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\system\strategies\hard\investor">
-      <UniqueIdentifier>{22858c8c-c193-4ad8-afef-af878b50b331}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\system\indicators\awvb">
-      <UniqueIdentifier>{2ea0c697-bc8e-46a7-afac-a8b54e3dec40}</UniqueIdentifier>
+    <Filter Include="source\source\strategies\hard\assimilator">
+      <UniqueIdentifier>{0de5d6b2-8863-4372-802d-e7416811a0c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -105,35 +84,23 @@
     <ClCompile Include="..\source\detail\inputs\inputs.cpp">
       <Filter>source\detail\inputs</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\system\indicators\ema\ema.cpp">
-      <Filter>source\system\indicators\ema</Filter>
+    <ClCompile Include="..\source\source\source.cpp">
+      <Filter>source\source</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\system\indicators\macd\macd.cpp">
-      <Filter>source\system\indicators\macd</Filter>
+    <ClCompile Include="..\source\source\backtester\backtester.cpp">
+      <Filter>source\source\backtester</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\system\indicators\adx\adx.cpp">
-      <Filter>source\system\indicators\adx</Filter>
+    <ClCompile Include="..\source\source\indicators\awvb\awvb.cpp">
+      <Filter>source\source\indicators\awvb</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\system\indicators\mfi\mfi.cpp">
-      <Filter>source\system\indicators\mfi</Filter>
+    <ClCompile Include="..\source\source\strategies\hard\assimilator\assimilator.cpp">
+      <Filter>source\source\strategies\hard\assimilator</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\system\indicators\rsi\rsi.cpp">
-      <Filter>source\system\indicators\rsi</Filter>
+    <ClCompile Include="..\source\source\strategies\strategy.cpp">
+      <Filter>source\source\strategies</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\system\backtester\backtester.cpp">
-      <Filter>source\system\backtester</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\system\strategies\strategies.cpp">
-      <Filter>source\system\strategies</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\system\strategies\hard\investor\investor.cpp">
-      <Filter>source\system\strategies\hard\investor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\system\strategies\hard\assimilator\assimilator.cpp">
-      <Filter>source\system\strategies\hard\assimilator</Filter>
-    </ClCompile>
-    <ClCompile Include="..\source\system\indicators\awvb\awvb.cpp">
-      <Filter>source\system\indicators\awvb</Filter>
+    <ClCompile Include="..\source\source\indicators\indicator.cpp">
+      <Filter>source\source\indicators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -164,38 +131,23 @@
     <ClInclude Include="..\source\detail\orders\orders.hpp">
       <Filter>source\detail\orders</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\system\indicators\indicators.hpp">
-      <Filter>source\system\indicators</Filter>
+    <ClInclude Include="..\source\source\source.hpp">
+      <Filter>source\source</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\system\indicators\ema\ema.hpp">
-      <Filter>source\system\indicators\ema</Filter>
+    <ClInclude Include="..\source\source\backtester\backtester.hpp">
+      <Filter>source\source\backtester</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\system\indicators\macd\macd.hpp">
-      <Filter>source\system\indicators\macd</Filter>
+    <ClInclude Include="..\source\source\indicators\awvb\awvb.hpp">
+      <Filter>source\source\indicators\awvb</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\system\indicators\adx\adx.hpp">
-      <Filter>source\system\indicators\adx</Filter>
+    <ClInclude Include="..\source\source\indicators\indicator.hpp">
+      <Filter>source\source\indicators</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\system\indicators\mfi\mfi.hpp">
-      <Filter>source\system\indicators\mfi</Filter>
+    <ClInclude Include="..\source\source\strategies\hard\assimilator\assimilator.hpp">
+      <Filter>source\source\strategies\hard\assimilator</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\system\indicators\rsi\rsi.hpp">
-      <Filter>source\system\indicators\rsi</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\system\strategies\strategies.hpp">
-      <Filter>source\system\strategies</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\system\backtester\backtester.hpp">
-      <Filter>source\system\backtester</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\system\strategies\hard\investor\investor.hpp">
-      <Filter>source\system\strategies\hard\investor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\system\strategies\hard\assimilator\assimilator.hpp">
-      <Filter>source\system\strategies\hard\assimilator</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\system\indicators\awvb\awvb.hpp">
-      <Filter>source\system\indicators\awvb</Filter>
+    <ClInclude Include="..\source\source\strategies\strategy.hpp">
+      <Filter>source\source\strategies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -172,16 +172,12 @@
     <ClCompile Include="..\source\detail\orders\orders.cpp" />
     <ClCompile Include="..\source\detail\trades\trades.cpp" />
     <ClCompile Include="..\source\main.cpp" />
-    <ClCompile Include="..\source\system\backtester\backtester.cpp" />
-    <ClCompile Include="..\source\system\indicators\adx\adx.cpp" />
-    <ClCompile Include="..\source\system\indicators\awvb\awvb.cpp" />
-    <ClCompile Include="..\source\system\indicators\ema\ema.cpp" />
-    <ClCompile Include="..\source\system\indicators\macd\macd.cpp" />
-    <ClCompile Include="..\source\system\indicators\mfi\mfi.cpp" />
-    <ClCompile Include="..\source\system\indicators\rsi\rsi.cpp" />
-    <ClCompile Include="..\source\system\strategies\hard\assimilator\assimilator.cpp" />
-    <ClCompile Include="..\source\system\strategies\hard\investor\investor.cpp" />
-    <ClCompile Include="..\source\system\strategies\strategies.cpp" />
+    <ClCompile Include="..\source\source\backtester\backtester.cpp" />
+    <ClCompile Include="..\source\source\indicators\awvb\awvb.cpp" />
+    <ClCompile Include="..\source\source\indicators\indicator.cpp" />
+    <ClCompile Include="..\source\source\source.cpp" />
+    <ClCompile Include="..\source\source\strategies\hard\assimilator\assimilator.cpp" />
+    <ClCompile Include="..\source\source\strategies\strategy.cpp" />
     <ClCompile Include="..\source\system\system.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -195,17 +191,12 @@
     <ClInclude Include="..\source\detail\klines\klines.hpp" />
     <ClInclude Include="..\source\detail\orders\orders.hpp" />
     <ClInclude Include="..\source\detail\trades\trades.hpp" />
-    <ClInclude Include="..\source\system\backtester\backtester.hpp" />
-    <ClInclude Include="..\source\system\indicators\adx\adx.hpp" />
-    <ClInclude Include="..\source\system\indicators\awvb\awvb.hpp" />
-    <ClInclude Include="..\source\system\indicators\ema\ema.hpp" />
-    <ClInclude Include="..\source\system\indicators\indicators.hpp" />
-    <ClInclude Include="..\source\system\indicators\macd\macd.hpp" />
-    <ClInclude Include="..\source\system\indicators\mfi\mfi.hpp" />
-    <ClInclude Include="..\source\system\indicators\rsi\rsi.hpp" />
-    <ClInclude Include="..\source\system\strategies\hard\assimilator\assimilator.hpp" />
-    <ClInclude Include="..\source\system\strategies\hard\investor\investor.hpp" />
-    <ClInclude Include="..\source\system\strategies\strategies.hpp" />
+    <ClInclude Include="..\source\source\backtester\backtester.hpp" />
+    <ClInclude Include="..\source\source\indicators\awvb\awvb.hpp" />
+    <ClInclude Include="..\source\source\indicators\indicator.hpp" />
+    <ClInclude Include="..\source\source\source.hpp" />
+    <ClInclude Include="..\source\source\strategies\hard\assimilator\assimilator.hpp" />
+    <ClInclude Include="..\source\source\strategies\strategy.hpp" />
     <ClInclude Include="..\source\system\system.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
