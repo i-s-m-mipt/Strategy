@@ -125,7 +125,8 @@ namespace solution
             double commission;
             double stop_loss;
 
-            std::string test_strategy;
+            std::string test_hard_strategy;
+            std::string test_soft_strategy;
 
             bool required_backtest;
 
