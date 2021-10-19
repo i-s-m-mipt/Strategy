@@ -34,52 +34,48 @@ namespace solution
 {
 	namespace system
 	{
-		namespace detail
+		class detail_exception : public std::exception
 		{
-			class detail_exception : public std::exception
-			{
-			public:
+		public:
 
-				explicit detail_exception(const std::string & message) noexcept :
-					std::exception(message.c_str())
-				{}
+			explicit detail_exception(const std::string & message) noexcept :
+				std::exception(message.c_str())
+			{}
 
-				explicit detail_exception(const char * const message) noexcept :
-					std::exception(message)
-				{}
+			explicit detail_exception(const char * const message) noexcept :
+				std::exception(message)
+			{}
 
-				~detail_exception() noexcept = default;
-			};
+			~detail_exception() noexcept = default;
+		};
 
-			struct Date_Time
-			{
-				unsigned int year   = 0U;
-				unsigned int month  = 0U;
-				unsigned int day    = 0U;
+		struct Date_Time
+		{
+			unsigned int year   = 0U;
+			unsigned int month  = 0U;
+			unsigned int day    = 0U;
 
-				unsigned int hour   = 0U;
-				unsigned int minute = 0U;
-				unsigned int second = 0U;
-			};
+			unsigned int hour   = 0U;
+			unsigned int minute = 0U;
+			unsigned int second = 0U;
+		};
 
-			bool operator== (const Date_Time & lhs, const Date_Time & rhs);
-			bool operator!= (const Date_Time & lhs, const Date_Time & rhs);
-			bool operator<  (const Date_Time & lhs, const Date_Time & rhs);
-			bool operator<= (const Date_Time & lhs, const Date_Time & rhs);
-			bool operator>  (const Date_Time & lhs, const Date_Time & rhs);
-			bool operator>= (const Date_Time & lhs, const Date_Time & rhs);
+		bool operator== (const Date_Time & lhs, const Date_Time & rhs);
+		bool operator!= (const Date_Time & lhs, const Date_Time & rhs);
+		bool operator<  (const Date_Time & lhs, const Date_Time & rhs);
+		bool operator<= (const Date_Time & lhs, const Date_Time & rhs);
+		bool operator>  (const Date_Time & lhs, const Date_Time & rhs);
+		bool operator>= (const Date_Time & lhs, const Date_Time & rhs);
 
-			std::ostream & operator<< (std::ostream & stream, const Date_Time & date_time);
+		std::ostream & operator<< (std::ostream & stream, const Date_Time & date_time);
 
-			std::time_t to_time_t(const Date_Time & date_time) noexcept;
+		std::time_t to_time_t(const Date_Time & date_time) noexcept;
 
-			Date_Time from_time_t(std::time_t time, bool has_milliseconds = false) noexcept;
+		Date_Time from_time_t(std::time_t time, bool has_milliseconds = false) noexcept;
 
-			std::time_t duration(const Date_Time & date_time_1, const Date_Time & date_time_2) noexcept;
+		std::time_t duration(const Date_Time & date_time_1, const Date_Time & date_time_2) noexcept;
 
-			unsigned int day_of_week(const Date_Time & date_time) noexcept;
-
-		} // namespace detail
+		unsigned int day_of_week(const Date_Time & date_time) noexcept;
 
 	} // namespace system
 
