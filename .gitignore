@@ -349,3 +349,4 @@ service/
 *.data
 *.png
 *.pdf
+!assets.data
