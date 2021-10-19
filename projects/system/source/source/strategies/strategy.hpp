@@ -1,5 +1,5 @@
-#ifndef SOLUTION_SYSTEM_STRATEGIES_HPP
-#define SOLUTION_SYSTEM_STRATEGIES_HPP
+#ifndef SOLUTION_SYSTEM_SOURCE_STRATEGY_HPP
+#define SOLUTION_SYSTEM_SOURCE_STRATEGY_HPP
 
 #include <boost/config.hpp>
 
@@ -7,20 +7,20 @@
 #  pragma once
 #endif // #ifdef BOOST_HAS_PRAGMA_ONCE
 
+#include <algorithm>
+#include <climits>
 #include <cmath>
 #include <exception>
 #include <fstream>
+#include <numeric>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
-#include "../indicators/adx/adx.hpp"
 #include "../indicators/awvb/awvb.hpp"
-#include "../indicators/ema/ema.hpp"
-#include "../indicators/macd/macd.hpp"
-#include "../indicators/mfi/mfi.hpp"
-#include "../indicators/rsi/rsi.hpp"
 
 #include "../../config/config.hpp"
+
 #include "../../detail/inputs/inputs.hpp"
 
 #include "logger/logger.hpp"
@@ -29,7 +29,7 @@ namespace solution
 {
 	namespace system
 	{
-		namespace strategies
+		namespace source
 		{
 			class strategy_exception : public std::exception
 			{
@@ -54,54 +54,45 @@ namespace solution
 
 			public:
 
-				struct State
+				enum class State
 				{
-				public:
-
-					auto is_long() const noexcept
-					{
-						return (position > 0.0);
-					}
-
-					auto is_short() const noexcept
-					{
-						return (position < 0.0);
-					}
-
-					auto is_null() const noexcept
-					{
-						return (position == 0.0);
-					}
-
-				public:
-
-					double position = 0.0;
+					N,
+					L,
+					S
 				};
 
 			public:
 
-				explicit Strategy(const Config & config) noexcept : 
-					m_config(config)
+				explicit Strategy(const Config & config) noexcept : m_config(config)
 				{}
 
 				virtual ~Strategy() noexcept = default;
 
 			public:
 
-				virtual std::string type() const noexcept = 0;
+				virtual std::string name() const noexcept
+				{
+					return Strategy::m_name;
+				}
 
-				virtual State handle(const inputs_container_t & inputs, 
-					const State & input_state, double transaction) const = 0;
+				virtual State run(const inputs_container_t & inputs, State current_state) const
+				{
+					return State::L;
+				}
+
+			public:
+
+				static inline const std::string m_name = "Strategy";
 
 			protected:
 
-				const Config & m_config;
+				const Config m_config;
 			};
 
-		} // namespace strategies
+		} // namespace source
 
 	} // namespace system
 
 } // namespace solution
 
-#endif // #ifndef SOLUTION_SYSTEM_STRATEGIES_HPP
+#endif // #ifndef SOLUTION_SYSTEM_SOURCE_STRATEGY_HPP

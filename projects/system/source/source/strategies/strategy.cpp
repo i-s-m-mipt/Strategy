@@ -1,14 +1,14 @@
-#include "strategies.hpp"
+#include "strategy.hpp"
 
 namespace solution
 {
 	namespace system
 	{
-		namespace strategies
+		namespace source
 		{
 			// ...
 
-		} // namespace strategies
+		} // namespace source
 
 	} // namespace system
 
