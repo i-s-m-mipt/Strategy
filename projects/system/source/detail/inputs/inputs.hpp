@@ -19,8 +19,7 @@ namespace solution
 			{
 			public:
 
-				using indicators_container_t = std::map < std::string, 
-					std::map < std::string, double > > ;
+				using indicators_container_t = std::map < std::string, double > ;
 
 			public:
 
