@@ -1,5 +1,5 @@
-#ifndef SOLUTION_SYSTEM_INDICATORS_HPP
-#define SOLUTION_SYSTEM_INDICATORS_HPP
+#ifndef SOLUTION_SYSTEM_SOURCE_INDICATOR_HPP
+#define SOLUTION_SYSTEM_SOURCE_INDICATOR_HPP
 
 #include <boost/config.hpp>
 
@@ -11,10 +11,13 @@
 #include <climits>
 #include <cmath>
 #include <exception>
+#include <fstream>
 #include <numeric>
 #include <stdexcept>
 #include <string>
 #include <vector>
+
+#include "../../config/config.hpp"
 
 #include "../../detail/inputs/inputs.hpp"
 
@@ -24,7 +27,7 @@ namespace solution
 {
 	namespace system
 	{
-		namespace indicators
+		namespace source
 		{
 			class indicator_exception : public std::exception
 			{
@@ -41,12 +44,37 @@ namespace solution
 				~indicator_exception() noexcept = default;
 			};
 
-			using inputs_container_t = detail::inputs_container_t;
+			class Indicator
+			{
+			public:
 
-		} // namespace indicators
+				using inputs_container_t = detail::inputs_container_t;
+
+			public:
+
+				explicit Indicator(const Config & config) noexcept : m_config(config)
+				{}
+
+				virtual ~Indicator() noexcept = default;
+
+			public:
+
+				virtual void run(inputs_container_t & inputs) const
+				{}
+
+			public:
+
+				static inline const std::string name = "Indicator";
+
+			protected:
+
+				const Config m_config;
+			};
+
+		} // namespace source
 		
 	} // namespace system
 
 } // namespace solution
 
-#endif // #ifndef SOLUTION_SYSTEM_INDICATORS_HPP
+#endif // #ifndef #define SOLUTION_SYSTEM_SOURCE_INDICATOR_HPP
