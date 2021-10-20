@@ -47,7 +47,7 @@ def make_plot(reward_HS, reward_BH, config):
     plt.plot(reward_HS["time"], reward_HS["reward"], color = "green")
     plt.plot(reward_BH["time"], reward_BH["reward"], color = "black")
     
-    plt.legend(["Assimilator", "Buy & Hold"])
+    plt.legend(["Strategy", "Benchmark"])
     
     #plt.xlabel("Year",   labelpad = 0.0 )
     #plt.ylabel("Profit", labelpad = 0.0 )
@@ -88,8 +88,6 @@ def make_deviations(reward, config):
             current_year = year
             
             times_y.append(reward["time"][i])
-    
-    times_m.pop(0)
             
     if(reward["date"][len(reward) - 1].split("/")[0] ==
        reward["date"][len(reward) - 2].split("/")[0]):
@@ -153,7 +151,7 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
     fields = ["Traded instrument",   "Backtesting period",   "Working timeframe",
               "Strategy version",    "Initial investments",  "Has reinvestment",   
               "Strategy profit",     "Total profitability",  "Maximum drawdown",
-              "B&H benchmark",       "Trading fee rate",     "Fixed stop-loss",
+              "Benchmark B&H",       "Trading fee rate",     "Fixed stop-loss",
               
               "Longs quantity",      "Shorts quantity",      "Trades quantity",
               
@@ -239,7 +237,7 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
     table["Strategy profit"      ] = str(reward_HS["reward"][len(reward_HS) - 1])
     table["Total profitability"  ] = ("%.2f" % (reward_HS["reward"][len(reward_HS) - 1] / config["transaction"] * 100)) + " %"
     table["Maximum drawdown"     ] = "undefined"
-    table["B&H benchmark"        ] = str(reward_BH["reward"][len(reward_BH) - 1])
+    table["Benchmark B&H"        ] = str(reward_BH["reward"][len(reward_BH) - 1])
     table["Trading fee rate"     ] = str(config["commission"] * 100) + " %"
     table["Fixed stop-loss"      ] = str(config["stop_loss"] * 100) + " %"
     
@@ -297,9 +295,11 @@ def make_deviations_table(reward, config):
     table = [" " for i in range(0, 14 * 5)]
     
     deviations_m, deviations_y = make_deviations(reward, config)
+
+    parts = reward["date"][0].split("/")
    
-    first_year =  int(reward["date"][0].split("/")[0])
-    first_month = int(reward["date"][0].split("/")[1]) + 1
+    first_year =  int(parts[0])
+    first_month = int(parts[1])
     
     i = 14 * (first_year - 2017) + first_month
 
@@ -358,7 +358,7 @@ def make_report(path_reward_HS, path_trades_HS, path_reward_BH, path_config):
     paragraph_2 = Paragraph("Monthly percentage changes in the volume of investments used for trading",
         font = "Helvetica-Bold", font_size = Decimal(16))
 
-    paragraph_3 = Paragraph("Comparison of returns between strategy \"" + config["test_hard_strategy"] + "\" and B&H benchmark",
+    paragraph_3 = Paragraph("Comparison of returns between strategy \"" + config["test_hard_strategy"] + "\" and benchmark B&H",
         font = "Helvetica-Bold", font_size = Decimal(16))
     
     fields, statistics_table = make_statictics_table(reward_HS, reward_BH, trades_HS, config)
@@ -391,14 +391,14 @@ def make_report(path_reward_HS, path_trades_HS, path_reward_BH, path_config):
 
     chart = Image(plot, width = Decimal(594), height = Decimal(400))
      
-    paragraph_1._do_layout_without_padding(page, Rectangle(10, 830, 750, 10))
-    paragraph_2._do_layout_without_padding(page, Rectangle(10, 555, 750, 10))
-    paragraph_3._do_layout_without_padding(page, Rectangle(10, 435, 750, 10))
+    paragraph_1._do_layout_without_padding(page, Rectangle(10, 825, 750, 10))
+    paragraph_2._do_layout_without_padding(page, Rectangle(10, 550, 750, 10))
+    paragraph_3._do_layout_without_padding(page, Rectangle(10, 430, 750, 10))
     
-    table_1._do_layout_without_padding(page, Rectangle(10, 510, 575, 300))
-    table_2._do_layout_without_padding(page, Rectangle(10, 535, 575, 0))
+    table_1._do_layout_without_padding(page, Rectangle(10, 505, 575, 300))
+    table_2._do_layout_without_padding(page, Rectangle(10, 530, 575, 0))
 
-    chart._do_layout_without_padding(page, Rectangle(0, 120, 500, 300))
+    chart._do_layout_without_padding(page, Rectangle(0, 115, 500, 300))
 
     with open("system/result/" + config["inputs_asset"] + "/" + config["inputs_asset"] + ".pdf", "wb") as file:  
         PDF.dumps(file, document)
