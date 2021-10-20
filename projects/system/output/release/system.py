@@ -236,7 +236,7 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
     table["Strategy version"     ] = config["test_hard_strategy"]
     table["Initial investments"  ] = ("%.2f" % config["transaction"])
     table["Has reinvestment"     ] = str(config["has_reinvestment"])
-    table["Strategy profit"      ] = str(reward_HS["reward"][len(reward_HS) - 1])
+    table["Strategy profit"      ] = ("%.2f" % reward_HS["reward"][len(reward_HS) - 1])
     table["Total profitability"  ] = ("%.2f" % (reward_HS["reward"][len(reward_HS) - 1] / config["transaction"] * 100)) + " %"
     table["Maximum drawdown"     ] = "undefined"
     table["Benchmark B&H"        ] = str(reward_BH["reward"][len(reward_BH) - 1])
