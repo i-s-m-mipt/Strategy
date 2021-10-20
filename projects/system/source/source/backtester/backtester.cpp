@@ -128,6 +128,8 @@ namespace solution
 
 					auto current_state = State::N;
 
+					//auto state_closed_by_stop_loss = State::N;
+
 					auto position = 0.0;
 
 					for (auto i = begin; i < std::size(m_inputs) - 1; ++i)
@@ -139,8 +141,15 @@ namespace solution
 
 						if (((required_state == State::N) && (current_state != State::N)) ||
 							((required_state == State::L) && (current_state == State::S)) ||
-							((required_state == State::S) && (current_state == State::L)))
+							((required_state == State::S) && (current_state == State::L))/* ||
+							((trade_reward < -1.0 * m_config.stop_loss * transaction) && 
+								(current_state != State::N))*/)
 						{
+							//if (trade_reward < -1.0 * m_config.stop_loss * transaction)
+							//{
+							//	state_closed_by_stop_loss = current_state;
+							//}
+
 							auto delta = -commission * std::abs(position);
 
 							position = 0.0;
@@ -155,9 +164,13 @@ namespace solution
 							total_reward += delta;
 						}
 						
-						if (((required_state == State::L) && (current_state == State::N)) ||
-							((required_state == State::S) && (current_state == State::N)))
+						if (((required_state == State::L) && (current_state == State::N)/* &&
+								(state_closed_by_stop_loss != State::L)*/) ||
+							((required_state == State::S) && (current_state == State::N)/* &&
+								(state_closed_by_stop_loss != State::S)*/))
 						{
+							//state_closed_by_stop_loss = State::N;
+
 							position = (required_state == State::L ? +transaction : -transaction);
 
 							current_state = required_state;
