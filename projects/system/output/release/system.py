@@ -47,7 +47,7 @@ def make_plot(reward_HS, reward_BH, config):
     plt.plot(reward_HS["time"], reward_HS["reward"], color = "green")
     plt.plot(reward_BH["time"], reward_BH["reward"], color = "black")
     
-    plt.legend(["Strategy", "Benchmark"])
+    plt.legend(["Strategy \"" + config["test_hard_strategy"] + "\"", "Benchmark B&H"])
     
     #plt.xlabel("Year",   labelpad = 0.0 )
     #plt.ylabel("Profit", labelpad = 0.0 )
@@ -56,8 +56,9 @@ def make_plot(reward_HS, reward_BH, config):
     plt.yticks(              fontsize = 8)
     
     plt.tick_params(axis = "x", direction = "in", which = "both")
+    #plt.figure(figsize = (40, 30))
     
-    plt.savefig("system/result/" + config["inputs_asset"] + "/reward.png",  bbox_inches = "tight")
+    plt.savefig("system/result/" + config["inputs_asset"] + "/reward.png", dpi = 400)
 
     plt.close()
 
@@ -355,13 +356,14 @@ def make_report(path_reward_HS, path_trades_HS, path_reward_BH, path_config):
 
     paragraph_1 = Paragraph("Backtesting results of strategy \"" + config["test_hard_strategy"] + "\" for " +
         config["inputs_asset"].upper() + " in " + str(config["inputs_timeframe"]) +
-        config["inputs_timeframe_type"].upper() + " timeframe", font = "Helvetica-Bold", font_size = Decimal(16))
+        config["inputs_timeframe_type"].upper() + " timeframe",
+        font = "Helvetica-Bold", font_size = Decimal(16.1))
 
     paragraph_2 = Paragraph("Monthly percentage changes in the volume of investments used for trading",
-        font = "Helvetica-Bold", font_size = Decimal(16))
+        font = "Helvetica-Bold", font_size = Decimal(16.1))
 
     paragraph_3 = Paragraph("Comparison of returns between strategy \"" + config["test_hard_strategy"] + "\" and benchmark B&H",
-        font = "Helvetica-Bold", font_size = Decimal(16))
+        font = "Helvetica-Bold", font_size = Decimal(16.0))
     
     fields, statistics_table = make_statictics_table(reward_HS, reward_BH, trades_HS, config)
     
@@ -389,18 +391,16 @@ def make_report(path_reward_HS, path_trades_HS, path_reward_BH, path_config):
     
     plot = PILImage.open("system/result/" + config["inputs_asset"] + "/reward.png")
 
-    plot = plot.resize((2740, 2000), PILImage.ANTIALIAS)
+    chart = Image(plot, width = Decimal(680), height = Decimal(511))
 
-    chart = Image(plot, width = Decimal(594), height = Decimal(400))
+    chart._do_layout_without_padding(page, Rectangle(-28, 180, 500, 300))
      
-    paragraph_1._do_layout_without_padding(page, Rectangle(10, 825, 750, 10))
-    paragraph_2._do_layout_without_padding(page, Rectangle(10, 550, 750, 10))
-    paragraph_3._do_layout_without_padding(page, Rectangle(10, 430, 750, 10))
+    paragraph_1._do_layout_without_padding(page, Rectangle(10, 829, 750, 10))
+    paragraph_2._do_layout_without_padding(page, Rectangle(10, 556, 750, 10))
+    paragraph_3._do_layout_without_padding(page, Rectangle(10, 440, 750, 10))
     
-    table_1._do_layout_without_padding(page, Rectangle(10, 505, 575, 300))
-    table_2._do_layout_without_padding(page, Rectangle(10, 530, 575, 0))
-
-    chart._do_layout_without_padding(page, Rectangle(0, 115, 500, 300))
+    table_1._do_layout_without_padding(page, Rectangle(10, 509, 575, 300))
+    table_2._do_layout_without_padding(page, Rectangle(10, 537, 575, 0))
 
     with open("system/result/" + config["inputs_asset"] + "/" + config["inputs_asset"] + ".pdf", "wb") as file:  
         PDF.dumps(file, document)
