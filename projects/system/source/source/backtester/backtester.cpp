@@ -61,7 +61,7 @@ namespace solution
 
 				try
 				{
-					const auto begin = m_config.skipped_timesteps;
+					const auto begin = make_begin();
 
 					const auto epsilon = std::numeric_limits < double > ::epsilon();
 
@@ -111,7 +111,7 @@ namespace solution
 
 				try
 				{
-					const auto begin = m_config.skipped_timesteps;
+					const auto begin = make_begin();
 
 					const auto epsilon = std::numeric_limits < double > ::epsilon();
 
@@ -198,6 +198,27 @@ namespace solution
 					verify(result);
 
 					return result;
+				}
+				catch (const std::exception & exception)
+				{
+					shared::catch_handler < backtester_exception > (logger, exception);
+				}
+			}
+
+			std::size_t Backtester::make_begin() const
+			{
+				LOGGER(logger, false);
+
+				try
+				{
+					auto begin = m_config.skipped_timesteps;
+
+					while (m_inputs[begin].date_time_close.day != 1)
+					{
+						++begin;
+					}
+
+					return begin;
 				}
 				catch (const std::exception & exception)
 				{

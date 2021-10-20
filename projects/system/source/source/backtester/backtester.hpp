@@ -115,6 +115,8 @@ namespace solution
 
 			private:
 
+				std::size_t make_begin() const;
+
 				void update_transaction(double & transaction, double total_reward) const noexcept;
 
 				inputs_container_t make_prehistory(const inputs_container_t & inputs, std::size_t index) const;
