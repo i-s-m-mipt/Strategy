@@ -3,281 +3,402 @@ import matplotlib.pyplot as plt
 import numpy             as np
 import pandas            as pd
 
-from borb.io.read.types                                     import Decimal
-from borb.pdf.canvas.color.color                            import X11Color
-from borb.pdf.canvas.geometry.rectangle                     import Rectangle
-from borb.pdf.canvas.layout.image.chart                     import Chart
-from borb.pdf.canvas.layout.image.image                     import Image
-from borb.pdf.canvas.layout.layout_element                  import Alignment
-from borb.pdf.canvas.layout.page_layout.multi_column_layout import SingleColumnLayout
-from borb.pdf.canvas.layout.page_layout.page_layout         import PageLayout
-from borb.pdf.canvas.layout.text.paragraph                  import Paragraph
-from borb.pdf.canvas.layout.table.fixed_column_width_table  import FixedColumnWidthTable
-from borb.pdf.canvas.layout.table.table                     import Table, TableCell
-from borb.pdf.document                                      import Document
-from borb.pdf.page.page                                     import Page
-from borb.pdf.pdf                                           import PDF
+from borb.io.read.types                                       import Decimal
+from borb.pdf.canvas.color.color                              import X11Color
+from borb.pdf.canvas.geometry.rectangle                       import Rectangle
+from borb.pdf.canvas.layout.image.chart                       import Chart
+from borb.pdf.canvas.layout.image.image                       import Image
+from borb.pdf.canvas.layout.layout_element                    import Alignment
+from borb.pdf.canvas.layout.page_layout.multi_column_layout   import SingleColumnLayout
+from borb.pdf.canvas.layout.page_layout.page_layout           import PageLayout
+from borb.pdf.canvas.layout.text.paragraph                    import Paragraph
+from borb.pdf.canvas.layout.table.fixed_column_width_table    import FixedColumnWidthTable
+from borb.pdf.canvas.layout.table.flexible_column_width_table import FlexibleColumnWidthTable
+from borb.pdf.canvas.layout.table.table                       import Table, TableCell
+from borb.pdf.document                                        import Document
+from borb.pdf.page.page                                       import Page
+from borb.pdf.pdf                                             import PDF
 
 from PIL import Image as PILImage
 
-def make_report(path_reward, path_trades, path_reward_BH, path_config):
 
-    reward = pd.read_csv(path_reward, names = ["date_time",
-                                               "date_time_UNIX",
-                                               "reward"])
+
+def make_plot(reward_HS, reward_BH, config):
     
-    trades = pd.read_csv(path_trades, names = ["date_time_open",
-                                               "date_time_close",
-                                               "date_time_open_UNIX",
-                                               "date_time_close_UNIX",
-                                               "position",
-                                               "reward"])
+    current_year = 0
+
+    dates = []
+    times = []
+
+    for i in range(0, len(reward_BH)):
+        
+        year = int(reward_BH["date"][i].split("/")[0])
+        
+        if (year != current_year):
+
+            current_year = year
+            
+            dates.append(current_year)
+            times.append(reward_BH["time"][i])
+        
+    dates.pop(0)
+    times.pop(0)
     
-    reward_BH = pd.read_csv(path_reward_BH, names = ["date_time",
-                                                     "date_time_UNIX",
-                                                     "reward"])
+    plt.plot(reward_HS["time"], reward_HS["reward"], color = "green")
+    plt.plot(reward_BH["time"], reward_BH["reward"], color = "black")
+    
+    plt.legend(["Assimilator", "Buy & Hold"])
+    
+    #plt.xlabel("Year",   labelpad = 0.0 )
+    #plt.ylabel("Profit", labelpad = 0.0 )
+    
+    plt.xticks(times, dates, fontsize = 8)
+    plt.yticks(              fontsize = 8)
+    
+    plt.tick_params(axis = "x", direction = "in", which = "both")
+    
+    plt.savefig("system/result/" + config["inputs_asset"] + "/reward.png",  bbox_inches = "tight")
 
-    unique_time      = []
-    unique_time_UNIX = []
+    
 
-    time = "1000/00"
-
+def make_deviations(reward, config):
+    
+    current_year_month = "0000/00"
+    current_year       = 0
+    
+    times_m = []
+    times_y = []
+    
     for i in range(0, len(reward)):
         
-        parts = reward[ "date_time"][i].split("/")
-        perts_time = time.split("/")
-        
-        if (parts[0] + "/" + parts[1]) != (perts_time[0] + "/" + perts_time[1]):
-            unique_time_UNIX.append(reward["date_time_UNIX"][i])
-            unique_time.append((parts[1]) + "." + str(int(parts[0]) - 2000))
-            time = reward["date_time"][i]
-        
-    unique_time = unique_time[1:]
-    unique_time_UNIX = unique_time_UNIX[1:]
+        parts = reward["date"][i].split("/")
 
-    plt.plot(reward["date_time_UNIX"][:],    reward["reward"][:],    color = "green") 
-    plt.plot(reward_BH["date_time_UNIX"][:], reward_BH["reward"][:], color = "black")
-    plt.legend(["Our strategy", "Buy & Hold"])
-    plt.xlabel("Date",       labelpad = -40.0 )
-    plt.ylabel("Profit ($)", labelpad = -50.0 )
-    plt.xticks(unique_time_UNIX, unique_time, rotation = 90, fontsize = 8)
-    plt.yticks(                                              fontsize = 8)
-    plt.tick_params(axis="x", direction="in", which ="both")
-    plt.savefig("reward",  bbox_inches="tight")
-    plot = PILImage.open("reward.png")
-
-    parameters = ["Strategy",            "Asset",                             "Backstory",
-                  "Timeframe",           "Reinvestment",                      "Commission", 
-                  "Init investment ($)", "Total profit",                      "Interest profit",
-                  "Stop loss",           "Profit on the Buy & Hold strategy", " ",
-              
-                  "Number of long positions (L)",     "Number of short positions (S)",    "Total number of transactions",
-                  "Number of L profitable positions", "Number of S profitable positions", "Total number of profitable transactions", 
-                  "Number of L losing positions",     "Number of S losing positions",     "Total number of losing transactionss",
-              
-                  "Average time spent in one L position", "Average time spent in one S position", "Average time spent in one position",
-                  "Maximum time spent in one position",   "Minimum time spent in one position",   " ",
+        year_month = (parts[0] + "/" + parts[1])
             
-                  "Profit amount in L positions", "Profit amount in S positions",  "Profit amount", 
-                  "Loss amount in L positions",   "Loss amount in S positions",    "Loss amount",
-              
-                  "Average profit on profitable positions",  "Average loss on unprofitable positions",  " ",
+        if (year_month != current_year_month):
 
-                  "Sharpe coefficient",  "Sortino coefficient", " "]
-             
-    output_table = dict()
-
-    with open(path_config,  "r", encoding= "utf-8 ") as f:
-        text = json.load(f)
-        
-    base_value = text["transaction"]
-
-    output_table["Strategy"]                          = text["test_strategy"]
-    output_table["Asset"]                             = text["inputs_asset"]
-    output_table["Stop loss"]                         = text["stop_loss"]
-    output_table["Timeframe"]                         = str(text["inputs_timeframe"]) +  "  " + text["inputs_timeframe_type"]
-    output_table["Backstory"]                         = str(text["inputs_year_begin"]) +  " -  " + str(text["inputs_year_end"]) #+  " year "
-    output_table["Commission"]                        = str(text["commission"] * 100) + " %"
-    output_table["Init investment ($)"]               = str(base_value)  
-    output_table["Total profit"]                      = str(reward["reward"][len(reward) - 1])
-    output_table["Profit on the Buy & Hold strategy"] = str(reward_BH[ "reward"][len(reward) - 1])
-    output_table["Interest profit"]                   = ("%.2f" % (reward["reward"][len(reward) - 1] / base_value * 100)) +  " % "
-    output_table["Reinvestment"]                      = str(text["has_reinvestment"])
-   
-    l_number = 0
-    s_number = 0
-
-    l_time = 0
-    s_time = 0
-
-    l_plus_number = 0
-    l_minus_number = 0
-    s_plus_number = 0
-    s_minus_number = 0
-
-    l_profit = 0
-    l_loss = 0
-    s_profit = 0
-    s_loss = 0
-
-    for i in range(0, len(trades)):
-        if(trades["position"][i] == "long"):
-            l_number +=1
-            l_time += (trades["date_time_close_UNIX"][i] - trades["date_time_open_UNIX"][i])
+            current_year_month = year_month
             
-            if(float(trades["reward"][i]) > 0):
-                l_plus_number += 1
-                l_profit += trades["reward"][i]
-            if(float(trades["reward"][i]) < 0):
-                l_minus_number += 1
-                l_loss += abs(trades["reward"][i])
-                
-        if(trades["position"][i] == "short"):
-            s_number += 1
-            s_time += (trades["date_time_close_UNIX"][i] - trades["date_time_open_UNIX"][i])
+            times_m.append(reward["time"][i])
+
+        year = int(parts[0])
             
-            if(float(trades["reward"][i]) > 0):
-                s_plus_number += 1
-                s_profit += trades["reward"][i]
-            if(float(trades["reward"][i]) < 0):
-                s_minus_number += 1
-                s_loss += abs(trades["reward"][i])
+        if (year != current_year):
 
-    output_table["Number of long positions (L)"]  = str(l_number)
-    output_table["Number of short positions (S)"] = str(s_number)
-    output_table["Total number of transactions"]  = str(l_number + s_number)
-
-    output_table["Number of L profitable positions"]        = str(l_plus_number)
-    output_table["Number of S profitable positions"]        = str(s_plus_number)
-    output_table["Total number of profitable transactions"] = str(l_plus_number + s_plus_number)
-
-    output_table["Number of L losing positions"]         = str(l_minus_number)
-    output_table["Number of S losing positions"]         = str(s_minus_number)
-    output_table["Total number of losing transactionss"] = str(l_minus_number + s_minus_number)
-
-    output_table["Average time spent in one L position"] = ("%.2f" % (l_time / l_number / 3600.0)) + " h "
-    output_table["Average time spent in one S position"] = ("%.2f" % (s_time / s_number / 3600.0)) + " h "
-    output_table["Average time spent in one position"]   = ("%.2f" % ((l_time + s_time) / (l_number + s_number) / 3600.0)) + " h "
-
-    output_table["Maximum time spent in one position"] =  ("%.2f" % ( max(trades[ "date_time_close_UNIX"][:-1] - trades[ "date_time_open_UNIX"][:-1]) / 3600.0)) +  " h "
-    output_table["Minimum time spent in one position"] = ("%.2f" % ( min(trades[ "date_time_close_UNIX"][:-1] - trades[ "date_time_open_UNIX"][:-1]) / 3600.0)) +  " h "
-
-    output_table["Profit amount in L positions"] = ("%.2f" % (l_profit))
-    output_table["Profit amount in S positions"] = ("%.2f" % (s_profit))
-    output_table["Profit amount"]                = ("%.2f " % (l_profit + s_profit))
-
-    output_table["Loss amount in L positions"] = ("%.2f" % (l_loss))
-    output_table["Loss amount in S positions"] = ("%.2f" % (s_loss))
-    output_table["Loss amount"]                = ("%.2f" % (l_loss + s_loss))
-
-    output_table["Average profit on profitable positions"] =  ("%.2f" % ((l_profit + s_profit) / (l_number + s_number)))
-    output_table["Average loss on unprofitable positions"] =  ("%.2f" % ((l_loss + s_loss) / (l_number + s_number)))
+            current_year = year
+            
+            times_y.append(reward["time"][i])
     
-    output_table[" "] = " "
+    times_m.pop(0)
+            
+    if(reward["date"][len(reward) - 1].split("/")[0] ==
+       reward["date"][len(reward) - 2].split("/")[0]):
+        times_y.append(reward["time"][len(reward) - 1])
+    
+    transaction = config["transaction"]
 
-    output_table["Total profit"] = ('%.2f' % ((l_profit + s_profit) - (l_loss + s_loss)))
+    deviations_m = []
+    
+    for i in range (1, len(times_m)):
 
-    month_table = []
+        reward_1 = reward["reward"][(reward[reward["time"] == times_m[i - 1]].index[0])]
+        reward_2 = reward["reward"][(reward[reward["time"] == times_m[i    ]].index[0])]
+            
+        if(config["has_reinvestment"]):
+            deviations_m.append((reward_2 - reward_1) / (transaction + reward_1)) 
+        else:
+            deviations_m.append((reward_2 - reward_1) / (transaction))
+    
+    deviations_y = []
+    
+    for i in range (1, len(times_y)):
 
-    for i in range (1, len(unique_time_UNIX)):
-        begin_of_month = base_value + reward["reward"][(reward[reward["date_time_UNIX"] == unique_time_UNIX[i - 1]].index[0])]
-        end_of_month =   base_value + reward["reward"][(reward[reward["date_time_UNIX"] == unique_time_UNIX[i]].index[0])]
-        w = (end_of_month - begin_of_month) / begin_of_month
-        month_table.append(w)  
-   
+        reward_1 = reward["reward"][(reward[reward["time"] == times_y[i - 1]].index[0])]
+        reward_2 = reward["reward"][(reward[reward["time"] == times_y[i    ]].index[0])]
+            
+        if(config["has_reinvestment"]):
+            deviations_y.append((reward_2 - reward_1) / (transaction + reward_1)) 
+        else:
+            deviations_y.append((reward_2 - reward_1) / (transaction))
+    
+    return deviations_m, deviations_y
+
+
+
+def sharpe_coefficient(reward, config):
+
     r = 0.1 / 100
-    small_month_table = [k for k in month_table if k < r / 12]
-    sharpe_koef = (np.mean(month_table) - r / 12)/np.std(month_table)
-    sortino_koef = (np.mean(month_table) - r / 12)/( (np.std(small_month_table)) * np.sqrt(len(small_month_table)/len(month_table)) )
-
-    extremums = []
-
-    for i in range(1, len(reward) - 1):
-        if(   ((reward[ "reward"][i] > reward[ "reward"][i-1]) and (reward[ "reward"][i] > reward[ "reward"][i+1]))  
-           or ((reward[ "reward"][i] < reward[ "reward"][i-1]) and (reward[ "reward"][i] < reward[ "reward"][i+1])) ):
-            extremums.append(reward[ "reward"][i])  
-
-    differences = [(extremums[i] - extremums[i + 1]) for i in range (0, len(extremums) - 1)]
-    maximum_drawdown = (extremums[differences.index(max(differences))] - 
-                        extremums[differences.index(max(differences)) + 1]) /(extremums[differences.index(max(differences))] 
-                                                                              + base_value) 
-
-    kalmar_koef  = reward[ "reward"][len(reward) - 1] / base_value / maximum_drawdown
-
-    output_table[ "Sharpe coefficient"] = ( "%.2f" % (sharpe_koef))
-    output_table[ "Sortino coefficient"] = ( "%.2f" % (sortino_koef))
-
-    doc = Document()  
-    page = Page(width = Decimal(595), height = Decimal(842))  
-    doc.append_page(page)
-
-    #Название для pdf файла
-    paragraph = Paragraph("Strategy \"" + text["test_strategy"] + "\" for " + text["inputs_asset"], font="Helvetica-Bold", font_size = Decimal(16))
-
-    #Таблица со статистическими параметрами для pdf файла
-    table = FixedColumnWidthTable(number_of_columns=6, number_of_rows=13, margin_left = Decimal(0))
-
-    for i in range (0, len(parameters) // 3):
-        table.add(Paragraph(str(parameters[3 * i]), text_alignment = Alignment.LEFT, 
-                            padding_left = Decimal(3), padding_bottom = Decimal(2), font_size = Decimal(8), font =  "Helvetica-bold "))
-        table.add(Paragraph(str(output_table[parameters[3 * i]]), text_alignment = Alignment.CENTERED, 
-                            padding_left = Decimal(3), padding_bottom = Decimal(2), font_size = Decimal(8)))
-        table.add(Paragraph(str(parameters[3 * i + 1]), text_alignment = Alignment.LEFT, 
-                            padding_left = Decimal(3), padding_bottom = Decimal(2), font_size = Decimal(8), font =  "Helvetica-bold "))
-        table.add(Paragraph(str(output_table[parameters[3 * i + 1]]), text_alignment = Alignment.CENTERED, 
-                            padding_left = Decimal(3), padding_bottom = Decimal(2), font_size = Decimal(8)))
-        table.add(Paragraph(str(parameters[3 * i + 2]), text_alignment = Alignment.LEFT, 
-                            padding_left = Decimal(3), padding_bottom = Decimal(2), font_size = Decimal(8), font =  "Helvetica-bold "))
-        table.add(Paragraph(str(output_table[parameters[3 * i + 2]]), text_alignment = Alignment.CENTERED, 
-                            padding_left = Decimal(3), padding_bottom = Decimal(2), font_size = Decimal(8)))
-
-    #Картинка для pdf файла
-    chart = Image(plot, width=Decimal(381), height=Decimal(260))
-
-    #Таблица с доходностью по месяцам для pdf файла
-    first_month = int(unique_time[0].split(".")[0])
     
-    year = int(unique_time[0].split(".")[1])
-    last_year = int(unique_time[-1].split(".")[1])
-    number_of_rows= 2 + last_year - year
-
-    table2 = FixedColumnWidthTable(number_of_columns=13, number_of_rows= number_of_rows, margin_left = Decimal(0))
-    months = [" ", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
-    for i in range (0, 13):
-        table2.add(Paragraph(str(months[i]), text_alignment = Alignment.LEFT, 
-                            padding_left = Decimal(3), padding_bottom = Decimal(2), font_size = Decimal(8), font = 'Helvetica-bold'))
-
-    k = 1
-    table2.add(Paragraph(str(2000 + year), text_alignment = Alignment.LEFT, 
-                        padding_left = Decimal(3), padding_bottom = Decimal(2), font_size = Decimal(8), font = 'Helvetica-bold'))
-    year += 1
-    while (k < first_month):
-        table2.add(Paragraph(str(" ")))
-        k += 1
-
-    while ( k <= 12):
-        table2.add(Paragraph(('%.2f' % (month_table[k - first_month - 1] * 100)) + ' %', text_alignment = Alignment.CENTERED, 
-                                 padding_left = Decimal(3), padding_bottom = Decimal(2), font_size = Decimal(8)))
-        k += 1
-
+    deviations_m, _ = make_deviations(reward, config)
     
-    n = 1
+    return (np.mean(deviations_m) - r / 12) / np.std(deviations_m)
 
-    while (n <= number_of_rows - 2):
-        k = 1
-        table2.add(Paragraph(str(2000 + year), text_alignment = Alignment.LEFT, 
-                                padding_left = Decimal(3), padding_bottom = Decimal(2), font_size = Decimal(8), font = 'Helvetica-bold'))
-        while( k <= 12 and n * 12 + k - first_month - 1 < len(month_table) ):
-            table2.add(Paragraph(('%.2f' % (month_table[12 * n + k - first_month - 1] * 100)) + ' %', text_alignment = Alignment.CENTERED, 
-                                 padding_left = Decimal(3), padding_bottom = Decimal(2), font_size = Decimal(8)))
-            k+=1
-        n+=1
+
+
+def sortino_coefficient(reward, config):
+    
+    r = 0.1 / 100
+    
+    deviations_m, _ = make_deviations(reward, config)
+    
+    selected_deviations_m = [k for k in deviations_m if k < r / 12]
+    
+    return ((np.mean(deviations_m) - r / 12) / (np.std(selected_deviations_m) *
+        np.sqrt(len(selected_deviations_m) / len(deviations_m))))
+
+
+
+def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
+    
+    fields = ["Traded instrument",   "Backtesting period",   "Working timeframe",
+              "Strategy version",    "Initial investments",  "Has reinvestment",   
+              "Strategy profit",     "Total profitability",  "Maximum drawdown",
+              "B&H benchmark",       "Trading fee rate",     "Fixed stop-loss",
+              
+              "Longs quantity",      "Shorts quantity",      "Trades quantity",
+              
+              "Longs with profit",   "Shorts with profit",   "Trades with profit", 
+              "Longs with loss",     "Shorts with loss",     "Trades with loss",
+
+              "Longs total profit",  "Shorts total profit",  "Trades total profit", 
+              "Longs total loss",    "Shorts total loss",    "Trades total loss",
+
+              "Long average profit", "Short average profit", "Trade average profit",
+              "Long average loss",   "Short average loss",   "Trade average loss",
+
+              "Long minimum hold",   "Short minimum hold",   "Trade minimum hold",
+              "Long average hold",   "Short average hold",   "Trade average hold",
+              "Long maximum hold",   "Short maximum hold",   "Trade maximum hold",
+            
+              "Sharpe coefficient",  "Sortino coefficient",  "Kalmar coefficient"]
+    
+    l_positions_with_profit = len(trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] > 0)].index)
+    s_positions_with_profit = len(trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] > 0)].index)
+    
+    a_positions_with_profit = l_positions_with_profit + s_positions_with_profit
+    
+    l_positions_with_loss = len(trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] < 0)].index)
+    s_positions_with_loss = len(trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] < 0)].index)
+    
+    a_positions_with_loss = l_positions_with_loss + s_positions_with_loss
+
+    l_positions_in_total = l_positions_with_profit + l_positions_with_loss
+    s_positions_in_total = s_positions_with_profit + s_positions_with_loss
+
+    a_positions_in_total = l_positions_in_total + s_positions_in_total
+
+    l_positions_total_profit = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] > 0)].index])
+    s_positions_total_profit = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] > 0)].index])
+
+    a_positions_total_profit = l_positions_total_profit + s_positions_total_profit
+    
+    l_positions_total_loss = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] < 0)].index])
+    s_positions_total_loss = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] < 0)].index])
+
+    a_positions_total_loss = l_positions_total_loss + s_positions_total_loss
+
+    l_positions_average_profit = l_positions_total_profit / l_positions_with_profit
+    s_positions_average_profit = s_positions_total_profit / s_positions_with_profit
+
+    a_positions_average_profit = (l_positions_average_profit + s_positions_average_profit) / 2
+
+    l_positions_average_loss = l_positions_total_loss / l_positions_with_loss
+    s_positions_average_loss = s_positions_total_loss / s_positions_with_loss
+
+    a_positions_average_loss = (l_positions_average_loss + s_positions_average_loss) / 2
+
+    l_positions_minimum_hold = min(trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] -
+                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]) / 3600.0
+    s_positions_minimum_hold = min(trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index] -
+                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]) / 3600.0
+
+    a_positions_minimum_hold = min(l_positions_minimum_hold, s_positions_minimum_hold)
+
+    l_positions_average_hold = (sum(trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index]) -
+                                sum(trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index])) / l_positions_in_total / 3600.0
+    s_positions_average_hold = (sum(trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index]) -
+                                sum(trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index])) / s_positions_in_total / 3600.0
+
+    a_positions_average_hold = (l_positions_average_hold + s_positions_average_hold) / 2
+
+    l_positions_maximum_hold = max(trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] -
+                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]) / 3600.0
+    s_positions_maximum_hold = max(trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index] -
+                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]) / 3600.0
+
+    a_positions_maximum_hold = max(l_positions_maximum_hold, s_positions_maximum_hold)
+    
+    table = dict()
+
+    table["Traded instrument"    ] = config["inputs_asset"].upper()
+    table["Backtesting period"   ] = str(config["inputs_year_begin"]) +  " - " + str(config["inputs_year_end"])
+    table["Working timeframe"    ] = str(config["inputs_timeframe"]) + config["inputs_timeframe_type"].upper()
+    table["Strategy version"     ] = config["test_hard_strategy"]
+    table["Initial investments"  ] = ("%.2f" % config["transaction"])
+    table["Has reinvestment"     ] = str(config["has_reinvestment"])
+    table["Strategy profit"      ] = str(reward_HS["reward"][len(reward_HS) - 1])
+    table["Total profitability"  ] = ("%.2f" % (reward_HS["reward"][len(reward_HS) - 1] / config["transaction"] * 100)) + " %"
+    table["Maximum drawdown"     ] = "undefined"
+    table["B&H benchmark"        ] = str(reward_BH["reward"][len(reward_BH) - 1])
+    table["Trading fee rate"     ] = str(config["commission"] * 100) + " %"
+    table["Fixed stop-loss"      ] = str(config["stop_loss"] * 100) + " %"
+    
+    table["Longs quantity"       ] = str(l_positions_in_total)
+    table["Shorts quantity"      ] = str(s_positions_in_total)
+    table["Trades quantity"      ] = str(a_positions_in_total)
+
+    table["Longs with profit"    ] = str(l_positions_with_profit)
+    table["Shorts with profit"   ] = str(s_positions_with_profit)
+    table["Trades with profit"   ] = str(a_positions_with_profit)
+
+    table["Longs with loss"      ] = str(l_positions_with_loss)
+    table["Shorts with loss"     ] = str(s_positions_with_loss)
+    table["Trades with loss"     ] = str(a_positions_with_loss)
+
+    table["Longs total profit"   ] = ("%.2f" % (l_positions_total_profit))
+    table["Shorts total profit"  ] = ("%.2f" % (s_positions_total_profit))
+    table["Trades total profit"  ] = ("%.2f" % (a_positions_total_profit))
+
+    table["Longs total loss"     ] = ("%.2f" % abs(l_positions_total_loss))
+    table["Shorts total loss"    ] = ("%.2f" % abs(s_positions_total_loss))
+    table["Trades total loss"    ] = ("%.2f" % abs(a_positions_total_loss))
+
+    table["Long average profit" ] = ("%.2f" % l_positions_average_profit)
+    table["Short average profit"] = ("%.2f" % s_positions_average_profit)
+    table["Trade average profit"] = ("%.2f" % a_positions_average_profit)
+
+    table["Long average loss"   ] = ("%.2f" % abs(l_positions_average_loss))
+    table["Short average loss"  ] = ("%.2f" % abs(s_positions_average_loss))
+    table["Trade average loss"  ] = ("%.2f" % abs(a_positions_average_loss))
+
+    table["Long minimum hold"   ] = ("%.2f" % l_positions_minimum_hold) +  " hours"
+    table["Short minimum hold"  ] = ("%.2f" % s_positions_minimum_hold) +  " hours"
+    table["Trade minimum hold"  ] = ("%.2f" % a_positions_minimum_hold) +  " hours"
+
+    table["Long average hold"   ] = ("%.2f" % l_positions_average_hold) +  " hours"
+    table["Short average hold"  ] = ("%.2f" % s_positions_average_hold) +  " hours"
+    table["Trade average hold"  ] = ("%.2f" % a_positions_average_hold) +  " hours"
+
+    table["Long maximum hold"   ] = ("%.2f" % l_positions_maximum_hold) +  " hours"
+    table["Short maximum hold"  ] = ("%.2f" % s_positions_maximum_hold) +  " hours"
+    table["Trade maximum hold"  ] = ("%.2f" % a_positions_maximum_hold) +  " hours"
+    
+    table["Sharpe coefficient"            ] = ("%.2f" % sharpe_coefficient (reward_HS, config))
+    table["Sortino coefficient"           ] = ("%.2f" % sortino_coefficient(reward_HS, config))
+    
+    table["Kalmar coefficient"            ] = "undefined"    
+    
+    return fields, table
+
+
+
+def make_deviations_table(reward, config):
+    
+    table = [" " for i in range(0, 14 * 5)]
+    
+    deviations_m, deviations_y = make_deviations(reward, config)
+   
+    first_year =  int(reward["date"][0].split("/")[0])
+    first_month = int(reward["date"][0].split("/")[1]) + 1
+    
+    i = 14 * (first_year - 2017) + first_month
+
+    n = 0
+    k = 0
+    
+    while (k < len(deviations_m)):
+        
+        if((i + 1) % 14 == 0):
+            table[i] = ("{:+.2f}".format(deviations_y[n] * 100))
+            n += 1   
+        elif(i % 14 == 0):
+            table[i]= " "  
+        else:
+            table[i] = ("{:+.2f}".format(deviations_m[k] * 100))
+            k += 1 
+
+        i += 1
+        
+    table[-1] = ("{:+.2f}".format(deviations_y[-1] * 100))
+                                
+    year = 2017
+    
+    for i in range(0, 5):
+        
+        table[14 * i] = year
         year += 1
-     
-    paragraph._do_layout_without_padding(page, Rectangle(10, 820, 500, 10))
-    chart._do_layout_without_padding(page, Rectangle(10, 180, 381, 260))
-    table._do_layout_without_padding(page, Rectangle(10, 490, 575, 300)) #Rectangle(10, 300, 575, 300))
-    table2._do_layout_without_padding(page, Rectangle(10, 520, 575, 0))
+    
+    return [" ", "Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.",
+            "Aug.", "Sep.", "Oct.", "Nov.", "Dec.", "Annual"] + table
 
-    with open("output.pdf", "wb") as out_file_handle:  
-        PDF.dumps(out_file_handle, doc)
+
+
+def make_report(path_reward_HS, path_trades_HS, path_reward_BH, path_config):
+
+    reward_HS = pd.read_csv(path_reward_HS, names = ["date", "time", "reward"])
+    
+    trades_HS = pd.read_csv(path_trades_HS, names = ["date_open", "date_close", "time_open",
+                                                     "time_close", "position", "reward"])
+    
+    reward_BH = pd.read_csv(path_reward_BH, names = ["date", "time", "reward"])
+    
+    with open(path_config, "r", encoding = "utf-8 ") as file:
+        config = json.load(file)
+
+    document = Document()
+    
+    page = Page(width = Decimal(595), height = Decimal(842))
+    
+    document.append_page(page)
+
+    paragraph_1 = Paragraph("Backtesting results of strategy \"" + config["test_hard_strategy"] + "\" for " +
+        config["inputs_asset"].upper() + " in " + str(config["inputs_timeframe"]) +
+        config["inputs_timeframe_type"].upper() + " timeframe", font = "Helvetica-Bold", font_size = Decimal(16))
+
+    paragraph_2 = Paragraph("Monthly percentage changes in the volume of investments used for trading",
+        font = "Helvetica-Bold", font_size = Decimal(16))
+
+    paragraph_3 = Paragraph("Comparison of returns between strategy \"" + config["test_hard_strategy"] + "\" and B&H benchmark",
+        font = "Helvetica-Bold", font_size = Decimal(16))
+    
+    fields, statistics_table = make_statictics_table(reward_HS, reward_BH, trades_HS, config)
+    
+    table_1 = FixedColumnWidthTable(number_of_columns = 6, number_of_rows = 15, margin_left = Decimal(0))
+    
+    for i in range (0, len(fields) // 3):
+        
+        for j in range(0, 3):
+            
+            table_1.add(Paragraph(str(fields[3 * i + j]), text_alignment = Alignment.LEFT,
+                padding_left = Decimal(3), padding_bottom = Decimal(5), font_size = Decimal(9), font = "Helvetica-Bold"))
+            table_1.add(Paragraph(str(statistics_table[fields[3 * i + j]]), text_alignment = Alignment.CENTERED, 
+                padding_bottom = Decimal(3), padding_top = Decimal(0), font_size = Decimal(9), font = "Helvetica"))
+
+    deviations_table = make_deviations_table(reward_HS, config)
+    
+    table_2 = FixedColumnWidthTable(number_of_columns = 14, number_of_rows = 6, margin_left = Decimal(0))
+    
+    for i in range (0, len(deviations_table)):
+        
+        table_2.add(Paragraph(str(deviations_table[i]), text_alignment = Alignment.RIGHT, 
+            padding_right = Decimal(3), padding_bottom = Decimal(3), font_size = Decimal(9), font = "Helvetica"))
+
+    make_plot(reward_HS, reward_BH, config)
+    
+    plot = PILImage.open("system/result/" + config["inputs_asset"] + "/reward.png")
+
+    plot = plot.resize((2740, 2000), PILImage.ANTIALIAS)
+
+    chart = Image(plot, width = Decimal(594), height = Decimal(400))
+     
+    paragraph_1._do_layout_without_padding(page, Rectangle(10, 830, 750, 10))
+    paragraph_2._do_layout_without_padding(page, Rectangle(10, 555, 750, 10))
+    paragraph_3._do_layout_without_padding(page, Rectangle(10, 435, 750, 10))
+    
+    table_1._do_layout_without_padding(page, Rectangle(10, 510, 575, 300))
+    table_2._do_layout_without_padding(page, Rectangle(10, 535, 575, 0))
+
+    chart._do_layout_without_padding(page, Rectangle(0, 120, 500, 300))
+
+    with open("system/result/" + config["inputs_asset"] + "/" + config["inputs_asset"] + ".pdf", "wb") as file:  
+        PDF.dumps(file, document)
