@@ -73,7 +73,7 @@ namespace solution
 
 					result.trades.push_back(Result::Trade());
 
-					result.trades.back().begin = m_inputs[begin].date_time;
+					result.trades.back().begin = m_inputs[begin].date_time_close;
 					result.trades.back().state = State::L;
 
 					auto total_reward = 0.0;
@@ -91,10 +91,10 @@ namespace solution
 						total_reward += delta;
 						trade_reward += delta;
 
-						result.rewards.push_back(std::make_pair(m_inputs[i].date_time, total_reward));
+						result.rewards.push_back(std::make_pair(m_inputs[i + 1].date_time_close, total_reward));
 					}
 
-					result.trades.back().end = m_inputs.back().date_time;
+					result.trades.back().end = m_inputs.back().date_time_close;
 					result.trades.back().reward = trade_reward;
 
 					return result;
@@ -147,12 +147,12 @@ namespace solution
 
 							current_state = State::N;
 
-							result.trades.back().end = m_inputs[i].date_time;
-							result.trades.back().reward = trade_reward - delta;
+							result.trades.back().end = m_inputs[i].date_time_close;
+							result.trades.back().reward = trade_reward + delta;
 
 							trade_reward = 0.0;
 
-							total_reward -= delta;
+							total_reward += delta;
 						}
 						
 						if (((required_state == State::L) && (current_state == State::N)) ||
@@ -166,11 +166,11 @@ namespace solution
 
 							result.trades.push_back(Result::Trade());
 
-							result.trades.back().begin = m_inputs[i].date_time;
+							result.trades.back().begin = m_inputs[i].date_time_close;
 							result.trades.back().state = current_state;
 
-							trade_reward -= delta;
-							total_reward -= delta;
+							trade_reward += delta;
+							total_reward += delta;
 						}
 
 						if (current_state != State::N)
@@ -186,12 +186,12 @@ namespace solution
 							trade_reward += delta;
 						}
 
-						result.rewards.push_back(std::make_pair(m_inputs[i].date_time, total_reward));
+						result.rewards.push_back(std::make_pair(m_inputs[i + 1].date_time_close, total_reward));
 					}
 
 					if (current_state != State::N)
 					{
-						result.trades.back().end = m_inputs.back().date_time;
+						result.trades.back().end = m_inputs.back().date_time_close;
 						result.trades.back().reward = trade_reward;
 					}
 

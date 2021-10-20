@@ -38,7 +38,8 @@ namespace solution
 
 			public:
 
-				Date_Time date_time;
+				Date_Time date_time_open;
+				Date_Time date_time_close;
 
 				unsigned int day;
 				unsigned int hour;

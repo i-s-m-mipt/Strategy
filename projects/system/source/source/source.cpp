@@ -795,12 +795,14 @@ namespace solution
 
 				for (auto i = 0ULL; i < std::size(klines); ++i)
 				{
-					auto date_time = from_time_t(klines[i].time_open, true);
+					auto date_time_open  = from_time_t(klines[i].time_open,  true);
+					auto date_time_close = from_time_t(klines[i].time_close, true);
 
-					inputs[i].date_time = date_time;
+					inputs[i].date_time_open  = date_time_open;
+					inputs[i].date_time_close = date_time_close;
 
-					inputs[i].day  = day_of_week(date_time);
-					inputs[i].hour = date_time.hour;
+					inputs[i].day  = day_of_week(date_time_open);
+					inputs[i].hour = date_time_open.hour;
 
 					inputs[i].price_open  = klines[i].price_open;
 					inputs[i].price_high  = klines[i].price_high;
@@ -1045,7 +1047,7 @@ namespace solution
 							(inputs[j].price_high - inputs[j].price_low) / inputs[j].price_open;
 					}
 
-					deviations.push_back(std::make_pair(inputs[i].date_time, deviation));
+					deviations.push_back(std::make_pair(inputs[i].date_time_open, deviation));
 				}
 
 				for (auto i = timesteps_sma - 1; i < std::size(deviations); ++i)
