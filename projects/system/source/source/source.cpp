@@ -12,7 +12,7 @@ namespace solution
 			{
 				auto path = Directory::inputs / m_config.inputs_asset;
 
-				std::filesystem::create_directory(path);
+				std::filesystem::create_directories(path);
 
 				path /= File::inputs_data;
 
@@ -97,7 +97,7 @@ namespace solution
 			{
 				auto path = Directory::result / m_config.inputs_asset;
 
-				std::filesystem::create_directory(path);
+				std::filesystem::create_directories(path);
 
 				path /= File::reward_data;
 
@@ -133,7 +133,7 @@ namespace solution
 			{
 				auto path = Directory::result / m_config.inputs_asset;
 
-				std::filesystem::create_directory(path);
+				std::filesystem::create_directories(path);
 
 				path /= File::trades_data;
 
@@ -472,6 +472,8 @@ namespace solution
 				auto inputs = load_inputs();
 
 				research_volumes(inputs);
+
+				research_volatility(inputs);
 			}
 			catch (const std::exception & exception)
 			{
@@ -1024,7 +1026,11 @@ namespace solution
 
 				const auto delimeter = ',';
 
-				auto path = Data::Directory::result / m_asset / Data::File::research_data;
+				auto path = Data::Directory::result / m_asset;
+
+				std::filesystem::create_directories(path);
+
+				path /= Data::File::research_volumes_data;
 
 				std::fstream fout(path, std::ios::out);
 
@@ -1083,6 +1089,43 @@ namespace solution
 						std::setw(9) << std::setfill(' ') << std::right <<
 						std::setprecision(3) << std::fixed << std::showpos << sma << delimeter << state << "\n";
 				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
+		void Source::research_volatility(const inputs_container_t & inputs) const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				auto path = Data::Directory::result / m_asset;
+
+				std::filesystem::create_directories(path);
+
+				path /= Data::File::research_volatility_data;
+
+				std::fstream fout(path, std::ios::out); // TODO
+
+				if (!fout)
+				{
+					throw source_exception("cannot open file " + path.string());
+				}
+
+				double volatility = 0.0;
+
+				for (const auto & input : inputs)
+				{
+					volatility += 100.0 * (input.price_high - input.price_low) / input.price_open;
+				}
+
+				volatility /= std::size(inputs);
+
+				std::cout << std::setw(8) << std::setfill(' ') << std::right << m_asset << " : " <<
+					std::setprecision(3) << std::fixed << std::noshowpos << volatility << std::endl;
 			}
 			catch (const std::exception & exception)
 			{

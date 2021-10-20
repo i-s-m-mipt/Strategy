@@ -149,7 +149,9 @@ namespace solution
 					static inline const path_t trades_SS_data = "trades_SS.data";
 					static inline const path_t trades_BH_data = "trades_BH.data";
 
-					static inline const path_t research_data = "research.data";
+					static inline const path_t research_volumes_data = "research_volumes.data";
+
+					static inline const path_t research_volatility_data = "research_volatility.data";
 				};
 
 			public:
@@ -282,6 +284,8 @@ namespace solution
 		private:
 
 			void research_volumes(const inputs_container_t & inputs) const;
+
+			void research_volatility(const inputs_container_t & inputs) const;
 
 		public:
 
