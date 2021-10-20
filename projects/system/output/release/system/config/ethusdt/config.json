@@ -1,10 +1,10 @@
 {
-    "assimilator_min_deviation": 0.05,
-    "awvb_timesteps_sma": 80,
-    "awvb_timesteps_wvb": 4,
+    "assimilator_min_deviation": 0.1,
+    "awvb_timesteps_sma": 70,
+    "awvb_timesteps_wvb": 10,
     "commission": 0.00075,
     "has_reinvestment": false,
-    "inputs_asset": "btcusdt",
+    "inputs_asset": "ethusdt",
     "inputs_timeframe": 1,
     "inputs_timeframe_type": "d",
     "inputs_year_begin": 2019,
@@ -22,6 +22,6 @@
     "test_hard_strategy": "Assimilator",
     "test_soft_strategy": "",
     "timesteps_prediction": 10,
-    "timesteps_prehistory": 4,
+    "timesteps_prehistory": 10,
     "transaction": 1000.0
 }
