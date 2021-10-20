@@ -59,6 +59,8 @@ def make_plot(reward_HS, reward_BH, config):
     
     plt.savefig("system/result/" + config["inputs_asset"] + "/reward.png",  bbox_inches = "tight")
 
+    plt.close()
+
     
 
 def make_deviations(reward, config):
