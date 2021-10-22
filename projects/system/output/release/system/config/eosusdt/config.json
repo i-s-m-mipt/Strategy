@@ -1,9 +1,9 @@
 {
-    "assimilator_min_deviation": 0.39999999999999997,
-    "awvb_timesteps_sma": 70,
-    "awvb_timesteps_wvb": 7,
+    "assimilator_min_deviation": 0.0,
+    "awvb_timesteps_sma": 47,
+    "awvb_timesteps_wvb": 12,
     "commission": 0.00075,
-    "has_reinvestment": true,
+    "has_reinvestment": false,
     "inputs_asset": "eosusdt",
     "inputs_timeframe": 1,
     "inputs_timeframe_type": "d",
@@ -22,6 +22,6 @@
     "test_hard_strategy": "Assimilator",
     "test_soft_strategy": "",
     "timesteps_prediction": 10,
-    "timesteps_prehistory": 7,
+    "timesteps_prehistory": 12,
     "transaction": 1000.0
 }

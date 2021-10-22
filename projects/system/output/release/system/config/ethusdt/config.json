@@ -1,7 +1,7 @@
 {
-    "assimilator_min_deviation": 0.1,
-    "awvb_timesteps_sma": 70,
-    "awvb_timesteps_wvb": 10,
+    "assimilator_min_deviation": 0.0,
+    "awvb_timesteps_sma": 74,
+    "awvb_timesteps_wvb": 8,
     "commission": 0.00075,
     "has_reinvestment": false,
     "inputs_asset": "ethusdt",
@@ -22,6 +22,6 @@
     "test_hard_strategy": "Assimilator",
     "test_soft_strategy": "",
     "timesteps_prediction": 10,
-    "timesteps_prehistory": 10,
+    "timesteps_prehistory": 8,
     "transaction": 1000.0
 }

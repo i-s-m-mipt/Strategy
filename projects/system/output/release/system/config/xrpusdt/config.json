@@ -1,7 +1,7 @@
 {
-    "assimilator_min_deviation": 0.05,
-    "awvb_timesteps_sma": 60,
-    "awvb_timesteps_wvb": 4,
+    "assimilator_min_deviation": 0.042,
+    "awvb_timesteps_sma": 68,
+    "awvb_timesteps_wvb": 3,
     "commission": 0.00075,
     "has_reinvestment": false,
     "inputs_asset": "xrpusdt",
@@ -22,6 +22,6 @@
     "test_hard_strategy": "Assimilator",
     "test_soft_strategy": "",
     "timesteps_prediction": 10,
-    "timesteps_prehistory": 4,
+    "timesteps_prehistory": 3,
     "transaction": 1000.0
 }

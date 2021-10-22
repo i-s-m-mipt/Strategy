@@ -1,6 +1,6 @@
 {
-    "assimilator_min_deviation": 0.15000000000000002,
-    "awvb_timesteps_sma": 100,
+    "assimilator_min_deviation": 0.137,
+    "awvb_timesteps_sma": 103,
     "awvb_timesteps_wvb": 10,
     "commission": 0.00075,
     "has_reinvestment": false,
