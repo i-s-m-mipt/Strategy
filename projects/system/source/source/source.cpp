@@ -403,16 +403,16 @@ namespace solution
 				{
 					std::size_t parameter_1 = 0ULL;
 					std::size_t parameter_2 = 0ULL;
-					double      parameter_3 = 0.00;
+					double      parameter_3 = 0.0;
 				};
 
 				Parameters best_parameters;
 
-				for (auto parameter_1 = 1ULL; parameter_1 <= 10; ++parameter_1)
+				for (auto parameter_1 = 1ULL; parameter_1 <= 10; parameter_1 += 1)
 				{
 					for (auto parameter_2 = 10ULL; parameter_2 <= 100; parameter_2 += 10)
 					{
-						for (auto parameter_3 = 0.05; parameter_3 <= 0.50; parameter_3 += 0.05)
+						for (auto parameter_3 = 0.000; parameter_3 <= 0.090; parameter_3 += 0.010)
 						{
 							m_config.timesteps_prehistory      = parameter_1;
 							m_config.awvb_timesteps_wvb        = parameter_1;
@@ -439,10 +439,14 @@ namespace solution
 										max_reward = reward;
 
 										best_parameters = parameters;
+
+										std::cout << max_reward << std::endl; // TODO
 									}
 								});
 
-							futures.push_back(boost::asio::post(m_thread_pool, std::move(task)));
+							task();
+
+							//futures.push_back(boost::asio::post(m_thread_pool, std::move(task)));
 						}
 					}
 				}
