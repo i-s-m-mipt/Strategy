@@ -92,6 +92,7 @@
 #  define _MAC
 #endif // #if !defined(_MAC) && (defined(_68K_) || defined(_MPPC_))
 
+#include <ctime>
 #include <string>
 
 namespace solution
