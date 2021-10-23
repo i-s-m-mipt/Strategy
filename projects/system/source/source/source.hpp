@@ -311,6 +311,10 @@ namespace solution
 
 			strategies_container_t m_strategies;
 
+			Result m_result_BH;
+			Result m_result_HS;
+			Result m_result_SS;
+
 			thread_pool_t m_thread_pool;
 		};
 

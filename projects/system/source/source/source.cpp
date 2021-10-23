@@ -339,7 +339,9 @@ namespace solution
 				{
 					Backtester backtester(m_config, inputs, m_strategies.at(Strategy::m_name));
 
-					m_data.save_result(backtester.run());
+					m_result_BH = backtester.run();
+
+					m_data.save_result(m_result_BH);
 				}
 
 				std::filesystem::rename(
@@ -353,7 +355,9 @@ namespace solution
 					Backtester backtester(m_config, inputs,
 						m_strategies.at(m_config.test_hard_strategy));
 
-					m_data.save_result(backtester.run());
+					m_result_HS = backtester.run();
+
+					m_data.save_result(m_result_HS);
 				}
 
 				std::filesystem::rename(
@@ -368,7 +372,9 @@ namespace solution
 					Backtester backtester(m_config, inputs,
 						m_strategies.at(m_config.test_soft_strategy));
 
-					m_data.save_result(backtester.run());
+					m_result_SS = backtester.run();
+
+					m_data.save_result(m_result_SS);
 				}
 
 				std::filesystem::rename(
