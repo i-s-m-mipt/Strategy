@@ -350,3 +350,4 @@ service/
 *.png
 *.pdf
 !assets.data
+*.ipynb_checkpoints
