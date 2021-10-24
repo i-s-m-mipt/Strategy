@@ -414,7 +414,7 @@ namespace solution
 
 				Parameters best_parameters;
 
-				for (auto parameter_1 = 1ULL; parameter_1 <= 10; parameter_1 += 1)
+				for (auto parameter_1 = 2ULL; parameter_1 <= 20; parameter_1 += 1)
 				{
 					for (auto parameter_2 = 10ULL; parameter_2 <= 100; parameter_2 += 10)
 					{
