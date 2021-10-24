@@ -240,7 +240,7 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
     table["Strategy profit"      ] = ("%.2f" % reward_HS["reward"][len(reward_HS) - 1])
     table["Total profitability"  ] = ("%.2f" % (reward_HS["reward"][len(reward_HS) - 1] / config["transaction"] * 100)) + " %"
     table["Maximum drawdown"     ] = "undefined"
-    table["Benchmark B&H"        ] = str(reward_BH["reward"][len(reward_BH) - 1])
+    table["Benchmark B&H"        ] = ("%.2f" % reward_BH["reward"][len(reward_BH) - 1])
     table["Trading fee rate"     ] = str(config["commission"] * 100) + " %"
     table["Fixed stop-loss"      ] = str(config["stop_loss"] * 100) + " %"
     
