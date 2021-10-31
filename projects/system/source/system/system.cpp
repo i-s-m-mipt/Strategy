@@ -319,7 +319,34 @@ namespace solution
 			{
 				if (m_config.required_run)
 				{
-					
+					wait_until_day_end();
+
+
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::wait_until_day_end() const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				while (true)
+				{
+					auto time = boost::posix_time::second_clock::universal_time();
+
+					if (time.time_of_day().hours()   == 23 &&
+						time.time_of_day().minutes() == 50)
+					{
+						break;
+					}
+
+					std::this_thread::sleep_for(std::chrono::seconds(1));
 				}
 			}
 			catch (const std::exception & exception)

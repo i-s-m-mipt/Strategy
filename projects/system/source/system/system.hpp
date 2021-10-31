@@ -7,6 +7,7 @@
 #  pragma once
 #endif // #ifdef BOOST_HAS_PRAGMA_ONCE
 
+#include <chrono>
 #include <ctime>
 #include <cstdlib>
 #include <exception>
@@ -17,9 +18,11 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include <boost/asio.hpp>
+#include <boost/date_time.hpp>
 
 #include <nlohmann/json.hpp>
 
@@ -59,6 +62,8 @@ namespace solution
 			using sources_container_t = std::vector < std::shared_ptr < Source > > ;
 
 			using thread_pool_t = boost::asio::thread_pool;
+
+			using io_service_t = boost::asio::io_service;
 
 		private:
 
@@ -186,7 +191,7 @@ namespace solution
 
 		private:
 
-
+			void wait_until_day_end() const;
 
 		public:
 
@@ -204,6 +209,8 @@ namespace solution
 			sources_container_t m_sources;
 
 			thread_pool_t m_thread_pool;
+
+			io_service_t m_io_service;
 		};
 
 	} // namespace system
