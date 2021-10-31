@@ -7,12 +7,15 @@
 #  pragma once
 #endif // #ifdef BOOST_HAS_PRAGMA_ONCE
 
+#include <atomic>
 #include <chrono>
-#include <ctime>
+#include <condition_variable>
 #include <cstdlib>
+#include <ctime>
 #include <exception>
 #include <filesystem>
 #include <fstream>
+#include <future>
 #include <iomanip>
 #include <iostream>
 #include <memory>
@@ -182,7 +185,8 @@ namespace solution
 
 		public:
 
-			System() : m_thread_pool(2 * std::thread::hardware_concurrency()), m_timer(m_io_service)
+			System() : m_thread_pool(2 * std::thread::hardware_concurrency()), 
+				m_timer(m_io_service), m_is_interrupted(false), m_is_running(false)
 			{
 				initialize();
 			}
@@ -265,6 +269,9 @@ namespace solution
 			io_service_t m_io_service;
 
 			timer_t m_timer;
+
+			std::atomic < bool > m_is_interrupted;
+			std::atomic < bool > m_is_running;
 		};
 
 	} // namespace system

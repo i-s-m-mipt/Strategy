@@ -387,11 +387,37 @@ namespace solution
 			{
 				if (m_config.required_run)
 				{
-					wait_until_day_end();
+					auto future = std::async(std::launch::async, [this]() 
+						{
+							m_is_running.store(true);
 
-					handle();
+							wait_until_day_end();
 
-					m_io_service.run();
+							if (!m_is_interrupted.load())
+							{
+								handle();
+							}
+
+							m_io_service.run();
+
+							m_is_running.store(false);
+						});
+
+					std::string command;
+
+					std::cin >> command;
+
+					if (command == "exit")
+					{
+						m_is_interrupted.store(true);
+
+						while (m_is_running.load())
+						{
+							m_io_service.stop();
+						}
+					}
+
+					future.wait();
 				}
 			}
 			catch (const std::exception & exception)
@@ -406,7 +432,7 @@ namespace solution
 
 			try
 			{
-				while (true)
+				while (false && !m_is_interrupted.load()) // TODO
 				{
 					auto time = boost::posix_time::second_clock::universal_time();
 
@@ -447,7 +473,7 @@ namespace solution
 				
 				m_timer.async_wait(boost::bind(&System::handle, this));
 
-				if (counter++ % static_cast < std::size_t > (seconds_in_day / interval) == 0)
+				if (true /*counter++ % static_cast < std::size_t > (seconds_in_day / interval) == 0*/) // TODO
 				{
 					for (const auto & asset : m_assets)
 					{
@@ -501,7 +527,7 @@ namespace solution
 							auto position = std::min(client.initial_investments * (1.0 - m_config.max_drawdown) *
 								(m_sources[asset]->config().transaction / 1000.0), available_usdt);
 
-							if (required_state == State::L)
+							if (required_state == State::L) // TODO
 							{
 								std::cout << "Required L for " << asset << " on " <<
 									std::setprecision(2) << std::fixed << std::noshowpos << position << std::endl;
