@@ -351,4 +351,4 @@ service/
 *.pdf
 !assets.data
 *.ipynb_checkpoints
-accounts.json
+clients.json
