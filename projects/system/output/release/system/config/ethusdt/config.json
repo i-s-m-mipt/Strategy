@@ -23,5 +23,6 @@
     "test_soft_strategy": "",
     "timesteps_prediction": 10,
     "timesteps_prehistory": 8,
-    "transaction": 1000.0
+    "transaction": 390.0,
+    "main_strategy": "Assimilator"
 }
