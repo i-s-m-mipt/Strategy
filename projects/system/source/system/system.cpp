@@ -101,13 +101,13 @@ namespace solution
 			}
 		}
 
-		void System::Data::load_accounts(accounts_container_t & accounts)
+		void System::Data::load_clients(clients_container_t & clients)
 		{
 			LOGGER(logger);
 
 			try
 			{
-				auto path = Directory::config / File::accounts_json;
+				auto path = Directory::config / File::clients_json;
 
 				json_t array;
 
@@ -115,11 +115,11 @@ namespace solution
 
 				for (const auto & element : array)
 				{
-					auto public_key          = element[Key::Account::public_key         ].get < std::string > ();
-					auto secret_key          = element[Key::Account::secret_key         ].get < std::string > ();
-					auto initial_investments = element[Key::Account::initial_investments].get < double > ();
+					auto public_key          = element[Key::Client::public_key         ].get < std::string > ();
+					auto secret_key          = element[Key::Client::secret_key         ].get < std::string > ();
+					auto initial_investments = element[Key::Client::initial_investments].get < double > ();
 
-					accounts.push_back({ public_key, secret_key, initial_investments });
+					clients.push_back({ public_key, secret_key, initial_investments });
 				}
 			}
 			catch (const std::exception & exception)
@@ -255,7 +255,7 @@ namespace solution
 
 				load_sources();
 
-				load_accounts();
+				load_clients();
 			}
 			catch (const std::exception & exception)
 			{
@@ -329,13 +329,31 @@ namespace solution
 			}
 		}
 
-		void System::load_accounts()
+		void System::load_clients()
 		{
 			LOGGER(logger);
 
 			try
 			{
-				Data::load_accounts(m_accounts);
+				Data::load_clients(m_clients);
+
+				shared::Python python;
+
+				try
+				{
+					boost::python::exec("from system import make_client", python.global(), python.global());
+
+					for (const auto & client : m_clients)
+					{
+						python.global()["make_client"](
+							client.public_key.c_str(), 
+							client.secret_key.c_str());
+					}
+				}
+				catch (const boost::python::error_already_set &)
+				{
+					LOGGER_WRITE_ERROR(logger, shared::Python::exception());
+				}
 			}
 			catch (const std::exception & exception)
 			{
@@ -454,11 +472,89 @@ namespace solution
 
 			try
 			{
+				auto required_state = m_sources[asset]->handle();
 
+				shared::Python python;
 
-				for (const auto & account : m_accounts)
+				try
 				{
+					boost::python::exec("from system import get_current_state",   python.global(), python.global());
+					boost::python::exec("from system import get_available_usdt",  python.global(), python.global());
+					boost::python::exec("from system import make_null_position",  python.global(), python.global());
+					boost::python::exec("from system import make_long_position",  python.global(), python.global());
+					boost::python::exec("from system import make_short_position", python.global(), python.global());
 
+					for (const auto & client : m_clients)
+					{
+						auto current_state = convert_state(boost::python::extract < std::string > (
+							python.global()["get_current_state"](client.public_key.c_str())));
+
+						if (current_state != required_state)
+						{
+							if (current_state != State::N)
+							{
+								python.global()["make_null_position"](
+									client.public_key.c_str(), asset.c_str());
+							}
+
+							auto available_usdt = std::stod(boost::python::extract < std::string > (
+								python.global()["get_available_usdt"](client.public_key.c_str())));
+
+							auto position = std::min(client.initial_investments * (1.0 - m_config.max_drawdown) *
+								(m_sources[asset]->config().transaction / 1000.0), available_usdt);
+
+							if (required_state == State::L)
+							{
+								std::cout << "Required L for " << asset << " on " <<
+									std::setprecision(2) << std::fixed << std::noshowpos << position << std::endl;
+								//python.global()["make_long_position"](client.public_key.c_str(), 
+								//	asset.c_str(), std::to_string(position).c_str());
+							}
+							else
+							{
+								std::cout << "Required S for " << asset << " on " <<
+									std::setprecision(2) << std::fixed << std::noshowpos << position << std::endl;
+								//python.global()["make_short_position"](client.public_key.c_str(),
+								//	asset.c_str(), std::to_string(position).c_str());
+							}
+						}
+					}
+				}
+				catch (const boost::python::error_already_set &)
+				{
+					LOGGER_WRITE_ERROR(logger, shared::Python::exception());
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		System::State System::convert_state(const std::string & state) const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				auto c = state.front();
+
+				if (c != 'L' && c != 'S' && c != 'N')
+				{
+					throw system_exception("invalid current state");
+				}
+
+				if (c == 'L')
+				{
+					return State::L;
+				}
+				else if (c == 'S')
+				{
+					return State::S;
+				}
+				else
+				{
+					return State::N;
 				}
 			}
 			catch (const std::exception & exception)

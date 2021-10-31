@@ -67,7 +67,7 @@ namespace solution
 
 		private:
 
-			struct Account
+			struct Client
 			{
 				std::string public_key;
 				std::string secret_key;
@@ -77,7 +77,7 @@ namespace solution
 
 		private:
 
-			using accounts_container_t = std::vector < Account > ;
+			using clients_container_t = std::vector < Client > ;
 
 			using thread_pool_t = boost::asio::thread_pool;
 
@@ -86,6 +86,8 @@ namespace solution
 			using timer_t = boost::asio::deadline_timer;
 
 			using inputs_container_t = detail::inputs_container_t;
+
+			using State = Source::State;
 
 		private:
 
@@ -106,9 +108,9 @@ namespace solution
 
 				struct File
 				{
-					static inline const path_t config_json   = "config.json";
-					static inline const path_t assets_data   = "assets.data";
-					static inline const path_t accounts_json = "accounts.json";
+					static inline const path_t config_json  = "config.json";
+					static inline const path_t assets_data  = "assets.data";
+					static inline const path_t clients_json = "clients.json";
 				};
 
 			private:
@@ -149,7 +151,7 @@ namespace solution
 						static inline const std::string main_strategy                 = "main_strategy";
 					};
 
-					struct Account
+					struct Client
 					{
 						static inline const std::string public_key          = "public_key";
 						static inline const std::string secret_key          = "secret_key";
@@ -165,7 +167,7 @@ namespace solution
 
 				static void load_assets(assets_container_t & assets);
 
-				static void load_accounts(accounts_container_t & accounts);
+				static void load_clients(clients_container_t & clients);
 
 			public:
 
@@ -217,7 +219,7 @@ namespace solution
 
 			void load_sources();
 
-			void load_accounts();
+			void load_clients();
 
 		private:
 
@@ -234,6 +236,8 @@ namespace solution
 			void handle();
 
 			void handle_implementation(const std::string & asset);
+
+			State convert_state(const std::string & state) const;
 
 		public:
 
@@ -254,7 +258,7 @@ namespace solution
 
 			sources_container_t m_sources;
 
-			accounts_container_t m_accounts;
+			clients_container_t m_clients;
 
 			thread_pool_t m_thread_pool;
 
