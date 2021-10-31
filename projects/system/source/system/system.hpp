@@ -217,6 +217,8 @@ namespace solution
 
 		private:
 
+			void load_python();
+
 			void load_config();
 
 			void load_assets();
@@ -272,6 +274,8 @@ namespace solution
 
 			std::atomic < bool > m_is_interrupted;
 			std::atomic < bool > m_is_running;
+
+			shared::Python m_python;
 		};
 
 	} // namespace system

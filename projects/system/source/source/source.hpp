@@ -188,9 +188,10 @@ namespace solution
 
 		public:
 
-			explicit Source(const Config & config) : m_config(config), 
-				m_data(m_config), m_asset(m_config.inputs_asset), 
-				m_thread_pool(2U * std::thread::hardware_concurrency())
+			explicit Source(const Config & config, shared::Python & python) : 
+				m_python(python), m_config(config), m_data(m_config), 
+				m_asset(m_config.inputs_asset), m_thread_pool(
+					2U * std::thread::hardware_concurrency())
 			{
 				initialize();
 			}
@@ -218,6 +219,8 @@ namespace solution
 			void load();
 
 		private:
+
+			void load_python();
 
 			void load_indicators();
 
@@ -326,6 +329,10 @@ namespace solution
 			orders_container_t make_orders(const std::string & data) const;
 
 			trades_container_t make_trades(const std::string & data) const;
+
+		private:
+
+			shared::Python & m_python;
 
 		private:
 

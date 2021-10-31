@@ -249,6 +249,8 @@ namespace solution
 
 			try
 			{
+				load_python();
+
 				load_config();
 
 				load_assets();
@@ -270,6 +272,29 @@ namespace solution
 			try
 			{
 				save_sources();
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::load_python()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				boost::python::exec("from system import make_client",         m_python.global(), m_python.global());
+				boost::python::exec("from system import get_current_state",   m_python.global(), m_python.global());
+				boost::python::exec("from system import get_available_usdt",  m_python.global(), m_python.global());
+				boost::python::exec("from system import make_null_position",  m_python.global(), m_python.global());
+				boost::python::exec("from system import make_long_position",  m_python.global(), m_python.global());
+				boost::python::exec("from system import make_short_position", m_python.global(), m_python.global());
+			}
+			catch (const boost::python::error_already_set &)
+			{
+				LOGGER_WRITE_ERROR(logger, shared::Python::exception());
 			}
 			catch (const std::exception & exception)
 			{
@@ -320,7 +345,7 @@ namespace solution
 					Data::load_source_config(Data::Directory::config / 
 						asset / Data::File::config_json, config);
 
-					m_sources[asset] = std::make_shared < Source > (std::move(config));
+					m_sources[asset] = std::make_shared < Source > (std::move(config), m_python);
 				}
 			}
 			catch (const std::exception & exception)
@@ -337,15 +362,11 @@ namespace solution
 			{
 				Data::load_clients(m_clients);
 
-				shared::Python python;
-
 				try
 				{
-					boost::python::exec("from system import make_client", python.global(), python.global());
-
 					for (const auto & client : m_clients)
 					{
-						python.global()["make_client"](
+						m_python.global()["make_client"](
 							client.public_key.c_str(), 
 							client.secret_key.c_str());
 					}
@@ -499,30 +520,22 @@ namespace solution
 			{
 				auto required_state = m_sources[asset]->handle();
 
-				shared::Python python;
-
 				try
 				{
-					boost::python::exec("from system import get_current_state",   python.global(), python.global());
-					boost::python::exec("from system import get_available_usdt",  python.global(), python.global());
-					boost::python::exec("from system import make_null_position",  python.global(), python.global());
-					boost::python::exec("from system import make_long_position",  python.global(), python.global());
-					boost::python::exec("from system import make_short_position", python.global(), python.global());
-
 					for (const auto & client : m_clients)
 					{
 						auto current_state = convert_state(boost::python::extract < std::string > (
-							python.global()["get_current_state"](client.public_key.c_str())));
+							m_python.global()["get_current_state"](client.public_key.c_str())));
 
 						if (current_state != required_state)
 						{
 							if (current_state != State::N)
 							{
-								python.global()["make_null_position"](client.public_key.c_str(), asset.c_str());
+								m_python.global()["make_null_position"](client.public_key.c_str(), asset.c_str());
 							}
 
 							auto available_usdt = std::stod(boost::python::extract < std::string > (
-								python.global()["get_available_usdt"](client.public_key.c_str())));
+								m_python.global()["get_available_usdt"](client.public_key.c_str())));
 
 							auto position = std::min(client.initial_investments * (1.0 - m_config.max_drawdown) *
 								(m_sources[asset]->config().transaction / 1000.0), available_usdt);
@@ -531,14 +544,14 @@ namespace solution
 							{
 								std::cout << "Required L for " << asset << " on " <<
 									std::setprecision(2) << std::fixed << std::noshowpos << position << std::endl;
-								//python.global()["make_long_position"](client.public_key.c_str(), 
+								//m_python.global()["make_long_position"](client.public_key.c_str(), 
 								//	asset.c_str(), std::to_string(position).c_str());
 							}
 							else
 							{
 								std::cout << "Required S for " << asset << " on " <<
 									std::setprecision(2) << std::fixed << std::noshowpos << position << std::endl;
-								//python.global()["make_short_position"](client.public_key.c_str(),
+								//m_python.global()["make_short_position"](client.public_key.c_str(),
 								//	asset.c_str(), std::to_string(position).c_str());
 							}
 						}

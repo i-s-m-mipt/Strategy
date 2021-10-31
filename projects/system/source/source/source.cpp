@@ -234,9 +234,32 @@ namespace solution
 
 			try
 			{
+				load_python();
+
 				load_indicators();
 
 				load_strategies();
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
+		void Source::load_python()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				boost::python::exec("from system import make_report", m_python.global(), m_python.global());
+				boost::python::exec("from system import get_klines",  m_python.global(), m_python.global());
+				//boost::python::exec("from system import get_orders",  m_python.global(), m_python.global());
+				//boost::python::exec("from system import get_trades",  m_python.global(), m_python.global());
+			}
+			catch (const boost::python::error_already_set &)
+			{
+				LOGGER_WRITE_ERROR(logger, shared::Python::exception());
 			}
 			catch (const std::exception & exception)
 			{
@@ -1005,13 +1028,9 @@ namespace solution
 
 			try
 			{
-				shared::Python python;
-
 				try
 				{
-					boost::python::exec("from system import make_report", python.global(), python.global());
-
-					python.global()["make_report"](
+					m_python.global()["make_report"](
 						(Data::Directory::result / m_asset / Data::File::reward_HS_data).string().c_str(),
 						(Data::Directory::result / m_asset / Data::File::trades_HS_data).string().c_str(),
 						(Data::Directory::result / m_asset / Data::File::reward_BH_data).string().c_str(),
@@ -1171,8 +1190,6 @@ namespace solution
 
 			try
 			{
-				shared::Python python;
-
 				try
 				{
 					const auto size = m_config.skipped_timesteps;
@@ -1180,10 +1197,8 @@ namespace solution
 					const auto timeframe = std::to_string(m_config.inputs_timeframe) + 
 						m_config.inputs_timeframe_type;
 
-					boost::python::exec("from system import get_klines", python.global(), python.global());
-
 					return make_klines(boost::python::extract < std::string > (
-						python.global()["get_klines"](m_asset.c_str(),
+						m_python.global()["get_klines"](m_asset.c_str(),
 							std::to_string(size).c_str(), timeframe.c_str())));
 				}
 				catch (const boost::python::error_already_set &)
@@ -1203,14 +1218,10 @@ namespace solution
 
 			try
 			{
-				shared::Python python;
-
 				try
 				{
-					boost::python::exec("from system import get_orders", python.global(), python.global());
-
 					return make_orders(boost::python::extract < std::string > (
-						python.global()["get_orders"]()));
+						m_python.global()["get_orders"]()));
 				}
 				catch (const boost::python::error_already_set &)
 				{
@@ -1229,14 +1240,10 @@ namespace solution
 
 			try
 			{
-				shared::Python python;
-
 				try
 				{
-					boost::python::exec("from system import get_trades", python.global(), python.global());
-
 					return make_trades(boost::python::extract < std::string > (
-						python.global()["get_trades"]()));
+						m_python.global()["get_trades"]()));
 				}
 				catch (const boost::python::error_already_set &)
 				{
