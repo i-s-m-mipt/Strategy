@@ -18,6 +18,11 @@ namespace solution
 						{
 							State required_state = current_state;
 
+							if (std::size(inputs) != m_config.timesteps_prehistory)
+							{
+								throw strategy_exception("invalid inputs size");
+							}
+
 							auto deviation = 0.0;
 
 							for (auto i = 0ULL; i < std::size(inputs); ++i)
