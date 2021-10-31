@@ -543,8 +543,8 @@ namespace solution
 
 							if (required_state == State::L)
 							{
-								std::cout << std::setw(20) << std::setfill(' ') << std::left << 
-									client.name << " : required L for " << asset << " on " <<
+								std::cout << std::setw(20) << std::setfill('.') << std::left << 
+									client.name + " " << " : required L for " << asset << " on " <<
 									std::setw(8) << std::setfill(' ') << std::right <<
 									std::setprecision(2) << std::fixed << std::noshowpos << 
 									position << " USDT" << std::endl;
@@ -554,8 +554,8 @@ namespace solution
 							}
 							else
 							{
-								std::cout << std::setw(20) << std::setfill(' ') << std::left <<
-									client.name << " : required S for " << asset << " on " <<
+								std::cout << std::setw(20) << std::setfill('.') << std::left <<
+									client.name + " " << " : required S for " << asset << " on " <<
 									std::setw(8) << std::setfill(' ') << std::right <<
 									std::setprecision(2) << std::fixed << std::noshowpos <<
 									position << " USDT" << std::endl;
