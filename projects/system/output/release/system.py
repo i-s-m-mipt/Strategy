@@ -21,6 +21,10 @@ from borb.pdf.pdf                                             import PDF
 
 from PIL import Image as PILImage
 
+from binance.spot import Spot
+from enum         import Enum, unique
+from math         import floor
+
 
 
 def make_plot(reward_HS, reward_BH, config):
@@ -404,3 +408,243 @@ def make_report(path_reward_HS, path_trades_HS, path_reward_BH, path_config):
 
     with open("system/result/" + config["inputs_asset"] + "/" + config["inputs_asset"] + ".pdf", "wb") as file:  
         PDF.dumps(file, document)
+
+
+
+class ClientsPool:
+    def __init__(self):
+        self.clients = dict()
+
+    def make_client(self, api: str, secret: str):
+        self.clients[api] = Connector(key=api, secret=secret)
+
+    def get_client(self, api: str):
+        return self.clients[api]
+
+clients = ClientsPool()
+
+
+
+class Connector(Spot):
+    def __init__(self, key=None, secret=None):
+        super().__init__(key=key, secret=secret)
+
+    @staticmethod
+    def _transform_kline(kline_desc):
+        headers = ['time_open', 'price_open', 'price_high', 'price_low', 'price_close', 'volume_base', 'time_close',
+                   'volume_quote', 'volume_buy_base', 'volume_buy_quote']
+        kline_desc = [float(entry) if '.' in str(entry) else entry for entry in kline_desc]
+        kline_desc = dict(
+            zip(
+                headers,
+                [item for item in kline_desc
+                 if kline_desc.index(item) != -4
+                 and kline_desc.index(item) != -1]
+            )
+        )
+        return kline_desc
+
+    @staticmethod
+    def _transform_trade(trade_desc):
+        trade_desc.pop('id')
+        trade_desc.pop('isBestMatch')
+        trade_desc = dict(
+            [(entry[0], float(entry[1])) if '.' in str(entry[1]) else entry for entry in trade_desc.items()])
+        return trade_desc
+
+    def get_klines(self, symbol: str, limit: str, interval: str = '4h') -> str:
+        """
+            Last n klines.
+            Given symbol and amount n of one-minute klines, loads them by the API.
+            Parameters
+            ----------
+            symbol : str
+                The symbol for which the klines should be loaded.
+            limit : int
+                Amount of klines.
+            interval: str
+                Chosen klines interval.
+            Returns
+            -------
+            list
+            [{
+                "time_open": 1635681600000,
+                "price_open": 60467.81,
+                "price_high": 60800.22,
+                "price_low": 59945.36,
+                "price_close": 60502.0,
+                "volume_base": 9225.1994,
+                "time_close": 1635695999999,
+                "volume_quote": 557202390.2375551,
+                "volume_buy_base": 310103,
+                "volume_buy_quote": 4748.30256
+            }]
+            """
+        klines_as_lists = self.klines(symbol, interval, limit=int(limit))
+        klines_as_dicts = [self._transform_kline(kline_desc) for kline_desc in klines_as_lists]
+        return json.dumps(klines_as_dicts)
+
+    def get_trades(self, symbol: str, n: int) -> str:
+        """
+                    Last n trades.
+                    Given symbol and amount n of trades, loads them by the API.
+                    Parameters
+                    ----------
+                    symbol : str
+                        The symbol for which the trades should be loaded.
+                    n : int
+                        Amount of trades.
+                    Returns
+                    -------
+                    list
+                        The list returned has the same elements like
+                        [
+                            {
+                                "id": 28457,
+                                "price": "4.00000100",
+                                "qty": "12.00000000",
+                                "quoteQty": "48.000012",
+                                "time": 1499865549590,
+                                "isBuyerMaker": true,
+                                "isBestMatch": true
+                            }
+                        ]
+                    """
+        return json.dumps([self._transform_trade(trade_desc) for trade_desc in super().trades(symbol, limit=n)])
+
+    def get_symbol_volume(self, symbol):
+        price = self.ticker_price(symbol=symbol)['price']
+        asset = symbol.replace('USDT', '')
+        quantity = 0.
+        for balance in self.margin_account()['balances']:
+            if balance['asset'] == asset:
+                quantity = float(balance['free'])
+        return quantity * price
+
+    def get_available_usdt(self):
+        for balance in self.margin_account()['userAssets']:
+            if balance['asset'] == 'USDT':
+                return balance['free']
+
+    # Margin Endpoints
+
+    def margin_account(self):
+        return super().margin_account()
+
+    def close_long_position(self, symbol):
+        asset = symbol.replace('USDT', '')
+        amount = 0.
+        for balance in self.margin_account()['userAssets']:
+            if asset == balance['asset']:
+                amount = float(balance['free'])
+        precision = self.compute_precision(symbol=symbol)
+        amount = floor(amount / precision) * precision
+        return self.new_margin_order(symbol=symbol, side='SELL', type='MARKET', quantity=amount)
+
+    def make_short_position(self, symbol: str, usdt: float):
+        return self.new_margin_order(symbol=symbol, side='SELL', type='MARKET',
+                                     quoteOrderQty=usdt, sideEffectType='MARGIN_BUY')
+
+    def make_long_position(self, symbol: str, usdt: float):
+        return self.new_margin_order(symbol=symbol, side='BUY', type='MARKET', quoteOrderQty=usdt)
+
+    def close_short_position(self, symbol: str):
+        asset = symbol.replace('USDT', '')
+        amount = 0.
+        for balance in self.margin_account()['userAssets']:
+            if asset == balance['asset']:
+                amount = float(balance['borrowed'])
+        precision = self.compute_precision(symbol=symbol)
+        amount = floor(amount / precision) * precision
+        return self.new_margin_order(symbol=symbol, side='BUY', type='MARKET', quantity=amount, sideEffectType='AUTO_REPAY')
+
+    def compute_precision(self, symbol: str):
+        symbol_information = self.exchange_info(symbol=symbol)
+        filter_information = symbol_information['symbols'][0]['filters']
+        for filter in filter_information:
+            if filter['filterType'] == 'LOT_SIZE':
+                stepSize = filter['stepSize']
+                return float(stepSize)
+        return 1
+
+    def get_current_state(self, symbol, precision=1e-4):
+        asset = symbol.replace('USDT', '')
+        for data in self.margin_account()['userAssets']:
+            if asset == data['asset']:
+                netAsset = float(data['netAsset'])
+                if abs(netAsset) < precision:
+                    return 'N'
+                return 'L' if netAsset > 0 else 'S'
+
+    def make_null_position(self, symbol: str):
+        if self.get_current_state(symbol=symbol) == 'S':
+            return self.close_short_position(symbol)
+        elif self.get_current_state(symbol=symbol) == 'L':
+            return self.close_long_position(symbol)
+
+
+
+    @unique
+    class DataType(Enum):
+        T_DEPTH = 1,
+        S_DEPTH = 2,
+        T_DEPTH_BACKFILL = 3
+
+        def __str__(self):
+            return self.name
+
+    def historical_data(self, symbol: str, startTime: int, endTime: int, dataType: DataType, timestamp: int):
+        payload_id = {"symbol": symbol, "startTime": startTime, "endTime": endTime,
+                      "dataType": str(dataType), "timestamp": timestamp}
+        id = self.sign_request("POST", "/sapi/v1/futuresHistDataId", payload_id)['id']
+        payload_link = {"downloadId": id, timestamp: timestamp}
+        link = self.sign_request("POST", "/sapi/v1/downloadLink", payload_link)['link']
+        return link
+
+dummy = Connector()
+
+
+
+def make_client(api: str, secret: str):
+    return clients.make_client(api=api, secret=secret)
+
+
+def get_client(api: str):
+    return clients.get_client(api=api)
+
+
+
+def get_klines(symbol: str, limit: str, interval: str = '4h') -> str:
+    return dummy.get_klines(symbol=symbol.upper(), limit=limit, interval=interval)
+
+
+def get_symbol_volume(public_key: str, symbol: str):
+    return clients.get_client(api=public_key).get_symbol_volume(symbol=symbol.upper())
+
+
+def account(public_key: str):
+    return clients.get_client(api=public_key).account()
+
+
+def margin_account(public_key: str):
+    return clients.get_client(api=public_key).margin_account()
+
+
+def get_current_state(public_key: str, symbol: str, precision=1e-4):
+    return clients.get_client(api=public_key).get_current_state(symbol=symbol.upper(), precision=precision)
+
+
+def get_available_usdt(public_key: str):
+    return clients.get_client(api=public_key).get_available_usdt()
+
+
+def make_long_position(public_key: str, symbol: str, usdt: str):
+    return clients.get_client(api=public_key).make_long_position(symbol=symbol.upper(), usdt=float(usdt))
+
+
+def make_short_position(public_key: str, symbol: str, usdt: str):
+    return clients.get_client(api=public_key).make_short_position(symbol=symbol.upper(), usdt=float(usdt))
+
+
+def make_null_position(public_key: str, symbol: str):
+    return clients.get_client(api=public_key).make_null_position(symbol=symbol.upper())
