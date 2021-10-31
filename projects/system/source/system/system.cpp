@@ -63,7 +63,7 @@ namespace solution
 				config.assimilator_min_deviation     = raw_config[Key::Config::assimilator_min_deviation    ].get < double > ();
 				config.required_backtest_fit         = raw_config[Key::Config::required_backtest_fit        ].get < bool > ();
 				config.has_reinvestment              = raw_config[Key::Config::has_reinvestment             ].get < bool > ();
-				config.main_strategy                 = raw_config[Key::Config::main_strategy                ].get < bool > ();
+				config.main_strategy                 = raw_config[Key::Config::main_strategy                ].get < std::string > ();
 			}
 			catch (const std::exception & exception)
 			{
