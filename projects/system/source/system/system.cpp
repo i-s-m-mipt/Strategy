@@ -454,7 +454,7 @@ namespace solution
 
 			try
 			{
-				while (false && !m_is_interrupted.load()) // TODO
+				while (!m_is_interrupted.load())
 				{
 					auto time = boost::posix_time::second_clock::universal_time();
 
@@ -495,7 +495,7 @@ namespace solution
 				
 				m_timer.async_wait(boost::bind(&System::handle, this));
 
-				if (true /*counter++ % static_cast < std::size_t > (seconds_in_day / interval) == 0*/) // TODO
+				if (counter++ % static_cast < std::size_t > (seconds_in_day / interval) == 0)
 				{
 					for (const auto & asset : m_assets)
 					{
@@ -541,7 +541,7 @@ namespace solution
 							auto position = std::min(client.initial_investments * (1.0 - m_config.max_drawdown) *
 								(m_sources[asset]->config().transaction / 1000.0), available_usdt);
 
-							if (required_state == State::L) // TODO
+							if (required_state == State::L)
 							{
 								std::cout << client.name << " : required L for " << asset << " on " <<
 									std::setprecision(2) << std::fixed << std::noshowpos << position << std::endl;
