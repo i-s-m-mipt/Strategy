@@ -114,12 +114,15 @@ namespace solution
 						static inline const std::string assimilator_min_deviation     = "assimilator_min_deviation";
 						static inline const std::string required_backtest_fit         = "required_backtest_fit";
 						static inline const std::string has_reinvestment              = "has_reinvestment";
+						static inline const std::string required_run                  = "required_run";
 					};
 				};
 
 			public:
 
-				static void load_config(const path_t & path, Config & config);
+				static void load_source_config(const path_t & path, Config & config);
+
+				static void load_system_config(const path_t & path, Config & config);
 
 				static void load_assets(assets_container_t & assets);
 
@@ -167,6 +170,8 @@ namespace solution
 
 		private:
 
+			void load_config();
+
 			void load_assets();
 
 			void load_sources();
@@ -179,6 +184,10 @@ namespace solution
 
 			void run();
 
+		private:
+
+
+
 		public:
 
 			const auto & assets() const noexcept
@@ -187,6 +196,8 @@ namespace solution
 			}
 
 		private:
+
+			Config m_config;
 
 			assets_container_t m_assets;
 

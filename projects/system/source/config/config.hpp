@@ -141,6 +141,8 @@ namespace solution
             bool required_backtest_fit;
 
             bool has_reinvestment;
+
+            bool required_run;
         };
 
     } // namespace system

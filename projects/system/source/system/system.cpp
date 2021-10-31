@@ -4,7 +4,7 @@ namespace solution
 {
 	namespace system
 	{
-		void System::Data::load_config(const path_t & path, Config & config)
+		void System::Data::load_source_config(const path_t & path, Config & config)
 		{
 			LOGGER(logger);
 
@@ -39,6 +39,25 @@ namespace solution
 				config.assimilator_min_deviation     = raw_config[Key::Config::assimilator_min_deviation    ].get < double > ();
 				config.required_backtest_fit         = raw_config[Key::Config::required_backtest_fit        ].get < bool > ();
 				config.has_reinvestment              = raw_config[Key::Config::has_reinvestment             ].get < bool > ();
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::Data::load_system_config(const path_t & path, Config & config)
+		{
+			LOGGER(logger);
+
+			try
+			{
+				json_t raw_config;
+
+				load(path, raw_config);
+
+				config.required_run = raw_config[Key::Config::required_run].get < bool > ();
+				
 			}
 			catch (const std::exception & exception)
 			{
@@ -196,9 +215,25 @@ namespace solution
 
 			try
 			{
+				load_config();
+
 				load_assets();
 
 				load_sources();
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::load_config()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				Data::load_system_config(Data::Directory::config / Data::File::config_json, m_config);
 			}
 			catch (const std::exception & exception)
 			{
@@ -246,7 +281,7 @@ namespace solution
 				{
 					Config config;
 
-					Data::load_config(Data::Directory::config / 
+					Data::load_source_config(Data::Directory::config / 
 						asset / Data::File::config_json, config);
 
 					m_sources.push_back(std::make_shared < Source > (std::move(config)));
@@ -282,7 +317,10 @@ namespace solution
 
 			try
 			{
-				// TODO
+				if (m_config.required_run)
+				{
+					
+				}
 			}
 			catch (const std::exception & exception)
 			{
