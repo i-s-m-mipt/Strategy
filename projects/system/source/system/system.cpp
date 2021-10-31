@@ -543,15 +543,23 @@ namespace solution
 
 							if (required_state == State::L)
 							{
-								std::cout << client.name << " : required L for " << asset << " on " <<
-									std::setprecision(2) << std::fixed << std::noshowpos << position << std::endl;
+								std::cout << std::setw(20) << std::setfill(' ') << std::left << 
+									client.name << " : required L for " << asset << " on " <<
+									std::setw(8) << std::setfill(' ') << std::right <<
+									std::setprecision(2) << std::fixed << std::noshowpos << 
+									position << " USDT" << std::endl;
+
 								m_python.global()["make_long_position"](client.public_key.c_str(), 
 									asset.c_str(), std::to_string(position).c_str());
 							}
 							else
 							{
-								std::cout << client.name << " : required S for " << asset << " on " <<
-									std::setprecision(2) << std::fixed << std::noshowpos << position << std::endl;
+								std::cout << std::setw(20) << std::setfill(' ') << std::left <<
+									client.name << " : required S for " << asset << " on " <<
+									std::setw(8) << std::setfill(' ') << std::right <<
+									std::setprecision(2) << std::fixed << std::noshowpos <<
+									position << " USDT" << std::endl;
+
 								m_python.global()["make_short_position"](client.public_key.c_str(),
 									asset.c_str(), std::to_string(position).c_str());
 							}
