@@ -1277,7 +1277,7 @@ namespace solution
 
 				std::sort(std::begin(klines), std::end(klines),
 					[](const auto & lhs, const auto & rhs)
-						{ return lhs.time_open < rhs.time_open });
+						{ return lhs.time_open < rhs.time_open; });
 
 				return klines;
 			}
