@@ -31,6 +31,8 @@
 
 #include <boost/asio.hpp>
 
+#include <nlohmann/json.hpp>
+
 #include "backtester/backtester.hpp"
 
 #include "indicators/indicator.hpp"
@@ -103,6 +105,12 @@ namespace solution
 			using Result = Backtester::Result;
 
 			using thread_pool_t = boost::asio::thread_pool;
+
+			using json_t = nlohmann::json;
+
+		public:
+
+			using State = Strategy::State;
 
 		private:
 
@@ -298,6 +306,26 @@ namespace solution
 			{
 				return m_asset;
 			}
+
+		public:
+
+			State handle(const std::string & data) const;
+
+		private:
+
+			klines_container_t get_klines() const;
+
+			orders_container_t get_orders() const;
+
+			trades_container_t get_trades() const;
+
+		private:
+
+			klines_container_t make_klines(const std::string & data) const;
+
+			orders_container_t make_orders(const std::string & data) const;
+
+			trades_container_t make_trades(const std::string & data) const;
 
 		private:
 

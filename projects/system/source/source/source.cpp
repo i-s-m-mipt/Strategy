@@ -1003,21 +1003,24 @@ namespace solution
 		{
 			LOGGER(logger);
 
-			shared::Python python;
-
 			try
 			{
-				boost::python::exec("from system import make_report", python.global(), python.global());
+				shared::Python python;
 
-				python.global()["make_report"](
-					(Data::Directory::result / m_asset / Data::File::reward_HS_data).string().c_str(),
-					(Data::Directory::result / m_asset / Data::File::trades_HS_data).string().c_str(),
-					(Data::Directory::result / m_asset / Data::File::reward_BH_data).string().c_str(),
-					(Data::Directory::config / m_asset / Data::File::config_json   ).string().c_str());
-			}
-			catch (const boost::python::error_already_set &)
-			{
-				LOGGER_WRITE_ERROR(logger, shared::Python::exception());
+				try
+				{
+					boost::python::exec("from system import make_report", python.global(), python.global());
+
+					python.global()["make_report"](
+						(Data::Directory::result / m_asset / Data::File::reward_HS_data).string().c_str(),
+						(Data::Directory::result / m_asset / Data::File::trades_HS_data).string().c_str(),
+						(Data::Directory::result / m_asset / Data::File::reward_BH_data).string().c_str(),
+						(Data::Directory::config / m_asset / Data::File::config_json   ).string().c_str());
+				}
+				catch (const boost::python::error_already_set &)
+				{
+					LOGGER_WRITE_ERROR(logger, shared::Python::exception());
+				}
 			}
 			catch (const std::exception & exception)
 			{
@@ -1136,6 +1139,175 @@ namespace solution
 
 				std::cout << std::setw(8) << std::setfill(' ') << std::right << m_asset << " : " <<
 					std::setprecision(3) << std::fixed << std::noshowpos << volatility << std::endl;
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
+		Source::State Source::handle(const std::string & data) const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				auto inputs = make_inputs(get_klines(), {}, {});
+
+				auto prehistory = inputs_container_t(std::prev(std::end(inputs), 
+					m_config.timesteps_prehistory), std::end(inputs));
+
+				return m_strategies.at(m_config.main_strategy)->run(prehistory, State::N);
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
+		Source::klines_container_t Source::get_klines() const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				shared::Python python;
+
+				try
+				{
+					const auto size = m_config.skipped_timesteps;
+
+					const auto timeframe = std::to_string(m_config.inputs_timeframe) + 
+						m_config.inputs_timeframe_type;
+
+					boost::python::exec("from system import get_klines", python.global(), python.global());
+
+					return make_klines(boost::python::extract < std::string > (
+						python.global()["get_klines"](m_asset.c_str(),
+							std::to_string(size).c_str(), timeframe.c_str())));
+				}
+				catch (const boost::python::error_already_set &)
+				{
+					LOGGER_WRITE_ERROR(logger, shared::Python::exception());
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
+		Source::orders_container_t Source::get_orders() const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				shared::Python python;
+
+				try
+				{
+					boost::python::exec("from system import get_orders", python.global(), python.global());
+
+					return make_orders(boost::python::extract < std::string > (
+						python.global()["get_orders"]()));
+				}
+				catch (const boost::python::error_already_set &)
+				{
+					LOGGER_WRITE_ERROR(logger, shared::Python::exception());
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
+		Source::trades_container_t Source::get_trades() const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				shared::Python python;
+
+				try
+				{
+					boost::python::exec("from system import get_trades", python.global(), python.global());
+
+					return make_trades(boost::python::extract < std::string > (
+						python.global()["get_trades"]()));
+				}
+				catch (const boost::python::error_already_set &)
+				{
+					LOGGER_WRITE_ERROR(logger, shared::Python::exception());
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
+		Source::klines_container_t Source::make_klines(const std::string & data) const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				klines_container_t klines(m_config.skipped_timesteps);
+
+				auto array = json_t::parse(data);
+
+				for (auto i = 0ULL; i < std::size(klines); ++i)
+				{
+					const auto & element = array.at(i);
+
+					klines[i].time_open        = element["time_open"       ].get < std::time_t > ();
+					klines[i].price_open       = element["price_open"      ].get < double > ();
+					klines[i].price_high       = element["price_high"      ].get < double > ();
+					klines[i].price_low        = element["price_low"       ].get < double > ();
+					klines[i].price_close      = element["price_close"     ].get < double > ();
+					klines[i].volume_base      = element["volume_base"     ].get < double > ();
+					klines[i].time_close       = element["time_close"      ].get < std::time_t > ();
+					klines[i].volume_quote     = element["volume_quote"    ].get < double > ();
+					klines[i].volume_buy_base  = element["volume_buy_base" ].get < double > ();
+					klines[i].volume_buy_quote = element["volume_buy_quote"].get < double > ();
+				}
+
+				std::sort(std::begin(klines), std::end(klines),
+					[](const auto & lhs, const auto & rhs)
+						{ return lhs.time_open < rhs.time_open });
+
+				return klines;
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
+		Source::orders_container_t Source::make_orders(const std::string & data) const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				return {};
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
+		Source::trades_container_t Source::make_trades(const std::string & data) const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				return {};
 			}
 			catch (const std::exception & exception)
 			{
