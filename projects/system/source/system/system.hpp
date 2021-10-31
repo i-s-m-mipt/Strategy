@@ -72,6 +72,8 @@ namespace solution
 
 			struct Client
 			{
+				std::string name;
+
 				std::string public_key;
 				std::string secret_key;
 
@@ -156,6 +158,7 @@ namespace solution
 
 					struct Client
 					{
+						static inline const std::string name                = "name";
 						static inline const std::string public_key          = "public_key";
 						static inline const std::string secret_key          = "secret_key";
 						static inline const std::string initial_investments = "initial_investments";

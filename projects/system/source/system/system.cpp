@@ -115,11 +115,12 @@ namespace solution
 
 				for (const auto & element : array)
 				{
+					auto name                = element[Key::Client::name               ].get < std::string > ();
 					auto public_key          = element[Key::Client::public_key         ].get < std::string > ();
 					auto secret_key          = element[Key::Client::secret_key         ].get < std::string > ();
 					auto initial_investments = element[Key::Client::initial_investments].get < double > ();
 
-					clients.push_back({ public_key, secret_key, initial_investments });
+					clients.push_back({ name, public_key, secret_key, initial_investments });
 				}
 			}
 			catch (const std::exception & exception)
@@ -525,7 +526,7 @@ namespace solution
 					for (const auto & client : m_clients)
 					{
 						auto current_state = convert_state(boost::python::extract < std::string > (
-							m_python.global()["get_current_state"](client.public_key.c_str())));
+							m_python.global()["get_current_state"](client.public_key.c_str(), asset.c_str())));
 
 						if (current_state != required_state)
 						{
@@ -542,17 +543,17 @@ namespace solution
 
 							if (required_state == State::L) // TODO
 							{
-								std::cout << "Required L for " << asset << " on " <<
+								std::cout << client.name << " : required L for " << asset << " on " <<
 									std::setprecision(2) << std::fixed << std::noshowpos << position << std::endl;
-								//m_python.global()["make_long_position"](client.public_key.c_str(), 
-								//	asset.c_str(), std::to_string(position).c_str());
+								m_python.global()["make_long_position"](client.public_key.c_str(), 
+									asset.c_str(), std::to_string(position).c_str());
 							}
 							else
 							{
-								std::cout << "Required S for " << asset << " on " <<
+								std::cout << client.name << " : required S for " << asset << " on " <<
 									std::setprecision(2) << std::fixed << std::noshowpos << position << std::endl;
-								//m_python.global()["make_short_position"](client.public_key.c_str(),
-								//	asset.c_str(), std::to_string(position).c_str());
+								m_python.global()["make_short_position"](client.public_key.c_str(),
+									asset.c_str(), std::to_string(position).c_str());
 							}
 						}
 					}
