@@ -999,7 +999,7 @@ namespace solution
 			}
 		}
 
-		void Source::make_report() const // TODO
+		void Source::make_report() const
 		{
 			LOGGER(logger);
 
@@ -1121,7 +1121,7 @@ namespace solution
 
 				path /= Data::File::research_volatility_data;
 
-				std::fstream fout(path, std::ios::out); // TODO
+				std::fstream fout(path, std::ios::out);
 
 				if (!fout)
 				{
@@ -1197,7 +1197,7 @@ namespace solution
 			}
 		}
 
-		Source::orders_container_t Source::get_orders() const
+		Source::orders_container_t Source::get_orders() const // TODO
 		{
 			LOGGER(logger);
 
@@ -1223,7 +1223,7 @@ namespace solution
 			}
 		}
 
-		Source::trades_container_t Source::get_trades() const
+		Source::trades_container_t Source::get_trades() const // TODO
 		{
 			LOGGER(logger);
 
@@ -1293,7 +1293,7 @@ namespace solution
 
 			try
 			{
-				return {};
+				return {}; // TODO
 			}
 			catch (const std::exception & exception)
 			{
@@ -1307,7 +1307,7 @@ namespace solution
 
 			try
 			{
-				return {};
+				return {}; // TODO
 			}
 			catch (const std::exception & exception)
 			{

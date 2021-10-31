@@ -437,8 +437,7 @@ namespace solution
 
 				if (counter == 0)
 				{
-					m_timer.expires_from_now(
-						boost::posix_time::seconds(interval));
+					m_timer.expires_from_now(boost::posix_time::seconds(interval));
 				}
 				else
 				{
@@ -493,8 +492,7 @@ namespace solution
 						{
 							if (current_state != State::N)
 							{
-								python.global()["make_null_position"](
-									client.public_key.c_str(), asset.c_str());
+								python.global()["make_null_position"](client.public_key.c_str(), asset.c_str());
 							}
 
 							auto available_usdt = std::stod(boost::python::extract < std::string > (
