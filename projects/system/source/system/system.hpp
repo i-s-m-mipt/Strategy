@@ -19,6 +19,7 @@
 #include <stdexcept>
 #include <string>
 #include <thread>
+#include <unordered_map>
 #include <vector>
 
 #include <boost/asio.hpp>
@@ -27,6 +28,8 @@
 #include <nlohmann/json.hpp>
 
 #include "../config/config.hpp"
+#include "../detail/detail.hpp"
+#include "../detail/inputs/inputs.hpp"
 #include "../source/source.hpp"
 
 #include "logger/logger.hpp"
@@ -59,11 +62,30 @@ namespace solution
 
 			using assets_container_t = std::vector < std::string > ;
 
-			using sources_container_t = std::vector < std::shared_ptr < Source > > ;
+			using sources_container_t = std::unordered_map < 
+				std::string, std::shared_ptr < Source > > ;
+
+		private:
+
+			struct Account
+			{
+				std::string public_key;
+				std::string secret_key;
+
+				double initial_investments;
+			};
+
+		private:
+
+			using accounts_container_t = std::vector < Account > ;
 
 			using thread_pool_t = boost::asio::thread_pool;
 
 			using io_service_t = boost::asio::io_service;
+
+			using timer_t = boost::asio::deadline_timer;
+
+			using inputs_container_t = detail::inputs_container_t;
 
 		private:
 
@@ -84,8 +106,9 @@ namespace solution
 
 				struct File
 				{
-					static inline const path_t assets_data = "assets.data";
-					static inline const path_t config_json = "config.json";
+					static inline const path_t config_json   = "config.json";
+					static inline const path_t assets_data   = "assets.data";
+					static inline const path_t accounts_json = "accounts.json";
 				};
 
 			private:
@@ -120,20 +143,33 @@ namespace solution
 						static inline const std::string required_backtest_fit         = "required_backtest_fit";
 						static inline const std::string has_reinvestment              = "has_reinvestment";
 						static inline const std::string required_run                  = "required_run";
+						static inline const std::string interval                      = "interval";
+						static inline const std::string max_drawdown                  = "max_drawdown";
+						static inline const std::string benchmark                     = "benchmark";
+						static inline const std::string main_strategy                 = "main_strategy";
+					};
+
+					struct Account
+					{
+						static inline const std::string public_key          = "public_key";
+						static inline const std::string secret_key          = "secret_key";
+						static inline const std::string initial_investments = "initial_investments";
 					};
 				};
 
 			public:
 
-				static void load_source_config(const path_t & path, Config & config);
+				static void load_system_config(Config & config);
 
-				static void load_system_config(const path_t & path, Config & config);
+				static void load_source_config(const path_t & path, Config & config);
 
 				static void load_assets(assets_container_t & assets);
 
+				static void load_accounts(accounts_container_t & accounts);
+
 			public:
 
-				static void save_config(const path_t & path, const Config & config);
+				static void save_source_config(const path_t & path, const Config & config);
 
 			private:
 
@@ -144,7 +180,7 @@ namespace solution
 
 		public:
 
-			System() : m_thread_pool(2U * std::thread::hardware_concurrency())
+			System() : m_thread_pool(2 * std::thread::hardware_concurrency()), m_timer(m_io_service)
 			{
 				initialize();
 			}
@@ -181,6 +217,8 @@ namespace solution
 
 			void load_sources();
 
+			void load_accounts();
+
 		private:
 
 			void save_sources() const;
@@ -193,6 +231,10 @@ namespace solution
 
 			void wait_until_day_end() const;
 
+			void handle();
+
+			void handle_implementation(const std::string & asset);
+
 		public:
 
 			const auto & assets() const noexcept
@@ -202,15 +244,23 @@ namespace solution
 
 		private:
 
+			static inline const std::time_t seconds_in_day = 86400;
+
+		private:
+
 			Config m_config;
 
 			assets_container_t m_assets;
 
 			sources_container_t m_sources;
 
+			accounts_container_t m_accounts;
+
 			thread_pool_t m_thread_pool;
 
 			io_service_t m_io_service;
+
+			timer_t m_timer;
 		};
 
 	} // namespace system

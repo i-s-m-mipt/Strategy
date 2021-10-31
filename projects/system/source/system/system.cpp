@@ -4,6 +4,30 @@ namespace solution
 {
 	namespace system
 	{
+		void System::Data::load_system_config(Config & config)
+		{
+			LOGGER(logger);
+
+			try
+			{
+				auto path = Directory::config / File::config_json;
+
+				json_t raw_config;
+
+				load(path, raw_config);
+
+				config.required_run = raw_config[Key::Config::required_run].get < bool > ();
+				config.interval     = raw_config[Key::Config::interval    ].get < std::time_t > ();
+				config.max_drawdown = raw_config[Key::Config::max_drawdown].get < double > ();
+				config.benchmark    = raw_config[Key::Config::benchmark   ].get < std::string > ();
+
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
 		void System::Data::load_source_config(const path_t & path, Config & config)
 		{
 			LOGGER(logger);
@@ -39,25 +63,7 @@ namespace solution
 				config.assimilator_min_deviation     = raw_config[Key::Config::assimilator_min_deviation    ].get < double > ();
 				config.required_backtest_fit         = raw_config[Key::Config::required_backtest_fit        ].get < bool > ();
 				config.has_reinvestment              = raw_config[Key::Config::has_reinvestment             ].get < bool > ();
-			}
-			catch (const std::exception & exception)
-			{
-				shared::catch_handler < system_exception > (logger, exception);
-			}
-		}
-
-		void System::Data::load_system_config(const path_t & path, Config & config)
-		{
-			LOGGER(logger);
-
-			try
-			{
-				json_t raw_config;
-
-				load(path, raw_config);
-
-				config.required_run = raw_config[Key::Config::required_run].get < bool > ();
-				
+				config.main_strategy                 = raw_config[Key::Config::main_strategy                ].get < bool > ();
 			}
 			catch (const std::exception & exception)
 			{
@@ -95,7 +101,34 @@ namespace solution
 			}
 		}
 
-		void System::Data::save_config(const path_t & path, const Config & config)
+		void System::Data::load_accounts(accounts_container_t & accounts)
+		{
+			LOGGER(logger);
+
+			try
+			{
+				auto path = Directory::config / File::accounts_json;
+
+				json_t array;
+
+				load(path, array);
+
+				for (const auto & element : array)
+				{
+					auto public_key          = element[Key::Account::public_key         ].get < std::string > ();
+					auto secret_key          = element[Key::Account::secret_key         ].get < std::string > ();
+					auto initial_investments = element[Key::Account::initial_investments].get < double > ();
+
+					accounts.push_back({ public_key, secret_key, initial_investments });
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::Data::save_source_config(const path_t & path, const Config & config)
 		{
 			LOGGER(logger);
 
@@ -128,6 +161,7 @@ namespace solution
 				raw_config[Key::Config::assimilator_min_deviation    ] = config.assimilator_min_deviation;
 				raw_config[Key::Config::required_backtest_fit        ] = config.required_backtest_fit;
 				raw_config[Key::Config::has_reinvestment             ] = config.has_reinvestment;
+				raw_config[Key::Config::main_strategy                ] = config.main_strategy;
 
 				save(path, raw_config);
 			}
@@ -220,34 +254,8 @@ namespace solution
 				load_assets();
 
 				load_sources();
-			}
-			catch (const std::exception & exception)
-			{
-				shared::catch_handler < system_exception > (logger, exception);
-			}
-		}
 
-		void System::load_config()
-		{
-			LOGGER(logger);
-
-			try
-			{
-				Data::load_system_config(Data::Directory::config / Data::File::config_json, m_config);
-			}
-			catch (const std::exception & exception)
-			{
-				shared::catch_handler < system_exception > (logger, exception);
-			}
-		}
-
-		void System::load_assets()
-		{
-			LOGGER(logger);
-
-			try
-			{
-				Data::load_assets(m_assets);
+				load_accounts();
 			}
 			catch (const std::exception & exception)
 			{
@@ -262,6 +270,34 @@ namespace solution
 			try
 			{
 				save_sources();
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::load_config()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				Data::load_system_config(m_config);
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::load_assets()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				Data::load_assets(m_assets);
 			}
 			catch (const std::exception & exception)
 			{
@@ -284,8 +320,22 @@ namespace solution
 					Data::load_source_config(Data::Directory::config / 
 						asset / Data::File::config_json, config);
 
-					m_sources.push_back(std::make_shared < Source > (std::move(config)));
+					m_sources[asset] = std::make_shared < Source > (std::move(config));
 				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::load_accounts()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				Data::load_accounts(m_accounts);
 			}
 			catch (const std::exception & exception)
 			{
@@ -299,10 +349,10 @@ namespace solution
 
 			try
 			{
-				for (auto source : m_sources)
+				for (const auto & [asset, source] : m_sources)
 				{
-					Data::save_config(Data::Directory::config /
-						source->asset() / Data::File::config_json, source->config());
+					Data::save_source_config(Data::Directory::config /
+						asset / Data::File::config_json, source->config());
 				}
 			}
 			catch (const std::exception & exception)
@@ -321,7 +371,9 @@ namespace solution
 				{
 					wait_until_day_end();
 
+					handle();
 
+					m_io_service.run();
 				}
 			}
 			catch (const std::exception & exception)
@@ -347,6 +399,66 @@ namespace solution
 					}
 
 					std::this_thread::sleep_for(std::chrono::seconds(1));
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::handle()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				static std::size_t counter = 0;
+
+				const auto interval = m_config.interval;
+
+				if (counter == 0)
+				{
+					m_timer.expires_from_now(
+						boost::posix_time::seconds(interval));
+				}
+				else
+				{
+					m_timer.expires_at(m_timer.expires_at() + 
+						boost::posix_time::seconds(interval));
+				}
+				
+				m_timer.async_wait(boost::bind(&System::handle, this));
+
+				if (counter++ % static_cast < std::size_t > (seconds_in_day / interval) == 0)
+				{
+					for (const auto & asset : m_assets)
+					{
+						handle_implementation(asset);
+					}
+				}
+				else
+				{
+					handle_implementation(m_config.benchmark);
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::handle_implementation(const std::string & asset)
+		{
+			LOGGER(logger);
+
+			try
+			{
+
+
+				for (const auto & account : m_accounts)
+				{
+
 				}
 			}
 			catch (const std::exception & exception)

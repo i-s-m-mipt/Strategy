@@ -143,6 +143,14 @@ namespace solution
             bool has_reinvestment;
 
             bool required_run;
+
+            std::time_t interval;
+
+            double max_drawdown;
+
+            std::string benchmark;
+
+            std::string main_strategy;
         };
 
     } // namespace system
