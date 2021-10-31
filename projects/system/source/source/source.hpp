@@ -309,7 +309,7 @@ namespace solution
 
 		public:
 
-			State handle(const std::string & data) const;
+			State handle() const;
 
 		private:
 

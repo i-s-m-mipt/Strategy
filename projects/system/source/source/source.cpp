@@ -1146,7 +1146,7 @@ namespace solution
 			}
 		}
 
-		Source::State Source::handle(const std::string & data) const
+		Source::State Source::handle() const
 		{
 			LOGGER(logger);
 
