@@ -1,6 +1,6 @@
 {
     "required_run": true,
     "interval": 14400,
-    "max_drawdown": 0.16,
+    "max_drawdown": 0.123,
     "benchmark": "btcusdt"
 }
