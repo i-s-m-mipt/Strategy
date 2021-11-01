@@ -541,18 +541,26 @@ namespace solution
 							auto position = std::min(client.initial_investments * (1.0 - m_config.max_drawdown) *
 								(m_sources[asset]->config().transaction / 1000.0), available_usdt);
 
-							if (required_state == State::L)
+							auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+							std::cout << std::put_time(std::localtime(&time), "%y.%m.%d %H:%M:%S") << " : ";
+
+							switch (required_state)
 							{
-								std::cout << std::setw(20) << std::setfill('.') << std::left << 
+							case State::L:
+							{
+								std::cout << std::setw(20) << std::setfill('.') << std::left <<
 									client.name + " " << " : required L for " << asset << " on " <<
 									std::setw(8) << std::setfill(' ') << std::right <<
-									std::setprecision(2) << std::fixed << std::noshowpos << 
+									std::setprecision(2) << std::fixed << std::noshowpos <<
 									position << " USDT" << std::endl;
 
-								m_python.global()["make_long_position"](client.public_key.c_str(), 
+								m_python.global()["make_long_position"](client.public_key.c_str(),
 									asset.c_str(), std::to_string(position).c_str());
+
+								break;
 							}
-							else
+							case State::S:
 							{
 								std::cout << std::setw(20) << std::setfill('.') << std::left <<
 									client.name + " " << " : required S for " << asset << " on " <<
@@ -562,6 +570,16 @@ namespace solution
 
 								m_python.global()["make_short_position"](client.public_key.c_str(),
 									asset.c_str(), std::to_string(position).c_str());
+
+								break;
+							}
+							default:
+							{
+								std::cout << std::setw(20) << std::setfill('.') << std::left <<
+									client.name + " " << " : required N for " << asset << std::endl;
+
+								break;
+							}
 							}
 						}
 					}
