@@ -27,9 +27,18 @@ namespace solution
 
 				std::stringstream sout;
 
-				for (auto i = m_config.skipped_timesteps; i < std::size(inputs); ++i)
+				auto begin = m_config.skipped_timesteps;
+
+				while (inputs[begin].date_time_close.day != 1)
+				{
+					++begin;
+				}
+
+				for (auto i = begin; i < std::size(inputs); ++i)
 				{
 					const auto & input = inputs[i];
+
+					sout << input.date_time_close << delimeter;
 
 					for (auto j = 0U; j < 7U; ++j)
 					{
@@ -55,11 +64,11 @@ namespace solution
 					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_sell_base  << delimeter;
 					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_sell_quote << delimeter;
 
-					for (const auto & [name, value] : input.indicators)
-					{
-						sout << std::setprecision(6) << std::fixed << // ?
-							std::showpos << value << delimeter;
-					}
+					//for (const auto & [name, value] : input.indicators)
+					//{
+					//	sout << std::setprecision(6) << std::fixed << // ?
+					//		std::showpos << value << delimeter;
+					//}
 
 					// TODO (save price_aggregated_trades)
 
@@ -836,8 +845,8 @@ namespace solution
 					inputs[i].date_time_open  = date_time_open;
 					inputs[i].date_time_close = date_time_close;
 
-					inputs[i].day  = day_of_week(date_time_open);
-					inputs[i].hour = date_time_open.hour;
+					inputs[i].day  = day_of_week(date_time_close);
+					inputs[i].hour = date_time_close.hour;
 
 					inputs[i].price_open  = klines[i].price_open;
 					inputs[i].price_high  = klines[i].price_high;
@@ -1085,7 +1094,7 @@ namespace solution
 							(inputs[j].price_high - inputs[j].price_low) / inputs[j].price_open;
 					}
 
-					deviations.push_back(std::make_pair(inputs[i].date_time_open, deviation));
+					deviations.push_back(std::make_pair(inputs[i].date_time_close, deviation));
 				}
 
 				for (auto i = timesteps_sma - 1; i < std::size(deviations); ++i)

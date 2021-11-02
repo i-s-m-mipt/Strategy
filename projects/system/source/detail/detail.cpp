@@ -78,7 +78,7 @@ namespace solution
 				time /= 1000LL;
 			}
 
-			auto tm = localtime(&time);
+			auto tm = std::gmtime(&time);
 
 			Date_Time date_time;
 
@@ -104,9 +104,9 @@ namespace solution
 				static_cast < int > (date_time.month) - 1,
 				static_cast < int > (date_time.year ) - 1900 };
 
-			auto time = std::mktime(&tm);
+			std::mktime(&tm);
 
-			return static_cast < unsigned int > (std::localtime(&time)->tm_wday);
+			return static_cast < unsigned int > (tm.tm_wday);
 		}
 
 	} // namespace system
