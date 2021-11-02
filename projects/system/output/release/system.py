@@ -95,6 +95,8 @@ def make_deviations(reward, config):
             current_year = year
             
             times_y.append(reward["time"][i])
+
+    times_m.append(reward["time"][len(reward) - 1])
             
     if(reward["date"][len(reward) - 1].split("/")[0] ==
        reward["date"][len(reward) - 2].split("/")[0]):
