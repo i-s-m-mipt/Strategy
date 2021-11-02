@@ -16,10 +16,13 @@ namespace solution
 
 				load(path, raw_config);
 
-				config.required_run = raw_config[Key::Config::required_run].get < bool > ();
-				config.interval     = raw_config[Key::Config::interval    ].get < std::time_t > ();
-				config.max_drawdown = raw_config[Key::Config::max_drawdown].get < double > ();
-				config.benchmark    = raw_config[Key::Config::benchmark   ].get < std::string > ();
+				config.required_run           = raw_config[Key::Config::required_run          ].get < bool > ();
+				config.interval               = raw_config[Key::Config::interval              ].get < std::time_t > ();
+				config.max_drawdown           = raw_config[Key::Config::max_drawdown          ].get < double > ();
+				config.benchmark              = raw_config[Key::Config::benchmark             ].get < std::string > ();
+				config.server_start_hour      = raw_config[Key::Config::server_start_hour     ].get < std::time_t > ();
+				config.server_start_minute    = raw_config[Key::Config::server_start_minute   ].get < std::time_t > ();
+				config.server_start_iteration = raw_config[Key::Config::server_start_iteration].get < std::size_t > ();
 
 			}
 			catch (const std::exception & exception)
@@ -458,8 +461,8 @@ namespace solution
 				{
 					auto time = boost::posix_time::second_clock::universal_time();
 
-					if (time.time_of_day().hours()   == 23 &&
-						time.time_of_day().minutes() == 50)
+					if (time.time_of_day().hours()   == m_config.server_start_hour &&
+						time.time_of_day().minutes() == m_config.server_start_minute)
 					{
 						break;
 					}
@@ -479,7 +482,7 @@ namespace solution
 
 			try
 			{
-				static std::size_t counter = 0;
+				static std::size_t counter = m_config.server_start_iteration;
 
 				const auto interval = m_config.interval;
 
@@ -521,9 +524,9 @@ namespace solution
 			{
 				auto required_state = m_sources[asset]->handle();
 
-				try
+				for (const auto & client : m_clients)
 				{
-					for (const auto & client : m_clients)
+					try
 					{
 						auto current_state = convert_state(boost::python::extract < std::string > (
 							m_python.global()["get_current_state"](client.public_key.c_str(), asset.c_str())));
@@ -582,12 +585,14 @@ namespace solution
 							}
 							}
 						}
+
+					}
+					catch (const boost::python::error_already_set &)
+					{
+						LOGGER_WRITE_ERROR(logger, shared::Python::exception());
 					}
 				}
-				catch (const boost::python::error_already_set &)
-				{
-					LOGGER_WRITE_ERROR(logger, shared::Python::exception());
-				}
+				
 			}
 			catch (const std::exception & exception)
 			{

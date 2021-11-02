@@ -151,6 +151,11 @@ namespace solution
             std::string benchmark;
 
             std::string main_strategy;
+
+            std::time_t server_start_hour;
+            std::time_t server_start_minute;
+
+            std::size_t server_start_iteration;
         };
 
     } // namespace system

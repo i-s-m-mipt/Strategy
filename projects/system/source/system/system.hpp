@@ -154,6 +154,9 @@ namespace solution
 						static inline const std::string max_drawdown                  = "max_drawdown";
 						static inline const std::string benchmark                     = "benchmark";
 						static inline const std::string main_strategy                 = "main_strategy";
+						static inline const std::string server_start_hour             = "server_start_hour";
+						static inline const std::string server_start_minute           = "server_start_minute";
+						static inline const std::string server_start_iteration        = "server_start_iteration";
 					};
 
 					struct Client
