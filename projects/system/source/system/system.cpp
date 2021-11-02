@@ -482,23 +482,25 @@ namespace solution
 
 			try
 			{
-				static std::size_t counter = m_config.server_start_iteration;
+				static auto counter = m_config.server_start_iteration;
 
-				const auto interval = m_config.interval;
+				boost::posix_time::seconds interval(m_config.interval);
 
-				if (counter == 0)
+				if (counter == m_config.server_start_iteration)
 				{
-					m_timer.expires_from_now(boost::posix_time::seconds(interval));
+					m_timer.expires_from_now(interval);
 				}
 				else
 				{
-					m_timer.expires_at(m_timer.expires_at() + 
-						boost::posix_time::seconds(interval));
+					m_timer.expires_at(m_timer.expires_at() + interval);
 				}
 				
 				m_timer.async_wait(boost::bind(&System::handle, this));
 
-				if (counter++ % static_cast < std::size_t > (seconds_in_day / interval) == 0)
+				auto n_iterations = static_cast < std::size_t > (
+					seconds_in_day / m_config.interval);
+
+				if (counter++ % n_iterations == 0)
 				{
 					for (const auto & asset : m_assets)
 					{
