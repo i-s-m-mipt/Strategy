@@ -567,8 +567,9 @@ class Connector(Spot):
                 return float(stepSize)
         return 1
 
-    def get_current_state(self, symbol, precision=1e-4):
+    def get_current_state(self, symbol):
         asset = symbol.replace('USDT', '')
+        precision = self.compute_precision(symbol)
         for data in self.margin_account()['userAssets']:
             if asset == data['asset']:
                 netAsset = float(data['netAsset'])
@@ -630,8 +631,8 @@ def margin_account(public_key: str):
     return clients.get_client(api=public_key).margin_account()
 
 
-def get_current_state(public_key: str, symbol: str, precision=1e-4):
-    return clients.get_client(api=public_key).get_current_state(symbol=symbol.upper(), precision=precision)
+def get_current_state(public_key: str, symbol: str):
+    return clients.get_client(api=public_key).get_current_state(symbol=symbol.upper())
 
 
 def get_available_usdt(public_key: str):
