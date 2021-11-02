@@ -419,7 +419,7 @@ class ClientsPool:
         self.clients = dict()
 
     def make_client(self, public_key: str, secret_key: str):
-        self.clients[public_key] = Connector(key = public_key, secret = secret_key)
+        self.clients[public_key] = Connector(public_key = public_key, secret_key = secret_key)
 
     def get_client(self, public_key: str):
         return self.clients[public_key]
@@ -493,9 +493,6 @@ class Connector(Spot):
         for balance in self.margin_account()["userAssets"]:
             if balance["asset"] == "USDT":
                 return balance["free"]
-
-    def margin_account(self):
-        return self.margin_account()
 
     def close_long_position(self, symbol: str):
         
