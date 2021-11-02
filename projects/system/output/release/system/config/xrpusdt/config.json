@@ -9,6 +9,7 @@
     "inputs_timeframe_type": "d",
     "inputs_year_begin": 2019,
     "inputs_year_end": 2021,
+    "main_strategy": "Assimilator",
     "min_movement": 0.05,
     "price_aggregated_trade_step": 0.001,
     "price_aggregated_trades_depth": 10,
@@ -23,6 +24,5 @@
     "test_soft_strategy": "",
     "timesteps_prediction": 10,
     "timesteps_prehistory": 3,
-    "transaction": 400.0,
-    "main_strategy": "Assimilator"
+    "transaction": 400.0
 }
