@@ -500,7 +500,7 @@ namespace solution
 				auto n_iterations = static_cast < std::size_t > (
 					seconds_in_day / m_config.interval);
 
-				if (counter++ % n_iterations == 0)
+				if (counter % n_iterations == 0)
 				{
 					for (const auto & asset : m_assets)
 					{
@@ -511,6 +511,8 @@ namespace solution
 				{
 					handle_implementation(m_config.benchmark);
 				}
+
+				counter = ((counter == n_iterations - 1) ? 0 : counter + 1);
 			}
 			catch (const std::exception & exception)
 			{
