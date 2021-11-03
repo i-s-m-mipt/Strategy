@@ -561,6 +561,18 @@ class Connector(Spot):
         elif self.get_current_state(symbol = symbol) == 'L':
             return self.close_long_position(symbol)
 
+
+    def get_total_value(self):
+
+        total_usdt = 0.
+        for balance in self.margin_account()["userAssets"]:
+            net = float(balance["netAsset"])
+            asset = balance["asset"]
+            if net != 0:
+                price = 1 if asset == 'USDT' else float(self.ticker_price(symbol=asset + "USDT")["price"])
+                total_usdt += price * net
+        return total_usdt
+
 dummy = Connector()
 
 # =============================================================================
@@ -588,6 +600,9 @@ def get_current_state(public_key: str, symbol: str):
 
 def get_available_usdt(public_key: str):
     return clients.get_client(public_key = public_key).get_available_usdt()
+
+def get_total_value(public_key: str):
+    return clients.get_client(public_key=public_key).get_total_value()
 
 def make_long_position(public_key: str, symbol: str, usdt: str):
     return clients.get_client(public_key = public_key).make_long_position(symbol = symbol.upper(), usdt = float(usdt))
