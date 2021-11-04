@@ -124,7 +124,7 @@ namespace solution
 					auto max = std::max_element(std::begin(result.rewards), std::next(i),
 						[](const auto & lhs, const auto & rhs) { return (lhs.second < rhs.second); });
 
-					auto min = std::max_element(max, std::next(i),
+					auto min = std::min_element(max, std::next(i),
 						[](const auto & lhs, const auto & rhs) { return (lhs.second < rhs.second); });
 
 					if (max != min && (max->second - min->second) / 
