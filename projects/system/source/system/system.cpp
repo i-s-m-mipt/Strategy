@@ -432,15 +432,24 @@ namespace solution
 
 					std::string command;
 
-					std::cin >> command;
-
-					if (command == "exit")
+					while (true)
 					{
-						m_is_interrupted.store(true);
+						std::cin >> command;
 
-						while (m_is_running.load())
+						if (command == "exit")
 						{
-							m_io_service.stop();
+							m_is_interrupted.store(true);
+
+							while (m_is_running.load())
+							{
+								m_io_service.stop();
+							}
+
+							break;
+						}
+						else
+						{
+							std::cout << "command not found" << std::endl;
 						}
 					}
 
