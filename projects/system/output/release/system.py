@@ -429,6 +429,11 @@ clients = ClientsPool()
 
 # =============================================================================
 
+def custom_receive_window(func):
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs, recvWindow=args[0].recvWindow)
+    return wrapper
+
 class Connector(Spot):
 
     def __init__(self, public_key=None, secret_key=None, recvWindow: int = 10000):
