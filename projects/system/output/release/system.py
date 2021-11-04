@@ -419,8 +419,7 @@ class ClientsPool:
         self.clients = dict()
 
     def make_client(self, public_key: str, secret_key: str, recvWindow: int):
-        self.clients[public_key] = Connector(public_key=public_key, secret_key=secret_key, recvWindow=recvWindow)
-
+        self.clients[public_key] = Connector(public_key = public_key, secret_key = secret_key, recvWindow = recvWindow)
 
     def get_client(self, public_key: str):
         return self.clients[public_key]
@@ -429,16 +428,20 @@ clients = ClientsPool()
 
 # =============================================================================
 
-def custom_receive_window(func):
+def custom_receive_window(function):
+    
     def wrapper(*args, **kwargs):
-        return func(*args, **kwargs, recvWindow=args[0].recvWindow)
+        return function(*args, **kwargs, recvWindow = args[0].recvWindow)
+    
     return wrapper
+
+# =============================================================================
 
 class Connector(Spot):
 
-    def __init__(self, public_key=None, secret_key=None, recvWindow: int = 10000):
+    def __init__(self, public_key = None, secret_key = None, recvWindow: int = 10000):
         self.recvWindow = recvWindow
-    super().__init__(key=public_key, secret=secret_key)
+    super().__init__(key = public_key, secret = secret_key)
 
     @staticmethod
     def _transform_kline(kline):
@@ -597,7 +600,7 @@ dummy = Connector()
 # =============================================================================
 
 def make_client(public_key: str, secret_key: str, recvWindow: str = "10000"):
-    return clients.make_client(public_key = public_key, secret_key = secret_key, recvWindow=int(recvWindow))
+    return clients.make_client(public_key = public_key, secret_key = secret_key, recvWindow = int(recvWindow))
 
 def get_client(public_key: str):
     return clients.get_client(public_key = public_key)
