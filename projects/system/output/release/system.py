@@ -418,8 +418,9 @@ class ClientsPool:
     def __init__(self):
         self.clients = dict()
 
-    def make_client(self, public_key: str, secret_key: str):
-        self.clients[public_key] = Connector(public_key = public_key, secret_key = secret_key)
+    def make_client(self, public_key: str, secret_key: str, recvWindow: int):
+        self.clients[public_key] = Connector(public_key=public_key, secret_key=secret_key, recvWindow=recvWindow)
+
 
     def get_client(self, public_key: str):
         return self.clients[public_key]
@@ -429,9 +430,10 @@ clients = ClientsPool()
 # =============================================================================
 
 class Connector(Spot):
-    
-    def __init__(self, public_key = None, secret_key = None):
-        super().__init__(key = public_key, secret = secret_key)
+
+    def __init__(self, public_key=None, secret_key=None, recvWindow: int = 10000):
+        self.recvWindow = recvWindow
+    super().__init__(key=public_key, secret=secret_key)
 
     @staticmethod
     def _transform_kline(kline):
@@ -573,12 +575,20 @@ class Connector(Spot):
                 total_usdt += price * net
         return total_usdt
 
+    @custom_receive_window
+    def margin_account(self, *args, **kwargs):
+        return super().margin_account(*args, **kwargs)
+
+    @custom_receive_window
+    def new_margin_order(self, *args, **kwargs):
+        return super().new_margin_order(*args, **kwargs)
+
 dummy = Connector()
 
 # =============================================================================
 
-def make_client(public_key: str, secret_key: str):
-    return clients.make_client(public_key = public_key, secret_key = secret_key)
+def make_client(public_key: str, secret_key: str, recvWindow: str = "10000"):
+    return clients.make_client(public_key = public_key, secret_key = secret_key, recvWindow=int(recvWindow))
 
 def get_client(public_key: str):
     return clients.get_client(public_key = public_key)
