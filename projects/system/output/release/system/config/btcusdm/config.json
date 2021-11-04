@@ -24,5 +24,6 @@
     "timesteps_prediction": 10,
     "timesteps_prehistory": 40,
     "transaction": 1000.0,
-    "main_strategy": "Assimilator"
+    "main_strategy": "Assimilator",
+    "required_markup": true
 }

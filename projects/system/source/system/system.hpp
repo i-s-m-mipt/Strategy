@@ -157,6 +157,7 @@ namespace solution
 						static inline const std::string server_start_hour             = "server_start_hour";
 						static inline const std::string server_start_minute           = "server_start_minute";
 						static inline const std::string server_start_iteration        = "server_start_iteration";
+						static inline const std::string required_markup               = "required_markup";
 					};
 
 					struct Client

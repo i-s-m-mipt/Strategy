@@ -16,6 +16,7 @@
     "required_backtest": true,
     "required_backtest_fit": false,
     "required_inputs": true,
+    "required_markup": true,
     "required_research": false,
     "skipped_timesteps": 600,
     "stop_loss": 0.1,

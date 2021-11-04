@@ -67,6 +67,7 @@ namespace solution
 				config.required_backtest_fit         = raw_config[Key::Config::required_backtest_fit        ].get < bool > ();
 				config.has_reinvestment              = raw_config[Key::Config::has_reinvestment             ].get < bool > ();
 				config.main_strategy                 = raw_config[Key::Config::main_strategy                ].get < std::string > ();
+				config.required_markup               = raw_config[Key::Config::required_markup              ].get < bool > ();
 			}
 			catch (const std::exception & exception)
 			{
@@ -166,6 +167,7 @@ namespace solution
 				raw_config[Key::Config::required_backtest_fit        ] = config.required_backtest_fit;
 				raw_config[Key::Config::has_reinvestment             ] = config.has_reinvestment;
 				raw_config[Key::Config::main_strategy                ] = config.main_strategy;
+				raw_config[Key::Config::required_markup              ] = config.required_markup;
 
 				save(path, raw_config);
 			}

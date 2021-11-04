@@ -98,6 +98,64 @@ namespace solution
 			}
 		}
 
+		void Source::Data::save_markup(const Result & result) const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				auto path = Directory::markup / m_config.inputs_asset;
+
+				std::filesystem::create_directories(path);
+
+				path /= File::markup_data;
+
+				std::fstream fout(path.string(), std::ios::out);
+
+				if (!fout)
+				{
+					throw source_exception("cannot open file " + path.string());
+				}
+
+				std::vector < char > markup(std::size(result.rewards), '+');
+
+				for (auto i = std::begin(result.rewards); i != std::end(result.rewards); ++i)
+				{
+					auto max = std::max_element(std::begin(result.rewards), std::next(i),
+						[](const auto & lhs, const auto & rhs) { return (lhs.second < rhs.second); });
+
+					auto min = std::max_element(max, std::next(i),
+						[](const auto & lhs, const auto & rhs) { return (lhs.second < rhs.second); });
+
+					if (max != min && (max->second - min->second) / 
+						m_config.transaction > m_config.min_movement)
+					{
+						for (auto j = max; j != min; ++j)
+						{
+							markup[std::distance(std::begin(result.rewards), j)] = '-';
+						}
+					}
+				}
+
+				const auto delimeter = ',';
+
+				auto index = 0ULL;
+
+				for (const auto & [date_time, reward] : result.rewards)
+				{
+					fout << std::noshowpos << date_time << delimeter;
+
+					fout << std::noshowpos << to_time_t(date_time) << delimeter;
+
+					fout << markup[index++] << '\n';
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
 		void Source::Data::save_reward(const Result & result) const
 		{
 			LOGGER(logger);
@@ -215,6 +273,11 @@ namespace solution
 				if (m_config.required_research)
 				{
 					handle_research();
+				}
+
+				if (m_config.required_markup)
+				{
+					handle_markup();
 				}
 			}
 			catch (const std::exception & exception)
@@ -516,6 +579,25 @@ namespace solution
 				research_volumes(inputs);
 
 				research_volatility(inputs);
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
+		void Source::handle_markup() const
+		{
+			LOGGER(logger);
+
+			try
+			{
+				auto inputs = load_inputs();
+
+				Backtester backtester(m_config, inputs, 
+					m_strategies.at(m_config.test_hard_strategy));
+
+				m_data.save_markup(backtester.run());
 			}
 			catch (const std::exception & exception)
 			{

@@ -135,6 +135,7 @@ namespace solution
 					static inline const path_t config = "system/config";
 					static inline const path_t inputs = "system/inputs";
 					static inline const path_t klines = "system/klines";
+					static inline const path_t markup = "system/markup";
 					static inline const path_t orders = "system/orders";
 					static inline const path_t result = "system/result";
 					static inline const path_t trades = "system/trades";
@@ -146,6 +147,7 @@ namespace solution
 				{
 					static inline const path_t config_json = "config.json";
 					static inline const path_t inputs_data = "inputs.data";
+					static inline const path_t markup_data = "markup.data";
 					static inline const path_t reward_data = "reward.data";
 					static inline const path_t trades_data = "trades.data";
 
@@ -174,6 +176,8 @@ namespace solution
 				void save_inputs(const inputs_container_t & inputs) const;
 
 				void save_result(const Result & result) const;
+
+				void save_markup(const Result & result) const;
 
 			private:
 
@@ -241,6 +245,8 @@ namespace solution
 			void handle_backtest_fit();
 
 			void handle_research() const;
+
+			void handle_markup() const;
 
 		private:
 
