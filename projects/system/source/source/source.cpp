@@ -23,7 +23,7 @@ namespace solution
 					throw source_exception("cannot open file " + path.string());
 				}
 
-				const auto delimeter = ',';
+				const auto separator = ',';
 
 				std::stringstream sout;
 
@@ -38,36 +38,36 @@ namespace solution
 				{
 					const auto & input = inputs[i];
 
-					sout << input.date_time_close << delimeter;
+					sout << input.date_time_close << separator;
 
 					for (auto j = 0U; j < 7U; ++j)
 					{
-						sout << std::noshowpos << (j == input.day ? 1 : 0) << delimeter;
+						sout << std::noshowpos << (j == input.day ? 1 : 0) << separator;
 					}
 
 					for (auto j = 0U; j < 24U; ++j)
 					{
-						sout << std::noshowpos << (j == input.hour ? 1 : 0) << delimeter;
+						sout << std::noshowpos << (j == input.hour ? 1 : 0) << separator;
 					}
 
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_open  << delimeter;
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_high  << delimeter;
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_low   << delimeter;
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_close << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_open  << separator;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_high  << separator;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_low   << separator;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.price_close << separator;
 
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_base  << delimeter;
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_quote << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_base  << separator;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_quote << separator;
 
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_buy_base  << delimeter;
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_buy_quote << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_buy_base  << separator;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_buy_quote << separator;
 
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_sell_base  << delimeter;
-					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_sell_quote << delimeter;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_sell_base  << separator;
+					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_sell_quote << separator;
 
 					//for (const auto & [name, value] : input.indicators)
 					//{
 					//	sout << std::setprecision(6) << std::fixed << // ?
-					//		std::showpos << value << delimeter;
+					//		std::showpos << value << separator;
 					//}
 
 					// TODO (save price_aggregated_trades)
@@ -137,15 +137,15 @@ namespace solution
 					}
 				}
 
-				const auto delimeter = ',';
+				const auto separator = ',';
 
 				auto index = 0ULL;
 
 				for (const auto & [date_time, reward] : result.rewards)
 				{
-					fout << std::noshowpos << date_time << delimeter;
+					fout << std::noshowpos << date_time << separator;
 
-					fout << std::noshowpos << to_time_t(date_time) << delimeter;
+					fout << std::noshowpos << to_time_t(date_time) << separator;
 
 					fout << markup[index++] << '\n';
 				}
@@ -175,13 +175,13 @@ namespace solution
 					throw source_exception("cannot open file " + path.string());
 				}
 
-				const auto delimeter = ',';
+				const auto separator = ',';
 
 				for (const auto & [date_time, reward] : result.rewards)
 				{
-					fout << std::noshowpos << date_time << delimeter;
+					fout << std::noshowpos << date_time << separator;
 
-					fout << std::noshowpos << to_time_t(date_time) << delimeter;
+					fout << std::noshowpos << to_time_t(date_time) << separator;
 
 					fout << std::setprecision(3) << std::fixed << std::showpos << reward << '\n';
 				}
@@ -211,33 +211,33 @@ namespace solution
 					throw source_exception("cannot open file " + path.string());
 				}
 
-				const auto delimeter = ',';
+				const auto separator = ',';
 
 				for (const auto & trade : result.trades)
 				{
-					fout << std::noshowpos << trade.begin << delimeter;
-					fout << std::noshowpos << trade.end << delimeter;
+					fout << std::noshowpos << trade.begin << separator;
+					fout << std::noshowpos << trade.end << separator;
 
-					fout << std::noshowpos << to_time_t(trade.begin) << delimeter;
-					fout << std::noshowpos << to_time_t(trade.end) << delimeter;
+					fout << std::noshowpos << to_time_t(trade.begin) << separator;
+					fout << std::noshowpos << to_time_t(trade.end) << separator;
 
 					switch (trade.state)
 					{
 					case Strategy::State::L:
 					{
-						fout << "L" << delimeter;
+						fout << "L" << separator;
 
 						break;
 					}
 					case Strategy::State::S:
 					{
-						fout << "S" << delimeter;
+						fout << "S" << separator;
 
 						break;
 					}
 					default:
 					{
-						fout << "unknown" << delimeter;
+						fout << "unknown" << separator;
 
 						break;
 					}
@@ -769,13 +769,13 @@ namespace solution
 
 			try
 			{
-				const auto delimeter = '-';
+				const auto separator = '-';
 
 				std::stringstream sout;
 
 				sout <<
-					m_asset << delimeter << m_config.inputs_timeframe <<
-					m_config.inputs_timeframe_type << delimeter << year << delimeter <<
+					m_asset << separator << m_config.inputs_timeframe <<
+					m_config.inputs_timeframe_type << separator << year << separator <<
 					std::setw(2) << std::setfill('0') << std::right << month << Extension::csv;
 
 				return sout.str();
@@ -792,12 +792,12 @@ namespace solution
 
 			try
 			{
-				const auto delimeter = '-';
+				const auto separator = '-';
 
 				std::stringstream sout;
 
 				sout << 
-					m_asset << delimeter << "orders" << delimeter << year << delimeter <<
+					m_asset << separator << "orders" << separator << year << separator <<
 					std::setw(2) << std::setfill('0') << std::right << month << Extension::csv;
 
 				return sout.str();
@@ -814,12 +814,12 @@ namespace solution
 
 			try
 			{
-				const auto delimeter = '-';
+				const auto separator = '-';
 
 				std::stringstream sout;
 
 				sout << 
-					m_asset << delimeter << "trades" << delimeter << year << delimeter <<
+					m_asset << separator << "trades" << separator << year << separator <<
 					std::setw(2) << std::setfill('0') << std::right << month << Extension::csv;
 
 				return sout.str();
@@ -1147,7 +1147,7 @@ namespace solution
 				const auto timesteps_wvb = m_config.awvb_timesteps_wvb;
 				const auto timesteps_sma = m_config.awvb_timesteps_sma;
 
-				const auto delimeter = ',';
+				const auto separator = ',';
 
 				auto path = Data::Directory::result / m_asset;
 
@@ -1206,11 +1206,11 @@ namespace solution
 						}
 					}
 
-					fout << deviations[i].first << delimeter <<
+					fout << deviations[i].first << separator <<
 						std::setw(9) << std::setfill(' ') << std::right <<
-						std::setprecision(3) << std::fixed << std::showpos << deviations[i].second << delimeter <<
+						std::setprecision(3) << std::fixed << std::showpos << deviations[i].second << separator <<
 						std::setw(9) << std::setfill(' ') << std::right <<
-						std::setprecision(3) << std::fixed << std::showpos << sma << delimeter << state << "\n";
+						std::setprecision(3) << std::fixed << std::showpos << sma << separator << state << "\n";
 				}
 			}
 			catch (const std::exception & exception)

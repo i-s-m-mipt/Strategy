@@ -201,7 +201,7 @@ namespace solution
 			{
 				try
 				{
-					std::cerr << scope << delimeter << exception.what() << '\n';
+					std::cerr << scope << separator << exception.what() << '\n';
 				}
 				catch (...)
 				{
@@ -216,7 +216,7 @@ namespace solution
 
 				try
 				{
-					std::cerr << scope << delimeter << exception.what() << '\n';
+					std::cerr << scope << separator << exception.what() << '\n';
 				}
 				catch (...)
 				{
@@ -228,7 +228,7 @@ namespace solution
 
 		private:
 
-			static inline const std::string delimeter = " : ";
+			static inline const std::string separator = " : ";
 
 		private:
 

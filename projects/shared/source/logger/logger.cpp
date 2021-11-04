@@ -139,7 +139,7 @@ namespace solution
 				stream << "0x" << std::dec << std::setw(8) << std::setfill('0');
 				stream << boost::log::extract_or_throw < std::size_t > (
 					attribute_value_set[attributes.at(Attribute_Index::line).first]);
-				stream << std::setfill(' ') << delimeter;
+				stream << std::setfill(' ') << separator;
 
 				auto date_time_formatter =
 					boost::log::expressions::stream <<
@@ -148,16 +148,16 @@ namespace solution
 
 				date_time_formatter(record_view, stream);
 
-				stream << delimeter;
+				stream << separator;
 
 				stream << severities.at(boost::log::extract_or_throw < Severity > (
-					attribute_value_set[attributes.at(Attribute_Index::severity).first])) << delimeter;
+					attribute_value_set[attributes.at(Attribute_Index::severity).first])) << separator;
 
 				stream << boost::log::extract_or_throw < boost::log::attributes::current_process_id::value_type > (
-					attribute_value_set[attributes.at(Attribute_Index::process).first]) << delimeter;
+					attribute_value_set[attributes.at(Attribute_Index::process).first]) << separator;
 
 				stream << boost::log::extract_or_throw < boost::log::attributes::current_thread_id::value_type > (
-					attribute_value_set[attributes.at(Attribute_Index::thread).first]) << delimeter;
+					attribute_value_set[attributes.at(Attribute_Index::thread).first]) << separator;
 
 				stream << record_view[boost::log::expressions::message];
 			}
@@ -187,7 +187,7 @@ namespace solution
 				{
 					boost::log::record_ostream stream(record);
 
-					stream << m_scope << delimeter << message;
+					stream << m_scope << separator << message;
 
 					logger.push_record(std::move(record));
 				}

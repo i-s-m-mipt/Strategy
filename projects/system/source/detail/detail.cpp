@@ -42,17 +42,17 @@ namespace solution
 
 		std::ostream & operator<< (std::ostream & stream, const Date_Time & date_time)
 		{
-			const char date_delimeter = '/';
-			const char time_delimeter = ':';
+			const char date_separator = '/';
+			const char time_separator = ':';
 
 			stream <<
-				std::setw(4) << std::right << std::setfill('0') << std::noshowpos << date_time.year  << date_delimeter <<
-				std::setw(2) << std::right << std::setfill('0') << std::noshowpos << date_time.month << date_delimeter <<
+				std::setw(4) << std::right << std::setfill('0') << std::noshowpos << date_time.year  << date_separator <<
+				std::setw(2) << std::right << std::setfill('0') << std::noshowpos << date_time.month << date_separator <<
 				std::setw(2) << std::right << std::setfill('0') << std::noshowpos << date_time.day   << ' ';
 
 			stream <<
-				std::setw(2) << std::right << std::setfill('0') << std::noshowpos << date_time.hour   << time_delimeter <<
-				std::setw(2) << std::right << std::setfill('0') << std::noshowpos << date_time.minute << time_delimeter <<
+				std::setw(2) << std::right << std::setfill('0') << std::noshowpos << date_time.hour   << time_separator <<
+				std::setw(2) << std::right << std::setfill('0') << std::noshowpos << date_time.minute << time_separator <<
 				std::setw(2) << std::right << std::setfill('0') << std::noshowpos << date_time.second;
 
 			return stream;
