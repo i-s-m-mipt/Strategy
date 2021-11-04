@@ -441,7 +441,7 @@ class Connector(Spot):
 
     def __init__(self, public_key = None, secret_key = None, recvWindow: int = 10000):
         self.recvWindow = recvWindow
-    super().__init__(key = public_key, secret = secret_key)
+        super().__init__(key = public_key, secret = secret_key)
 
     @staticmethod
     def _transform_kline(kline):
