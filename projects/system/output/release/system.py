@@ -22,6 +22,7 @@ from borb.pdf.pdf                                             import PDF
 from PIL import Image as PILImage
 
 from binance.spot import Spot
+from datetime     import datetime
 from enum         import Enum, unique
 from math         import floor
 
@@ -595,6 +596,14 @@ class Connector(Spot):
     def new_margin_order(self, *args, **kwargs):
         return super().new_margin_order(*args, **kwargs)
 
+    def time_difference(self):
+        
+        local_time_before_query = round(datetime.now().timestamp() * 1e3)
+        server_time = self.time()["serverTime"]
+        local_time_after_query = round(datetime.now().timestamp() * 1e3)
+        
+        return (2 * server_time - local_time_after_query - local_time_before_query) / 2
+
 dummy = Connector()
 
 # =============================================================================
@@ -634,5 +643,8 @@ def make_short_position(public_key: str, symbol: str, usdt: str):
 
 def make_null_position(public_key: str, symbol: str):
     return clients.get_client(public_key = public_key).make_null_position(symbol = symbol.upper())
+
+def time_difference():
+    return dummy.time_difference()
 
 # =============================================================================
