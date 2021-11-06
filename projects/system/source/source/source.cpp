@@ -509,9 +509,9 @@ namespace solution
 
 				Parameters best_parameters;
 
-				for (auto parameter_1 = 2ULL; parameter_1 <= 20; parameter_1 += 1)
+				for (auto parameter_1 = 25ULL; parameter_1 <= 50; parameter_1 += 5)
 				{
-					for (auto parameter_2 = 10ULL; parameter_2 <= 100; parameter_2 += 10)
+					for (auto parameter_2 = 400ULL; parameter_2 <= 500; parameter_2 += 10)
 					{
 						for (auto parameter_3 = 0.000; parameter_3 <= 0.090; parameter_3 += 0.010)
 						{
