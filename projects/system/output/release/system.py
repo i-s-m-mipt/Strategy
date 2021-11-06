@@ -110,8 +110,8 @@ def sortino_coefficient(reward, config):
     
     selected_deviations_m = [k for k in deviations_m if k < r / 12]
     
-    return ((np.mean(deviations_m) - r / 12) / (np.std(selected_deviations_m) *
-        np.sqrt(len(selected_deviations_m) / len(deviations_m))))
+    return ((np.mean(deviations_m) - r / 12) / (np.std(deviations_m) *
+        np.sqrt(len(deviations_m) / len(deviations_m))))
 
 # =============================================================================
 
