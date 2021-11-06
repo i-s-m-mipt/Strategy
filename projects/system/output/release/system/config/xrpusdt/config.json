@@ -25,5 +25,5 @@
     "test_soft_strategy": "",
     "timesteps_prediction": 10,
     "timesteps_prehistory": 40,
-    "transaction": 400.0
+    "transaction": 124.0
 }
