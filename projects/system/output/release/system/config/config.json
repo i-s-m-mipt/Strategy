@@ -1,9 +1,9 @@
 {
-    "required_run": true,
+    "required_run": false,
     "interval": 14400,
     "max_drawdown": 0.123,
     "benchmark": "btcusdt",
-    "server_start_hour": 3,
+    "server_start_hour": 23,
     "server_start_minute": 50,
-    "server_start_iteration": 1
+    "server_start_iteration": 0
 }
