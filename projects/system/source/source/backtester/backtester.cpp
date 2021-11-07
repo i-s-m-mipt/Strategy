@@ -63,8 +63,6 @@ namespace solution
 				{
 					const auto begin = make_begin();
 
-					const auto epsilon = std::numeric_limits < double > ::epsilon();
-
 					Result result;
 
 					result.rewards.reserve(std::size(m_inputs));
@@ -82,7 +80,7 @@ namespace solution
 					for (auto i = begin; i < std::size(m_inputs) - 1; ++i)
 					{
 						auto price_deviation = (m_inputs[i + 1].price_close -
-							m_inputs[i].price_close) / std::max(m_inputs[i].price_close, epsilon);
+							m_inputs[i].price_close) / m_inputs[i].price_close;
 
 						auto delta = price_deviation * position;
 
@@ -112,8 +110,6 @@ namespace solution
 				try
 				{
 					const auto begin = make_begin();
-
-					const auto epsilon = std::numeric_limits < double > ::epsilon();
 
 					const auto commission = m_config.commission;
 
@@ -188,8 +184,8 @@ namespace solution
 
 						if (current_state != State::N)
 						{
-							auto price_deviation = (m_inputs[i + 1].price_close -
-								m_inputs[i].price_close) / std::max(m_inputs[i].price_close, epsilon);
+							auto price_deviation = (m_inputs[i + 1].price_close - 
+								m_inputs[i].price_close) / m_inputs[i].price_close;
 
 							auto delta = price_deviation * position;
 
