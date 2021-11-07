@@ -50,6 +50,8 @@ namespace solution
 			{
 			public:
 
+				using Input = detail::Input;
+
 				using inputs_container_t = detail::inputs_container_t;
 
 			public:

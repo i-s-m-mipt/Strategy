@@ -27,8 +27,7 @@ namespace solution
 
 								for (auto k = j + 1 - timesteps_wvb; k <= j; ++k)
 								{
-									deviation += (inputs[k].volume_buy_base - inputs[k].volume_sell_base) *
-										(inputs[k].price_high - inputs[k].price_low) / inputs[k].price_open;
+									deviation += weighted_volume_bias(inputs[k]);
 								}
 
 								sma += deviation;
@@ -43,6 +42,12 @@ namespace solution
 					{
 						shared::catch_handler < indicator_exception > (logger, exception);
 					}
+				}
+
+				double AWVB::weighted_volume_bias(const Input & input) noexcept
+				{
+					return (input.volume_buy_base - input.volume_sell_base) *
+						(input.price_high - input.price_low) / input.price_open;
 				}
 
 			} // namespace indicators

@@ -32,6 +32,10 @@ namespace solution
 
 				public:
 
+					static double weighted_volume_bias(const Input & input) noexcept;
+
+				public:
+
 					static inline const std::string name = "AWVB";
 				};
 

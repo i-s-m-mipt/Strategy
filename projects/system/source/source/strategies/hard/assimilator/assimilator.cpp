@@ -27,8 +27,7 @@ namespace solution
 
 							for (auto i = 0ULL; i < std::size(inputs); ++i)
 							{
-								deviation += (inputs[i].volume_buy_base - inputs[i].volume_sell_base) *
-									(inputs[i].price_high - inputs[i].price_low) / inputs[i].price_open;
+								deviation += indicators::AWVB::weighted_volume_bias(inputs[i]);
 							}
 
 							auto awvb = inputs.back().indicators.at(indicators::AWVB::name);
