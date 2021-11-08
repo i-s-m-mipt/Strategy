@@ -46,8 +46,9 @@ namespace solution
 
 				double AWVB::weighted_volume_bias(const Input & input) noexcept
 				{
-					return (input.volume_buy_base - input.volume_sell_base) *
-						(input.price_high - input.price_low) / input.price_open;
+					double weight = std::pow((input.price_high - input.price_low) / input.price_open, 1.0);
+
+					return (input.volume_buy_base - input.volume_sell_base) * weight;
 				}
 
 			} // namespace indicators
