@@ -64,8 +64,7 @@ namespace solution
 
 			public:
 
-				std::vector < Aggregated_Trade > lower_price_aggregated_trades;
-				std::vector < Aggregated_Trade > upper_price_aggregated_trades;
+				std::vector < Aggregated_Trade > price_aggregated_trades;
 				
 			public:
 

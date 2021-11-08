@@ -55,6 +55,9 @@
     <Filter Include="source\source\strategies\hard\assimilator">
       <UniqueIdentifier>{0de5d6b2-8863-4372-802d-e7416811a0c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\source\strategies\hard\subjugator">
+      <UniqueIdentifier>{326f5296-864e-4580-bd6e-792c87c3dae4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.cpp">
@@ -102,6 +105,9 @@
     <ClCompile Include="..\source\source\indicators\indicator.cpp">
       <Filter>source\source\indicators</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\source\strategies\hard\subjugator\subjugator.cpp">
+      <Filter>source\source\strategies\hard\subjugator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\system\system.hpp">
@@ -148,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="..\source\source\strategies\strategy.hpp">
       <Filter>source\source\strategies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\source\strategies\hard\subjugator\subjugator.hpp">
+      <Filter>source\source\strategies\hard\subjugator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

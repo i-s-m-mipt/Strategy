@@ -177,6 +177,7 @@
     <ClCompile Include="..\source\source\indicators\indicator.cpp" />
     <ClCompile Include="..\source\source\source.cpp" />
     <ClCompile Include="..\source\source\strategies\hard\assimilator\assimilator.cpp" />
+    <ClCompile Include="..\source\source\strategies\hard\subjugator\subjugator.cpp" />
     <ClCompile Include="..\source\source\strategies\strategy.cpp" />
     <ClCompile Include="..\source\system\system.cpp" />
   </ItemGroup>
@@ -196,6 +197,7 @@
     <ClInclude Include="..\source\source\indicators\indicator.hpp" />
     <ClInclude Include="..\source\source\source.hpp" />
     <ClInclude Include="..\source\source\strategies\hard\assimilator\assimilator.hpp" />
+    <ClInclude Include="..\source\source\strategies\hard\subjugator\subjugator.hpp" />
     <ClInclude Include="..\source\source\strategies\strategy.hpp" />
     <ClInclude Include="..\source\system\system.hpp" />
   </ItemGroup>

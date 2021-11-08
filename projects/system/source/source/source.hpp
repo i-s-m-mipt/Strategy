@@ -40,6 +40,7 @@
 
 #include "strategies/strategy.hpp"
 #include "strategies/hard/assimilator/assimilator.hpp"
+#include "strategies/hard/subjugator/subjugator.hpp"
 
 #include "../config/config.hpp"
 

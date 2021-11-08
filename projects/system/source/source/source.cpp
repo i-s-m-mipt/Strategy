@@ -365,6 +365,9 @@ namespace solution
 
 				m_strategies[source::strategies::hard::Assimilator::m_name] = 
 					std::make_shared < source::strategies::hard::Assimilator > (m_config);
+
+				m_strategies[source::strategies::hard::Subjugator::m_name] =
+					std::make_shared < source::strategies::hard::Subjugator > (m_config);
 			}
 			catch (const std::exception & exception)
 			{
@@ -985,72 +988,65 @@ namespace solution
 
 			try
 			{
+				const auto timesteps = m_config.timesteps_prehistory;
+
 				if (std::size(klines) != std::size(inputs))
 				{
 					throw std::domain_error("invalid klines/inputs size");
 				}
 
-				const auto epsilon = std::numeric_limits < double > ::epsilon();
-
-				for (auto i = m_config.timesteps_prehistory - 1; i < std::size(klines); ++i)
+				for (auto i = timesteps - 1; i < std::size(klines); ++i)
 				{
+					const auto & kline = klines[i];
+
+					auto price_high = std::max_element(
+						std::next(std::begin(klines), i + 1 - timesteps),
+						std::next(std::begin(klines), i + 1), 
+						[](const auto & lhs, const auto & rhs)
+							{ return (lhs.price_high < rhs.price_high); })->price_high;
+
+					auto price_low = std::min_element(
+						std::next(std::begin(klines), i + 1 - timesteps),
+						std::next(std::begin(klines), i + 1),
+						[](const auto & lhs, const auto & rhs)
+							{ return (lhs.price_low < rhs.price_low); })->price_low;
+
+					auto step = kline.price_close * m_config.price_aggregated_trade_step;
+
+					inputs[i].price_aggregated_trades.resize(static_cast < std::size_t > (
+						std::ceil((price_high - price_low) / step)), { 0.0, 0.0, 0.0, 0.0 });
+
 					auto begin = std::lower_bound(std::begin(trades), std::end(trades),
-						klines[i + 1 - m_config.timesteps_prehistory].time_open,
-							[](const auto & trade, auto time) { return (trade.time < time); });
+						klines[i + 1 - timesteps].time_open, [](const auto & trade, auto time)
+							{ return (trade.time < time); });
 
-					auto end = std::upper_bound(std::begin(trades), std::end(trades), klines[i].time_close,
-						[](auto time, const auto & trade) { return (time < trade.time); });
-
-					inputs[i].lower_price_aggregated_trades.resize(
-						m_config.price_aggregated_trades_depth, { 0.0, 0.0, 0.0, 0.0 });
-
-					inputs[i].upper_price_aggregated_trades.resize(
-						m_config.price_aggregated_trades_depth, { 0.0, 0.0, 0.0, 0.0 });
+					auto end = std::upper_bound(std::begin(trades), std::end(trades),
+						klines[i].time_close, [](auto time, const auto & trade)
+							{ return (time < trade.time); });
 
 					for (auto iterator = begin; iterator != end; ++iterator)
 					{
-						if (iterator->time < klines[i + 1 - m_config.timesteps_prehistory].time_open ||
+						if (iterator->time < klines[i + 1 - timesteps].time_open ||
 							iterator->time > klines[i].time_close)
 						{
 							LOGGER_WRITE_FATAL(logger, std::string("trade time: ") + std::to_string(iterator->time));
-							LOGGER_WRITE_FATAL(logger, std::string("open  time: ") + std::to_string(klines[i].time_open));
-							LOGGER_WRITE_FATAL(logger, std::string("close time: ") + std::to_string(klines[i].time_close));
+							LOGGER_WRITE_FATAL(logger, std::string("open  time: ") + std::to_string(kline.time_open));
+							LOGGER_WRITE_FATAL(logger, std::string("close time: ") + std::to_string(kline.time_close));
 
 							throw std::domain_error("invalid trade time");
 						}
 
-						if (auto index = static_cast < std::size_t > (std::floor(
-								std::abs(iterator->price - inputs[i].price_close) /
-									std::max(inputs[i].price_close, epsilon) /
-										m_config.price_aggregated_trade_step));
-							index < m_config.price_aggregated_trades_depth)
+						auto index = static_cast < std::size_t > (std::floor((iterator->price - price_low) / step));
+
+						if (iterator->is_buyer_maker == "True")
 						{
-							if (iterator->price < inputs[i].price_close)
-							{
-								if (iterator->is_buyer_maker == "True")
-								{
-									inputs[i].lower_price_aggregated_trades[index].volume_buy_base  += iterator->volume_base;
-									inputs[i].lower_price_aggregated_trades[index].volume_buy_quote += iterator->volume_quote;
-								}
-								else
-								{
-									inputs[i].lower_price_aggregated_trades[index].volume_sell_base  += iterator->volume_base;
-									inputs[i].lower_price_aggregated_trades[index].volume_sell_quote += iterator->volume_quote;
-								}
-							}
-							else
-							{
-								if (iterator->is_buyer_maker == "True")
-								{
-									inputs[i].upper_price_aggregated_trades[index].volume_buy_base  += iterator->volume_base;
-									inputs[i].upper_price_aggregated_trades[index].volume_buy_quote += iterator->volume_quote;
-								}
-								else
-								{
-									inputs[i].upper_price_aggregated_trades[index].volume_sell_base  += iterator->volume_base;
-									inputs[i].upper_price_aggregated_trades[index].volume_sell_quote += iterator->volume_quote;
-								}
-							}
+							inputs[i].price_aggregated_trades[index].volume_buy_base  += iterator->volume_base;
+							inputs[i].price_aggregated_trades[index].volume_buy_quote += iterator->volume_quote;
+						}
+						else
+						{
+							inputs[i].price_aggregated_trades[index].volume_sell_base  += iterator->volume_base;
+							inputs[i].price_aggregated_trades[index].volume_sell_quote += iterator->volume_quote;
 						}
 					}
 				}
