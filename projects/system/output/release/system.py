@@ -455,20 +455,19 @@ class Connector(Spot):
                    "volume_base",
                    "time_close",
                    "volume_quote",
+                   "n_trades",
                    "volume_buy_base",
-                   "volume_buy_quote"]
+                   "volume_buy_quote",
+                   "ignore"]
         
         kline = [float(entry) if '.' in str(entry) else entry for entry in kline]
         
-        kline = dict(zip(headers, [item for item in kline if kline.index(item) != -4 and kline.index(item) != -1]))
+        kline = dict(zip(headers, kline))
         
         return kline
 
     @staticmethod
     def _transform_trade(trade):
-        
-        trade.pop("id")
-        trade.pop("isBestMatch")
         
         trade = dict([(entry[0], float(entry[1])) if '.' in str(entry[1]) else entry for entry in trade.items()])
         
