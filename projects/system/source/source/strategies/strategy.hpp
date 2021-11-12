@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "../indicators/awvb/awvb.hpp"
+#include "../indicators/ema/ema.hpp"
 
 #include "../../config/config.hpp"
 
