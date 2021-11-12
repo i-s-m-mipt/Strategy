@@ -16,6 +16,7 @@ namespace solution
 
 				load(path, raw_config);
 
+				config.test                   = raw_config[Key::Config::test                  ].get < bool > ();
 				config.required_run           = raw_config[Key::Config::required_run          ].get < bool > ();
 				config.interval               = raw_config[Key::Config::interval              ].get < std::time_t > ();
 				config.max_drawdown           = raw_config[Key::Config::max_drawdown          ].get < double > ();
@@ -23,6 +24,7 @@ namespace solution
 				config.server_start_hour      = raw_config[Key::Config::server_start_hour     ].get < std::time_t > ();
 				config.server_start_minute    = raw_config[Key::Config::server_start_minute   ].get < std::time_t > ();
 				config.server_start_iteration = raw_config[Key::Config::server_start_iteration].get < std::size_t > ();
+				config.required_correlation   = raw_config[Key::Config::required_correlation  ].get < bool > ();
 
 			}
 			catch (const std::exception & exception)
@@ -177,6 +179,46 @@ namespace solution
 			}
 		}
 
+		void System::Data::save_correlation(const correlation_matrix_t & correlation_matrix)
+		{
+			LOGGER(logger);
+
+			try
+			{
+				std::filesystem::create_directory(Directory::output);
+
+				auto path = Directory::output / File::correlation_data;
+
+				std::fstream fout(path.string(), std::ios::out);
+
+				if (!fout)
+				{
+					throw system_exception("cannot open file " + path.string());
+				}
+
+				std::ostringstream sout;
+
+				auto size = correlation_matrix.size();
+
+				for (auto i = 0ULL; i < size; ++i)
+				{
+					for (auto j = 0ULL; j < size; ++j)
+					{
+						sout << std::setw(2 + 1 + 3) << std::setfill(' ') << std::right << 
+							std::setprecision(3) << std::fixed << std::showpos << correlation_matrix[i][j] << " ";
+					}
+
+					sout << "\n";
+				}
+
+				fout << sout.str();
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
 		void System::Data::load(const path_t & path, json_t & object)
 		{
 			LOGGER(logger);
@@ -226,6 +268,11 @@ namespace solution
 			try
 			{
 				load();
+
+				if (m_config.required_correlation)
+				{
+					handle_correlation();
+				}
 			}
 			catch (const std::exception & exception)
 			{
@@ -399,6 +446,117 @@ namespace solution
 					Data::save_source_config(Data::Directory::config /
 						asset / Data::File::config_json, source->config());
 				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::handle_correlation()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				Data::save_correlation(make_correlation());
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		System::correlation_matrix_t System::make_correlation()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				const auto size = std::size(m_assets);
+
+				std::vector < std::future < double > > futures;
+
+				futures.reserve(size * (size - 1) / 2);
+
+				for (auto i = 0ULL; i < size; ++i)
+				{
+					for (auto j = i + 1; j < size; ++j)
+					{
+						std::packaged_task < double() > task([this, i, j]()
+							{ return make_correlation(m_assets[i], m_assets[j]); });
+
+						futures.push_back(boost::asio::post(m_thread_pool, std::move(task)));
+					}
+				}
+
+				auto index = 0ULL;
+
+				correlation_matrix_t correlation_matrix(boost::extents[size][size]);
+
+				for (auto i = 0ULL; i < size; ++i)
+				{
+					for (auto j = 0ULL; j < size; ++j)
+					{
+						if (i == j)
+						{
+							correlation_matrix[i][j] = 1.0;
+						}
+						else
+						{
+							if (i > j)
+							{
+								correlation_matrix[i][j] = correlation_matrix[j][i];
+							}
+							else
+							{
+								correlation_matrix[i][j] = futures[index++].get();
+							}
+						}
+					}
+				}
+				
+				return correlation_matrix;
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		double System::make_correlation(const std::string & asset_1, const std::string & asset_2)
+		{
+			LOGGER(logger);
+
+			try
+			{
+				const auto & config_1 = m_sources.at(asset_1)->config();
+				const auto & config_2 = m_sources.at(asset_2)->config();
+
+				if ((config_1.inputs_timeframe      != config_2.inputs_timeframe     ) ||
+					(config_1.inputs_timeframe_type != config_2.inputs_timeframe_type))
+				{
+					throw system_exception("invalid timeframes pair");
+				}
+
+				const auto & klines_1 = m_sources.at(asset_1)->load_klines();
+				const auto & klines_2 = m_sources.at(asset_2)->load_klines();
+
+				auto size = std::min(std::size(klines_1), std::size(klines_2));
+
+				std::vector < int > signs_1(size, 0);
+				std::vector < int > signs_2(size, 0);
+
+				std::transform(std::crbegin(klines_1), std::next(std::crbegin(klines_1), size),
+					std::begin(signs_1), [](const auto & kline) 
+						{ return (kline.price_close > kline.price_open ? +1 : -1); });
+
+				std::transform(std::crbegin(klines_2), std::next(std::crbegin(klines_2), size),
+					std::begin(signs_2), [](const auto & kline)
+						{ return (kline.price_close > kline.price_open ? +1 : -1); });
+
+				return (std::transform_reduce(std::begin(signs_1), std::end(signs_1), std::begin(signs_2),
+					0.0, std::plus(), [](auto lhs, auto rhs) { return (lhs == rhs ? +1.0 : -1.0); }) / size);
 			}
 			catch (const std::exception & exception)
 			{

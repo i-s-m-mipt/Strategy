@@ -158,6 +158,8 @@ namespace solution
             std::size_t server_start_iteration;
 
             bool required_markup;
+
+            bool required_correlation;
         };
 
     } // namespace system

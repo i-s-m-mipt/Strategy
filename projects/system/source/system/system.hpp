@@ -27,6 +27,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/date_time.hpp>
+#include <boost/multi_array.hpp>
 
 #include <nlohmann/json.hpp>
 
@@ -94,6 +95,8 @@ namespace solution
 
 			using State = Source::State;
 
+			using correlation_matrix_t = boost::multi_array < double, 2 > ;
+
 		private:
 
 			class Data
@@ -107,15 +110,17 @@ namespace solution
 				struct Directory
 				{
 					static inline const path_t config = "system/config";
+					static inline const path_t output = "system/output";
 				};
 
 			public:
 
 				struct File
 				{
-					static inline const path_t config_json  = "config.json";
-					static inline const path_t assets_data  = "assets.data";
-					static inline const path_t clients_json = "clients.json";
+					static inline const path_t assets_data      = "assets.data";
+					static inline const path_t clients_json     = "clients.json";
+					static inline const path_t config_json      = "config.json";
+					static inline const path_t correlation_data = "correlation.data";
 				};
 
 			private:
@@ -158,6 +163,7 @@ namespace solution
 						static inline const std::string server_start_minute           = "server_start_minute";
 						static inline const std::string server_start_iteration        = "server_start_iteration";
 						static inline const std::string required_markup               = "required_markup";
+						static inline const std::string required_correlation          = "required_correlation";
 					};
 
 					struct Client
@@ -182,6 +188,8 @@ namespace solution
 			public:
 
 				static void save_source_config(const path_t & path, const Config & config);
+
+				static void save_correlation(const correlation_matrix_t & correlation_matrix);
 
 			private:
 
@@ -237,6 +245,18 @@ namespace solution
 		private:
 
 			void save_sources() const;
+
+		private:
+
+			void handle_correlation();
+
+		private:
+
+			correlation_matrix_t make_correlation();
+
+		private:
+
+			double make_correlation(const std::string & asset_1, const std::string & asset_2);
 
 		public:
 

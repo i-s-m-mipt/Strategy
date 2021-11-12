@@ -253,9 +253,11 @@ namespace solution
 
 			inputs_container_t load_inputs() const;
 
-		private:
+		public:
 
 			klines_container_t load_klines() const;
+
+		private:
 
 			orders_container_t load_orders() const;
 
