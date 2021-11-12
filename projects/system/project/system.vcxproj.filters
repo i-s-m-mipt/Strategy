@@ -58,6 +58,9 @@
     <Filter Include="source\source\strategies\hard\subjugator">
       <UniqueIdentifier>{326f5296-864e-4580-bd6e-792c87c3dae4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\source\indicators\ema">
+      <UniqueIdentifier>{c0d00ff2-0eed-4a98-875c-c25cb3ba4253}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.cpp">
@@ -108,6 +111,9 @@
     <ClCompile Include="..\source\source\strategies\hard\subjugator\subjugator.cpp">
       <Filter>source\source\strategies\hard\subjugator</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\source\indicators\ema\ema.cpp">
+      <Filter>source\source\indicators\ema</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\system\system.hpp">
@@ -157,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="..\source\source\strategies\hard\subjugator\subjugator.hpp">
       <Filter>source\source\strategies\hard\subjugator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\source\indicators\ema\ema.hpp">
+      <Filter>source\source\indicators\ema</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
