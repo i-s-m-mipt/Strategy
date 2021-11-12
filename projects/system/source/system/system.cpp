@@ -556,7 +556,7 @@ namespace solution
 						{ return (kline.price_close > kline.price_open ? +1 : -1); });
 
 				return (std::transform_reduce(std::begin(signs_1), std::end(signs_1), std::begin(signs_2),
-					0.0, std::plus(), [](auto lhs, auto rhs) { return (lhs == rhs ? +1.0 : -1.0); }) / size);
+					0.0, std::plus(), [](auto lhs, auto rhs) { return (lhs == rhs ? +1.0 : 0.0); }) / size);
 			}
 			catch (const std::exception & exception)
 			{
