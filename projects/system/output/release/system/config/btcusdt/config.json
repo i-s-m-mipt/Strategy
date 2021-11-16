@@ -3,6 +3,7 @@
     "awvb_timesteps_sma": 472,
     "awvb_timesteps_wvb": 30,
     "commission": 0.00075,
+    "ema_timesteps": 10,
     "has_reinvestment": false,
     "inputs_asset": "btcusdt",
     "inputs_timeframe": 4,

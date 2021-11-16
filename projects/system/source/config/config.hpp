@@ -160,6 +160,8 @@ namespace solution
             bool required_markup;
 
             bool required_correlation;
+
+            std::size_t ema_timesteps;
         };
 
     } // namespace system

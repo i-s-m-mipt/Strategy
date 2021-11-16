@@ -347,6 +347,9 @@ namespace solution
 			{
 				m_indicators[source::indicators::AWVB::name] = 
 					std::make_shared < source::indicators::AWVB > (m_config);
+
+				m_indicators[source::indicators::EMA::name] =
+					std::make_shared < source::indicators::EMA > (m_config);
 			}
 			catch (const std::exception & exception)
 			{

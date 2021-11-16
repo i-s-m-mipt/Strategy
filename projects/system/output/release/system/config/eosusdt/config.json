@@ -3,6 +3,7 @@
     "awvb_timesteps_sma": 47,
     "awvb_timesteps_wvb": 12,
     "commission": 0.00075,
+    "ema_timesteps": 10,
     "has_reinvestment": false,
     "inputs_asset": "eosusdt",
     "inputs_timeframe": 1,

@@ -3,6 +3,7 @@
     "awvb_timesteps_sma": 68,
     "awvb_timesteps_wvb": 3,
     "commission": 0.00075,
+    "ema_timesteps": 10,
     "has_reinvestment": false,
     "inputs_asset": "xrpusdt",
     "inputs_timeframe": 1,

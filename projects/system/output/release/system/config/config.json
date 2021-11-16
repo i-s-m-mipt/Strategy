@@ -6,6 +6,6 @@
     "server_start_hour": 23,
     "server_start_minute": 50,
     "server_start_iteration": 0,
-    "required_correlation": true,
+    "required_correlation": false,
     "test": true
 }
