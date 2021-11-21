@@ -168,6 +168,7 @@ namespace solution
 						static inline const std::string rsi_timesteps                 = "rsi_timesteps";
 						static inline const std::string rsi_threshold_long            = "rsi_threshold_long";
 						static inline const std::string rsi_threshold_short           = "rsi_threshold_short";
+						static inline const std::string stop_loss_relaxation          = "stop_loss_relaxation";
 					};
 
 					struct Client

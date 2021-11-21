@@ -166,6 +166,8 @@ namespace solution
 
             double rsi_threshold_long;
             double rsi_threshold_short;
+
+            std::size_t stop_loss_relaxation;
         };
 
     } // namespace system

@@ -74,6 +74,7 @@ namespace solution
 				config.rsi_timesteps                 = raw_config[Key::Config::rsi_timesteps                ].get < std::size_t > ();
 				config.rsi_threshold_long            = raw_config[Key::Config::rsi_threshold_long           ].get < double > ();
 				config.rsi_threshold_short           = raw_config[Key::Config::rsi_threshold_short          ].get < double > ();
+				config.stop_loss_relaxation          = raw_config[Key::Config::stop_loss_relaxation         ].get < std::size_t > ();
 			}
 			catch (const std::exception & exception)
 			{
@@ -178,6 +179,7 @@ namespace solution
 				raw_config[Key::Config::rsi_timesteps                ] = config.rsi_timesteps;
 				raw_config[Key::Config::rsi_threshold_long           ] = config.rsi_threshold_long;
 				raw_config[Key::Config::rsi_threshold_short          ] = config.rsi_threshold_short;
+				raw_config[Key::Config::stop_loss_relaxation         ] = config.stop_loss_relaxation;
 
 				save(path, raw_config);
 			}

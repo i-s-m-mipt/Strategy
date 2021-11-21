@@ -113,6 +113,8 @@ namespace solution
 
 					const auto commission = m_config.commission;
 
+					const auto stop_loss_relaxation = m_config.stop_loss_relaxation;
+
 					Result result;
 
 					result.rewards.reserve(std::size(m_inputs));
@@ -124,9 +126,11 @@ namespace solution
 
 					auto current_state = State::N;
 
-					//auto state_closed_by_stop_loss = State::N;
+					auto current_stop_loss_relaxation = 0ULL;
 
 					auto position = 0.0;
+
+					auto counter = 0ULL;
 
 					for (auto i = begin; i < std::size(m_inputs) - 1; ++i)
 					{
@@ -137,14 +141,16 @@ namespace solution
 
 						if (((required_state == State::N) && (current_state != State::N)) ||
 							((required_state == State::L) && (current_state == State::S)) ||
-							((required_state == State::S) && (current_state == State::L))/* ||
+							((required_state == State::S) && (current_state == State::L)) ||
 							((trade_reward < -1.0 * m_config.stop_loss * transaction) && 
-								(current_state != State::N))*/)
+								(current_state != State::N)))
 						{
-							//if (trade_reward < -1.0 * m_config.stop_loss * transaction)
-							//{
-							//	state_closed_by_stop_loss = current_state;
-							//}
+							if (trade_reward < -1.0 * m_config.stop_loss * transaction)
+							{
+								current_stop_loss_relaxation = stop_loss_relaxation;
+
+								++counter;
+							}
 
 							auto delta = -commission * std::abs(position);
 
@@ -160,13 +166,11 @@ namespace solution
 							total_reward += delta;
 						}
 						
-						if (((required_state == State::L) && (current_state == State::N)/* &&
-								(state_closed_by_stop_loss != State::L)*/) ||
-							((required_state == State::S) && (current_state == State::N)/* &&
-								(state_closed_by_stop_loss != State::S)*/))
+						if (((required_state == State::L) && (current_state == State::N) && 
+								(current_stop_loss_relaxation == 0)) ||
+							((required_state == State::S) && (current_state == State::N) && 
+								(current_stop_loss_relaxation == 0)))
 						{
-							//state_closed_by_stop_loss = State::N;
-
 							position = (required_state == State::L ? +transaction : -transaction);
 
 							current_state = required_state;
@@ -196,6 +200,11 @@ namespace solution
 						}
 
 						result.rewards.push_back(std::make_pair(m_inputs[i + 1].date_time_close, total_reward));
+
+						if (current_stop_loss_relaxation > 0)
+						{
+							--current_stop_loss_relaxation;
+						}
 					}
 
 					if (current_state != State::N)
@@ -205,6 +214,8 @@ namespace solution
 					}
 
 					verify(result);
+
+					LOGGER_WRITE(logger, std::to_string(counter));
 
 					return result;
 				}
