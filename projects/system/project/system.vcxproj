@@ -176,6 +176,7 @@
     <ClCompile Include="..\source\source\indicators\awvb\awvb.cpp" />
     <ClCompile Include="..\source\source\indicators\ema\ema.cpp" />
     <ClCompile Include="..\source\source\indicators\indicator.cpp" />
+    <ClCompile Include="..\source\source\indicators\rsi\rsi.cpp" />
     <ClCompile Include="..\source\source\source.cpp" />
     <ClCompile Include="..\source\source\strategies\hard\assimilator\assimilator.cpp" />
     <ClCompile Include="..\source\source\strategies\hard\subjugator\subjugator.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="..\source\source\indicators\awvb\awvb.hpp" />
     <ClInclude Include="..\source\source\indicators\ema\ema.hpp" />
     <ClInclude Include="..\source\source\indicators\indicator.hpp" />
+    <ClInclude Include="..\source\source\indicators\rsi\rsi.hpp" />
     <ClInclude Include="..\source\source\source.hpp" />
     <ClInclude Include="..\source\source\strategies\hard\assimilator\assimilator.hpp" />
     <ClInclude Include="..\source\source\strategies\hard\subjugator\subjugator.hpp" />

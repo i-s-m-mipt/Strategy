@@ -20,6 +20,7 @@
 
 #include "../indicators/awvb/awvb.hpp"
 #include "../indicators/ema/ema.hpp"
+#include "../indicators/rsi/rsi.hpp"
 
 #include "../../config/config.hpp"
 

@@ -38,6 +38,7 @@
 #include "indicators/indicator.hpp"
 #include "indicators/awvb/awvb.hpp"
 #include "indicators/ema/ema.hpp"
+#include "indicators/rsi/rsi.hpp"
 
 #include "strategies/strategy.hpp"
 #include "strategies/hard/assimilator/assimilator.hpp"

@@ -165,6 +165,7 @@ namespace solution
 						static inline const std::string required_markup               = "required_markup";
 						static inline const std::string required_correlation          = "required_correlation";
 						static inline const std::string ema_timesteps                 = "ema_timesteps";
+						static inline const std::string rsi_timesteps                 = "rsi_timesteps";
 					};
 
 					struct Client

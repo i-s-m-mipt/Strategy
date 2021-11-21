@@ -71,6 +71,7 @@ namespace solution
 				config.main_strategy                 = raw_config[Key::Config::main_strategy                ].get < std::string > ();
 				config.required_markup               = raw_config[Key::Config::required_markup              ].get < bool > ();
 				config.ema_timesteps                 = raw_config[Key::Config::ema_timesteps                ].get < std::size_t > ();
+				config.rsi_timesteps                 = raw_config[Key::Config::rsi_timesteps                ].get < std::size_t > ();
 			}
 			catch (const std::exception & exception)
 			{
@@ -172,6 +173,7 @@ namespace solution
 				raw_config[Key::Config::main_strategy                ] = config.main_strategy;
 				raw_config[Key::Config::required_markup              ] = config.required_markup;
 				raw_config[Key::Config::ema_timesteps                ] = config.ema_timesteps;
+				raw_config[Key::Config::rsi_timesteps                ] = config.rsi_timesteps;
 
 				save(path, raw_config);
 			}

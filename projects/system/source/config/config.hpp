@@ -162,6 +162,7 @@ namespace solution
             bool required_correlation;
 
             std::size_t ema_timesteps;
+            std::size_t rsi_timesteps;
         };
 
     } // namespace system

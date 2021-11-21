@@ -61,6 +61,9 @@
     <Filter Include="source\source\indicators\ema">
       <UniqueIdentifier>{c0d00ff2-0eed-4a98-875c-c25cb3ba4253}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\source\indicators\rsi">
+      <UniqueIdentifier>{97fe9588-b384-4cd9-8c1c-8221015f92b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.cpp">
@@ -114,6 +117,9 @@
     <ClCompile Include="..\source\source\indicators\ema\ema.cpp">
       <Filter>source\source\indicators\ema</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\source\indicators\rsi\rsi.cpp">
+      <Filter>source\source\indicators\rsi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\system\system.hpp">
@@ -166,6 +172,9 @@
     </ClInclude>
     <ClInclude Include="..\source\source\indicators\ema\ema.hpp">
       <Filter>source\source\indicators\ema</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\source\indicators\rsi\rsi.hpp">
+      <Filter>source\source\indicators\rsi</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
