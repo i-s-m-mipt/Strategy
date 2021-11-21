@@ -134,7 +134,7 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
               "Long average loss",   "Short average loss",   "Trade average loss",
 
               "Long minimum hold",   "Short minimum hold",   "Trade minimum hold",
-              "Long average hold",   "Short average hold",   "Trade average hold",
+              "Long median hold",    "Short median hold",    "Trade median hold",
               "Long maximum hold",   "Short maximum hold",   "Trade maximum hold",
             
               "Sharpe coefficient",  "Sortino coefficient",  "Kalmar coefficient"]
@@ -180,13 +180,13 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
                                    trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]) / 3600.0
 
     a_positions_minimum_hold = min(l_positions_minimum_hold, s_positions_minimum_hold)
-
-    l_positions_average_hold = (sum(trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index]) -
-                                sum(trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index])) / l_positions_in_total / 3600.0
-    s_positions_average_hold = (sum(trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index]) -
-                                sum(trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index])) / s_positions_in_total / 3600.0
-
-    a_positions_average_hold = (l_positions_average_hold + s_positions_average_hold) / 2
+    
+    l_positions_median_hold = (trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] - 
+                               trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]).median() / 3600.0
+    s_positions_median_hold = (trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index] - 
+                               trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]).median() / 3600.0
+                                                      
+    a_positions_median_hold = (trades_HS["time_close"] - trades_HS["time_open"]).median() / 3600.0
 
     l_positions_maximum_hold = max(trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] -
                                    trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]) / 3600.0
@@ -242,9 +242,9 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
     table["Short minimum hold"  ] = ("%.2f" % s_positions_minimum_hold) +  " hours"
     table["Trade minimum hold"  ] = ("%.2f" % a_positions_minimum_hold) +  " hours"
 
-    table["Long average hold"   ] = ("%.2f" % l_positions_average_hold) +  " hours"
-    table["Short average hold"  ] = ("%.2f" % s_positions_average_hold) +  " hours"
-    table["Trade average hold"  ] = ("%.2f" % a_positions_average_hold) +  " hours"
+    table["Long median hold"   ] = ("%.2f" % l_positions_median_hold) +  " hours"
+    table["Short median hold"  ] = ("%.2f" % s_positions_median_hold) +  " hours"
+    table["Trade median hold"  ] = ("%.2f" % a_positions_median_hold) +  " hours"
 
     table["Long maximum hold"   ] = ("%.2f" % l_positions_maximum_hold) +  " hours"
     table["Short maximum hold"  ] = ("%.2f" % s_positions_maximum_hold) +  " hours"
