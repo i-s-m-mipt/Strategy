@@ -163,6 +163,9 @@ namespace solution
 
             std::size_t ema_timesteps;
             std::size_t rsi_timesteps;
+
+            double rsi_threshold_long;
+            double rsi_threshold_short;
         };
 
     } // namespace system

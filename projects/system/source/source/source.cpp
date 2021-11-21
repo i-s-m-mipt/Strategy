@@ -350,6 +350,9 @@ namespace solution
 
 				m_indicators[source::indicators::EMA::name] =
 					std::make_shared < source::indicators::EMA > (m_config);
+
+				m_indicators[source::indicators::RSI::name] =
+					std::make_shared < source::indicators::RSI > (m_config);
 			}
 			catch (const std::exception & exception)
 			{

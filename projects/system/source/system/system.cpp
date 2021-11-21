@@ -72,6 +72,8 @@ namespace solution
 				config.required_markup               = raw_config[Key::Config::required_markup              ].get < bool > ();
 				config.ema_timesteps                 = raw_config[Key::Config::ema_timesteps                ].get < std::size_t > ();
 				config.rsi_timesteps                 = raw_config[Key::Config::rsi_timesteps                ].get < std::size_t > ();
+				config.rsi_threshold_long            = raw_config[Key::Config::rsi_threshold_long           ].get < double > ();
+				config.rsi_threshold_short           = raw_config[Key::Config::rsi_threshold_short          ].get < double > ();
 			}
 			catch (const std::exception & exception)
 			{
@@ -174,6 +176,8 @@ namespace solution
 				raw_config[Key::Config::required_markup              ] = config.required_markup;
 				raw_config[Key::Config::ema_timesteps                ] = config.ema_timesteps;
 				raw_config[Key::Config::rsi_timesteps                ] = config.rsi_timesteps;
+				raw_config[Key::Config::rsi_threshold_long           ] = config.rsi_threshold_long;
+				raw_config[Key::Config::rsi_threshold_short          ] = config.rsi_threshold_short;
 
 				save(path, raw_config);
 			}
