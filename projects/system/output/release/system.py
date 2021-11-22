@@ -555,11 +555,15 @@ class Connector(Spot):
         precision = self.compute_precision(symbol)
 
         for data in self.margin_account()["userAssets"]:
+            
             if asset == data["asset"]:
+                
                 netAsset = float(data["netAsset"])
+                
                 if abs(netAsset) < precision or \
-                        abs(netAsset) * self.compute_price(symbol=symbol) < self.compute_min_notional(symbol=symbol):
+                        abs(netAsset) * self.compute_price(symbol = symbol) < self.compute_min_notional(symbol = symbol):
                     return 'N'
+                
                 return 'L' if netAsset > 0.0 else 'S'
 
     def make_null_position(self, symbol: str):
