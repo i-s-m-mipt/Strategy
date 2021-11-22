@@ -152,32 +152,32 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
     l_positions_in_total = l_positions_with_profit + l_positions_with_loss
     s_positions_in_total = s_positions_with_profit + s_positions_with_loss
 
-    a_positions_in_total = l_positions_in_total + s_positions_in_total
+    a_positions_in_total = a_positions_with_profit + a_positions_with_loss
 
-    l_positions_total_profit = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] > 0)].index])
-    s_positions_total_profit = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] > 0)].index])
+    l_positions_total_profit = trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] > 0)].index].sum()
+    s_positions_total_profit = trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] > 0)].index].sum()
 
     a_positions_total_profit = l_positions_total_profit + s_positions_total_profit
     
-    l_positions_total_loss = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] < 0)].index])
-    s_positions_total_loss = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] < 0)].index])
+    l_positions_total_loss = trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] < 0)].index].sum()
+    s_positions_total_loss = trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] < 0)].index].sum()
 
     a_positions_total_loss = l_positions_total_loss + s_positions_total_loss
 
-    l_positions_average_profit = l_positions_total_profit / l_positions_with_profit
-    s_positions_average_profit = s_positions_total_profit / s_positions_with_profit
+    l_positions_average_profit = trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] > 0)].index].mean()
+    s_positions_average_profit = trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] > 0)].index].mean()
 
-    a_positions_average_profit = (l_positions_average_profit + s_positions_average_profit) / 2
+    a_positions_average_profit = trades_HS["reward"][trades_HS[(trades_HS["reward"] > 0)].index].mean()
 
-    l_positions_average_loss = l_positions_total_loss / l_positions_with_loss
-    s_positions_average_loss = s_positions_total_loss / s_positions_with_loss
+    l_positions_average_loss = trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] < 0)].index].mean()
+    s_positions_average_loss = trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] < 0)].index].mean()
 
-    a_positions_average_loss = (l_positions_average_loss + s_positions_average_loss) / 2
+    a_positions_average_loss = trades_HS["reward"][trades_HS[(trades_HS["reward"] < 0)].index].mean()
 
-    l_positions_minimum_hold = min(trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] -
-                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]) / 3600.0
-    s_positions_minimum_hold = min(trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index] -
-                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]) / 3600.0
+    l_positions_minimum_hold = (trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] -
+                                trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]).min() / 3600.0
+    s_positions_minimum_hold = (trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index] -
+                                trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]).min() / 3600.0
 
     a_positions_minimum_hold = min(l_positions_minimum_hold, s_positions_minimum_hold)
     
@@ -188,10 +188,10 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
                                                       
     a_positions_median_hold = (trades_HS["time_close"] - trades_HS["time_open"]).median() / 3600.0
 
-    l_positions_maximum_hold = max(trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] -
-                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]) / 3600.0
-    s_positions_maximum_hold = max(trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index] -
-                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]) / 3600.0
+    l_positions_maximum_hold = (trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] -
+                                trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]).max() / 3600.0
+    s_positions_maximum_hold = (trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index] -
+                                trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]).max() / 3600.0
 
     a_positions_maximum_hold = max(l_positions_maximum_hold, s_positions_maximum_hold)
     
@@ -473,26 +473,10 @@ class Connector(Spot):
         
         return trade
 
-    def get_klines_implementation(self, symbol: str, limit: int, end_time, interval: str = "1h") -> list:
+    def get_klines(self, symbol: str, limit: str, interval: str = "4h") -> str:
         
-        klines_as_lists = self.klines(symbol, interval, limit = limit, endTime = end_time)
+        klines_as_lists = self.klines(symbol, interval, limit = int(limit))
         klines_as_dicts = [self._transform_kline(kline) for kline in klines_as_lists]
-        
-        return klines_as_dicts
-
-    def get_klines(self, symbol: str, limit: str) -> str:
-        
-        casted_limit = int(limit)
-        klines_as_dicts = []
-        time = self.time()["serverTime"]
-        delta = int(3.6e6)
-        
-        while casted_limit >= 1000:
-            klines_as_dicts = self.get_klines_implementation(symbol = symbol, limit = 1000, end_time = time) + klines_as_dicts
-            time -= delta * 1000
-            casted_limit -= 1000
-            
-        klines_as_dicts = self.get_klines_implementation(symbol = symbol, limit = casted_limit, end_time = time) + klines_as_dicts
         
         return json.dumps(klines_as_dicts)
 
@@ -579,8 +563,11 @@ class Connector(Spot):
                 return 'L' if netAsset > 0.0 else 'S'
 
     def make_null_position(self, symbol: str):
-        state = self.get_current_state(symbol=symbol)
+        
+        state = self.get_current_state(symbol = symbol)
+        
         while state != 'N':
+            
             if state == 'S':
                 self.close_short_position(symbol)
             elif state == 'L':
