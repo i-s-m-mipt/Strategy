@@ -575,11 +575,12 @@ class Connector(Spot):
                 return 'L' if netAsset > 0.0 else 'S'
 
     def make_null_position(self, symbol: str):
-        
-        if self.get_current_state(symbol = symbol) == 'S':
-            return self.close_short_position(symbol)
-        elif self.get_current_state(symbol = symbol) == 'L':
-            return self.close_long_position(symbol)
+        state = self.get_current_state(symbol=symbol)
+        while state != 'N':
+            if state == 'S':
+                self.close_short_position(symbol)
+            elif state == 'L':
+                self.close_long_position(symbol)
 
     def get_total_value(self):
 
