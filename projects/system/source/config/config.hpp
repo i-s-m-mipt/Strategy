@@ -155,8 +155,6 @@ namespace solution
             std::time_t server_start_hour;
             std::time_t server_start_minute;
 
-            std::size_t server_start_iteration;
-
             bool required_markup;
 
             bool required_correlation;

@@ -5,7 +5,6 @@
     "benchmark": "btcusdt",
     "server_start_hour": 23,
     "server_start_minute": 55,
-    "server_start_iteration": 0,
     "required_correlation": false,
     "test": true
 }

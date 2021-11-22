@@ -23,7 +23,6 @@ namespace solution
 				config.benchmark              = raw_config[Key::Config::benchmark             ].get < std::string > ();
 				config.server_start_hour      = raw_config[Key::Config::server_start_hour     ].get < std::time_t > ();
 				config.server_start_minute    = raw_config[Key::Config::server_start_minute   ].get < std::time_t > ();
-				config.server_start_iteration = raw_config[Key::Config::server_start_iteration].get < std::size_t > ();
 				config.required_correlation   = raw_config[Key::Config::required_correlation  ].get < bool > ();
 
 			}
@@ -586,10 +585,12 @@ namespace solution
 						{
 							m_is_running.store(true);
 
-							wait_until_day_end();
+							wait_until_hour_end();
 
 							if (!m_is_interrupted.load())
 							{
+								m_timer.expires_from_now(boost::posix_time::seconds(0));
+
 								handle();
 							}
 
@@ -630,7 +631,7 @@ namespace solution
 			}
 		}
 
-		void System::wait_until_day_end() const
+		void System::wait_until_hour_end() const // TODO
 		{
 			LOGGER(logger);
 
@@ -640,8 +641,7 @@ namespace solution
 				{
 					auto time = boost::posix_time::second_clock::universal_time();
 
-					if (time.time_of_day().hours()   == m_config.server_start_hour &&
-						time.time_of_day().minutes() == m_config.server_start_minute)
+					if (time.time_of_day().minutes() == m_config.server_start_minute)
 					{
 						break;
 					}
@@ -661,34 +661,14 @@ namespace solution
 
 			try
 			{
-				static auto counter = m_config.server_start_iteration;
-
-				boost::posix_time::seconds interval(m_config.interval);
-
-				if (counter == m_config.server_start_iteration)
-				{
-					m_timer.expires_from_now(interval);
-				}
-				else
-				{
-					m_timer.expires_at(m_timer.expires_at() + interval);
-				}
+				m_timer.expires_at(m_timer.expires_at() + 
+					boost::posix_time::seconds(m_config.interval));
 				
 				m_timer.async_wait(boost::bind(&System::handle, this));
 
-				auto n_iterations = static_cast < std::size_t > (
-					seconds_in_day / m_config.interval);
-
-				if (counter++ % n_iterations == 0)
+				for (const auto & asset : m_assets)
 				{
-					for (const auto & asset : m_assets)
-					{
-						handle_implementation(asset);
-					}
-				}
-				else
-				{
-					handle_implementation(m_config.benchmark);
+					handle_implementation(asset);
 				}
 			}
 			catch (const std::exception & exception)
