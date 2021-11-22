@@ -1,6 +1,6 @@
 {
     "required_run": false,
-    "interval": 3600,
+    "interval": 14400,
     "max_drawdown": 0.123,
     "benchmark": "btcusdt",
     "server_start_hour": 23,
