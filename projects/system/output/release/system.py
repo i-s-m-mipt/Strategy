@@ -581,8 +581,11 @@ class Connector(Spot):
                 return 'L' if netAsset > 0.0 else 'S'
 
     def make_null_position(self, symbol: str):
-        state = self.get_current_state(symbol=symbol)
+        
+        state = self.get_current_state(symbol = symbol)
+        
         while state != 'N':
+            
             if state == 'S':
                 self.close_short_position(symbol)
             elif state == 'L':
