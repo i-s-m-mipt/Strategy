@@ -549,6 +549,21 @@ class Connector(Spot):
             
         return 1.0
 
+
+    def compute_price(self, symbol):
+        return float(self.avg_price(symbol=symbol)['price'])
+
+    def compute_min_notional(self, symbol: str):
+
+        symbol_information = self.exchange_info(symbol=symbol)
+        filter_information = symbol_information["symbols"][0]["filters"]
+
+        for filter in filter_information:
+            if filter["filterType"] == "MIN_NOTIONAL":
+                return float(filter["minNotional"])
+
+        return 1.0
+
     def get_current_state(self, symbol: str):
 
         asset = symbol.replace("USDT", "")
