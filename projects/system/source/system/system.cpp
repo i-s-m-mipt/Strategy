@@ -641,7 +641,8 @@ namespace solution
 				{
 					auto time = boost::posix_time::second_clock::universal_time();
 
-					if (time.time_of_day().minutes() == m_config.server_start_minute)
+					if (time.time_of_day().hours()   == m_config.server_start_hour &&
+						time.time_of_day().minutes() == m_config.server_start_minute)
 					{
 						break;
 					}
