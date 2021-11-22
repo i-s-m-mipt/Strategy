@@ -152,32 +152,32 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
     l_positions_in_total = l_positions_with_profit + l_positions_with_loss
     s_positions_in_total = s_positions_with_profit + s_positions_with_loss
 
-    a_positions_in_total = l_positions_in_total + s_positions_in_total
+    a_positions_in_total = a_positions_with_profit + a_positions_with_loss
 
-    l_positions_total_profit = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] > 0)].index])
-    s_positions_total_profit = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] > 0)].index])
+    l_positions_total_profit = trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] > 0)].index].sum()
+    s_positions_total_profit = trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] > 0)].index].sum()
 
     a_positions_total_profit = l_positions_total_profit + s_positions_total_profit
     
-    l_positions_total_loss = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] < 0)].index])
-    s_positions_total_loss = sum(trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] < 0)].index])
+    l_positions_total_loss = trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] < 0)].index].sum()
+    s_positions_total_loss = trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] < 0)].index].sum()
 
     a_positions_total_loss = l_positions_total_loss + s_positions_total_loss
 
-    l_positions_average_profit = l_positions_total_profit / l_positions_with_profit
-    s_positions_average_profit = s_positions_total_profit / s_positions_with_profit
+    l_positions_average_profit = trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] > 0)].index].mean()
+    s_positions_average_profit = trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] > 0)].index].mean()
 
-    a_positions_average_profit = (l_positions_average_profit + s_positions_average_profit) / 2
+    a_positions_average_profit = trades_HS["reward"][trades_HS[(trades_HS["reward"] > 0)].index].mean()
 
-    l_positions_average_loss = l_positions_total_loss / l_positions_with_loss
-    s_positions_average_loss = s_positions_total_loss / s_positions_with_loss
+    l_positions_average_loss = trades_HS["reward"][trades_HS[(trades_HS["position"] == "L") & (trades_HS["reward"] < 0)].index].mean()
+    s_positions_average_loss = trades_HS["reward"][trades_HS[(trades_HS["position"] == "S") & (trades_HS["reward"] < 0)].index].mean()
 
-    a_positions_average_loss = (l_positions_average_loss + s_positions_average_loss) / 2
+    a_positions_average_loss = trades_HS["reward"][trades_HS[(trades_HS["reward"] < 0)].index].mean()
 
-    l_positions_minimum_hold = min(trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] -
-                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]) / 3600.0
-    s_positions_minimum_hold = min(trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index] -
-                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]) / 3600.0
+    l_positions_minimum_hold = (trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] -
+                                trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]).min() / 3600.0
+    s_positions_minimum_hold = (trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index] -
+                                trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]).min() / 3600.0
 
     a_positions_minimum_hold = min(l_positions_minimum_hold, s_positions_minimum_hold)
     
@@ -188,10 +188,10 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
                                                       
     a_positions_median_hold = (trades_HS["time_close"] - trades_HS["time_open"]).median() / 3600.0
 
-    l_positions_maximum_hold = max(trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] -
-                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]) / 3600.0
-    s_positions_maximum_hold = max(trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index] -
-                                   trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]) / 3600.0
+    l_positions_maximum_hold = (trades_HS["time_close"][trades_HS[trades_HS["position"] == "L"].index] -
+                                trades_HS["time_open" ][trades_HS[trades_HS["position"] == "L"].index]).max() / 3600.0
+    s_positions_maximum_hold = (trades_HS["time_close"][trades_HS[trades_HS["position"] == "S"].index] -
+                                trades_HS["time_open" ][trades_HS[trades_HS["position"] == "S"].index]).max() / 3600.0
 
     a_positions_maximum_hold = max(l_positions_maximum_hold, s_positions_maximum_hold)
     
