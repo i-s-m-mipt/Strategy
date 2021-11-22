@@ -49,6 +49,17 @@ namespace solution
 								required_state = State::N;
 							}
 
+							if (required_state != current_state)
+							{
+								auto rsi = inputs.back().indicators.at(indicators::RSI::name);
+
+								if (required_state == State::L && rsi > m_config.rsi_threshold_long ||
+									required_state == State::S && rsi < m_config.rsi_threshold_short)
+								{
+									required_state = State::N;
+								}
+							}
+
 							return required_state;
 						}
 						catch (const std::exception & exception)

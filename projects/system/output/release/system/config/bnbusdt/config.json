@@ -1,11 +1,11 @@
 {
     "assimilator_min_deviation": 0.0,
-    "awvb_timesteps_sma": 2000,
-    "awvb_timesteps_wvb": 140,
+    "awvb_timesteps_sma": 1800,
+    "awvb_timesteps_wvb": 189,
     "commission": 0.00075,
     "ema_timesteps": 10,
     "has_reinvestment": false,
-    "inputs_asset": "eosusdt",
+    "inputs_asset": "bnbusdt",
     "inputs_timeframe": 1,
     "inputs_timeframe_type": "h",
     "inputs_year_begin": 2020,
@@ -29,6 +29,6 @@
     "test_hard_strategy": "Assimilator",
     "test_soft_strategy": "",
     "timesteps_prediction": 10,
-    "timesteps_prehistory": 140,
+    "timesteps_prehistory": 189,
     "transaction": 1000.0
 }

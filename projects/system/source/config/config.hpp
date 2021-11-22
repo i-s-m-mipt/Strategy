@@ -155,11 +155,17 @@ namespace solution
             std::time_t server_start_hour;
             std::time_t server_start_minute;
 
-            std::size_t server_start_iteration;
-
             bool required_markup;
 
             bool required_correlation;
+
+            std::size_t ema_timesteps;
+            std::size_t rsi_timesteps;
+
+            double rsi_threshold_long;
+            double rsi_threshold_short;
+
+            std::size_t stop_loss_relaxation;
         };
 
     } // namespace system

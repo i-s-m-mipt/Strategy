@@ -13,12 +13,14 @@
 #include <exception>
 #include <fstream>
 #include <numeric>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "../indicators/awvb/awvb.hpp"
 #include "../indicators/ema/ema.hpp"
+#include "../indicators/rsi/rsi.hpp"
 
 #include "../../config/config.hpp"
 

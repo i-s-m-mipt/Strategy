@@ -161,10 +161,13 @@ namespace solution
 						static inline const std::string main_strategy                 = "main_strategy";
 						static inline const std::string server_start_hour             = "server_start_hour";
 						static inline const std::string server_start_minute           = "server_start_minute";
-						static inline const std::string server_start_iteration        = "server_start_iteration";
 						static inline const std::string required_markup               = "required_markup";
 						static inline const std::string required_correlation          = "required_correlation";
 						static inline const std::string ema_timesteps                 = "ema_timesteps";
+						static inline const std::string rsi_timesteps                 = "rsi_timesteps";
+						static inline const std::string rsi_threshold_long            = "rsi_threshold_long";
+						static inline const std::string rsi_threshold_short           = "rsi_threshold_short";
+						static inline const std::string stop_loss_relaxation          = "stop_loss_relaxation";
 					};
 
 					struct Client
@@ -265,7 +268,7 @@ namespace solution
 
 		private:
 
-			void wait_until_day_end() const;
+			void wait_until_hour_end() const;
 
 			void handle();
 
