@@ -473,21 +473,27 @@ class Connector(Spot):
         
         return trade
 
-    def get_klines_implementation(self, symbol: str, limit: int, endTime, interval: str = "1h") -> list:
-        klines_as_lists = self.klines(symbol, interval, limit=limit, endTime=endTime)
+    def get_klines_implementation(self, symbol: str, limit: int, end_time, interval: str = "1h") -> list:
+        
+        klines_as_lists = self.klines(symbol, interval, limit = limit, endTime = end_time)
         klines_as_dicts = [self._transform_kline(kline) for kline in klines_as_lists]
+        
         return klines_as_dicts
 
     def get_klines(self, symbol: str, limit: str) -> str:
-        time = self.time()['serverTime']
-        delta = int(3.6e6)
-        klines_as_dicts = []
+        
         casted_limit = int(limit)
+        klines_as_dicts = []
+        time = self.time()["serverTime"]
+        delta = int(3.6e6)
+        
         while casted_limit >= 1000:
-            klines_as_dicts = self.get_klines_implementation(symbol=symbol, limit=1000, endTime=time) + klines_as_dicts
+            klines_as_dicts = self.get_klines_implementation(symbol = symbol, limit = 1000, end_time = time) + klines_as_dicts
             time -= delta * 1000
             casted_limit -= 1000
-        klines_as_dicts = self.get_klines_implementation(symbol=symbol, limit=casted_limit, endTime=time) + klines_as_dicts
+            
+        klines_as_dicts = self.get_klines_implementation(symbol = symbol, limit = casted_limit, end_time = time) + klines_as_dicts
+        
         return json.dumps(klines_as_dicts)
 
     def get_trades(self, symbol: str, n: int) -> str:
