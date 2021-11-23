@@ -590,6 +590,8 @@ class Connector(Spot):
                 self.close_short_position(symbol)
             elif state == 'L':
                 self.close_long_position(symbol)
+                
+            state = self.get_current_state(symbol = symbol)
 
     def get_total_value(self):
 
