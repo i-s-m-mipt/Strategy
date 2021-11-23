@@ -1258,7 +1258,7 @@ namespace solution
 			}
 		}
 
-		Source::State Source::handle() const
+		Source::State Source::handle(State current_state) const
 		{
 			LOGGER(logger);
 
@@ -1269,7 +1269,7 @@ namespace solution
 				auto prehistory = inputs_container_t(std::prev(std::end(inputs), 
 					m_config.timesteps_prehistory), std::end(inputs));
 
-				return m_strategies.at(m_config.main_strategy)->run(prehistory, State::N);
+				return m_strategies.at(m_config.main_strategy)->run(prehistory, current_state);
 			}
 			catch (const std::exception & exception)
 			{

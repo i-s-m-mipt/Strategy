@@ -323,7 +323,7 @@ namespace solution
 
 		public:
 
-			State handle() const;
+			State handle(State current_state) const;
 
 		private:
 

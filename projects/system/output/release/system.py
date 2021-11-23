@@ -549,13 +549,12 @@ class Connector(Spot):
             
         return 1.0
 
-
     def compute_price(self, symbol):
-        return float(self.ticker_price(symbol=symbol)['price'])
+        return float(self.ticker_price(symbol = symbol)['price'])
 
     def compute_min_notional(self, symbol: str):
 
-        symbol_information = self.exchange_info(symbol=symbol)
+        symbol_information = self.exchange_info(symbol = symbol)
         filter_information = symbol_information["symbols"][0]["filters"]
 
         for filter in filter_information:
@@ -596,6 +595,8 @@ class Connector(Spot):
                 self.close_short_position(symbol)
             elif state == 'L':
                 self.close_long_position(symbol)
+
+            state = self.get_current_state(symbol = symbol)
 
     def get_total_value(self):
 

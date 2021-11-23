@@ -684,16 +684,16 @@ namespace solution
 
 			try
 			{
-				auto required_state = m_sources[asset]->handle();
+				auto current_state = convert_state(boost::python::extract < std::string > (
+					m_python.global()["get_current_state"](m_clients.front().public_key.c_str(), asset.c_str())));
 
-				for (const auto & client : m_clients)
+				auto required_state = m_sources[asset]->handle(current_state);
+
+				if (current_state != required_state)
 				{
-					try
+					for (const auto & client : m_clients)
 					{
-						auto current_state = convert_state(boost::python::extract < std::string > (
-							m_python.global()["get_current_state"](client.public_key.c_str(), asset.c_str())));
-
-						if (current_state != required_state)
+						try
 						{
 							if (current_state != State::N)
 							{
@@ -747,14 +747,12 @@ namespace solution
 							}
 							}
 						}
-
-					}
-					catch (const boost::python::error_already_set &)
-					{
-						LOGGER_WRITE_ERROR(logger, shared::Python::exception());
+						catch (const boost::python::error_already_set &)
+						{
+							LOGGER_WRITE_ERROR(logger, shared::Python::exception());
+						}
 					}
 				}
-				
 			}
 			catch (const std::exception & exception)
 			{
