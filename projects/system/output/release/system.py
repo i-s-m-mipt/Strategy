@@ -550,7 +550,7 @@ class Connector(Spot):
         return 1.0
 
     def compute_price(self, symbol):
-        return float(self.ticker_price(symbol = symbol)['price'])
+        return float(self.ticker_price(symbol = symbol)["price"])
 
     def compute_min_notional(self, symbol: str):
 
@@ -569,21 +569,23 @@ class Connector(Spot):
         precision = self.compute_precision(symbol)
 
         for data in self.margin_account()["userAssets"]:
+            
             if asset == data["asset"]:
+                
                 netAsset = float(data["netAsset"])
+                
                 if abs(netAsset) < precision:
                     return 'N'
                 elif netAsset > 0.0 and \
-                        float(data["free"]) * self.compute_price(symbol=symbol) > \
-                        self.compute_min_notional(symbol=symbol):
+                        float(data["free"]) * self.compute_price(symbol = symbol) > \
+                        self.compute_min_notional(symbol = symbol):
                     return 'L'
                 elif netAsset < 0.0 and \
-                        float(data["borrowed"]) * self.compute_price(symbol=symbol) > \
-                        self.compute_min_notional(symbol=symbol):
+                        float(data["borrowed"]) * self.compute_price(symbol = symbol) > \
+                        self.compute_min_notional(symbol = symbol):
                     return 'S'
                 else:
                     return 'N'
-
 
     def make_null_position(self, symbol: str):
         
