@@ -199,7 +199,7 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
 
     table["Traded instrument"    ] = config["inputs_asset"].upper()
     table["Backtesting period"   ] = str(config["inputs_year_begin"]) +  " - " + str(config["inputs_year_end"])
-    table["Working timeframe"    ] = str(config["inputs_timeframe"]) + config["inputs_timeframe_type"].upper()
+    table["Working timeframe"    ] = config["strategy_timeframe"].upper()
     table["Strategy version"     ] = config["test_hard_strategy"]
     table["Initial investments"  ] = ("%.2f" % config["transaction"])
     table["Has reinvestment"     ] = str(config["has_reinvestment"])
@@ -362,8 +362,7 @@ def make_report(path_reward_HS, path_trades_HS, path_reward_BH, path_config):
     document.append_page(page)
 
     paragraph_1 = Paragraph("Backtesting results of strategy \"" + config["test_hard_strategy"] + "\" for " +
-        config["inputs_asset"].upper() + " in " + str(config["inputs_timeframe"]) +
-        config["inputs_timeframe_type"].upper() + " timeframe",
+        config["inputs_asset"].upper() + " in " + config["strategy_timeframe"].upper() + " timeframe",
         font = "Helvetica-Bold", font_size = Decimal(16.1))
 
     paragraph_2 = Paragraph("Monthly percentage changes in the volume of investments used for trading",
