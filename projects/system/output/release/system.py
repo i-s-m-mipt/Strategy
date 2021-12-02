@@ -474,11 +474,14 @@ class Connector(Spot):
         return trade
 
     def get_klines(self, symbol: str, limit: str, interval: str = "4h") -> str:
-        
-        klines_as_lists = self.klines(symbol, interval, limit = int(limit))
-        klines_as_dicts = [self._transform_kline(kline) for kline in klines_as_lists]
-        
-        return json.dumps(klines_as_dicts)
+        while True:
+            try:
+                klines_as_lists = self.klines(symbol, interval, limit = int(limit))
+                klines_as_dicts = [self._transform_kline(kline) for kline in klines_as_lists]
+                return json.dumps(klines_as_dicts)
+            except:
+                print('Error occured, trying again..')
+
 
     def get_trades(self, symbol: str, n: int) -> str:
 
