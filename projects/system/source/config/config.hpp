@@ -152,8 +152,6 @@ namespace solution
             bool required_backtest;
             bool required_backtest_fit;
             bool required_inputs;
-            bool required_markup;
-            bool required_research;
 
             double rsi_threshold_long;
             double rsi_threshold_short;

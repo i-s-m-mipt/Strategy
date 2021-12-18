@@ -36,13 +36,16 @@
 #include "backtester/backtester.hpp"
 
 #include "indicators/indicator.hpp"
-#include "indicators/awvb/awvb.hpp"
+#include "indicators/apwvb/apwvb.hpp"
 #include "indicators/ema/ema.hpp"
 #include "indicators/rsi/rsi.hpp"
 
 #include "strategies/strategy.hpp"
+#include "strategies/hard/accelerator/accelerator.hpp"
 #include "strategies/hard/assimilator/assimilator.hpp"
+#include "strategies/hard/intersector/intersector.hpp"
 #include "strategies/hard/subjugator/subjugator.hpp"
+#include "strategies/soft/combinator/combinator.hpp"
 
 #include "../config/config.hpp"
 
@@ -111,6 +114,8 @@ namespace solution
 
 			using json_t = nlohmann::json;
 
+			using database_t = detail::database_t;
+
 		public:
 
 			using State = Strategy::State;
@@ -154,17 +159,11 @@ namespace solution
 					static inline const path_t reward_data = "reward.data";
 					static inline const path_t trades_data = "trades.data";
 
-					static inline const path_t reward_HS_data = "reward_HS.data";
-					static inline const path_t reward_SS_data = "reward_SS.data";
 					static inline const path_t reward_BH_data = "reward_BH.data";
+					static inline const path_t reward_HS_data = "reward_HS.data";
 
-					static inline const path_t trades_HS_data = "trades_HS.data";
-					static inline const path_t trades_SS_data = "trades_SS.data";
 					static inline const path_t trades_BH_data = "trades_BH.data";
-
-					static inline const path_t research_volumes_data = "research_volumes.data";
-
-					static inline const path_t research_volatility_data = "research_volatility.data";
+					static inline const path_t trades_HS_data = "trades_HS.data";
 				};
 
 			public:
@@ -196,9 +195,8 @@ namespace solution
 		public:
 
 			explicit Source(const Config & config, shared::Python & python) : 
-				m_python(python), m_config(config), m_data(m_config), 
-				m_asset(m_config.inputs_asset), m_thread_pool(
-					2U * std::thread::hardware_concurrency())
+				m_python(python), m_config(config), m_data(m_config), m_asset(m_config.asset), 
+				m_thread_pool(2U * std::thread::hardware_concurrency()), m_database(nullptr)
 			{
 				initialize();
 			}
@@ -239,6 +237,10 @@ namespace solution
 
 			void reload_strategies();
 
+		public:
+
+			void handle();
+
 		private:
 
 			void handle_inputs() const;
@@ -247,27 +249,24 @@ namespace solution
 
 			void handle_backtest_fit();
 
-			void handle_research() const;
+		public:
 
-			void handle_markup() const;
-
-		private:
-
-			inputs_container_t load_inputs() const;
+			inputs_container_t load_inputs(const std::string & timeframe, bool all = false) const;
 
 		public:
 
-			klines_container_t load_klines() const;
+			klines_container_t load_klines(const std::string & timeframe, bool all = false) const;
 
 		private:
 
-			orders_container_t load_orders() const;
+			orders_container_t load_orders(bool all = false) const;
 
-			trades_container_t load_trades() const;
+			trades_container_t load_trades(bool all = false) const;
 
 		private:
 
-			std::string make_klines_file_name(std::time_t year, std::time_t month) const;
+			std::string make_klines_file_name(std::time_t year, 
+				std::time_t month, const std::string & timeframe) const;
 
 			std::string make_orders_file_name(std::time_t year, std::time_t month) const;
 
@@ -303,12 +302,6 @@ namespace solution
 
 			void make_report() const;
 
-		private:
-
-			void research_volumes(const inputs_container_t & inputs) const;
-
-			void research_volatility(const inputs_container_t & inputs) const;
-
 		public:
 
 			const auto & config() const noexcept
@@ -341,6 +334,10 @@ namespace solution
 
 			trades_container_t make_trades(const std::string & data) const;
 
+		public:
+
+			void update_database(std::shared_ptr < database_t > database);
+
 		private:
 
 			shared::Python & m_python;
@@ -354,14 +351,14 @@ namespace solution
 			std::string m_asset;
 
 			indicators_container_t m_indicators;
-
 			strategies_container_t m_strategies;
 
 			Result m_result_BH;
 			Result m_result_HS;
-			Result m_result_SS;
 
 			thread_pool_t m_thread_pool;
+
+			std::shared_ptr < database_t > m_database;
 		};
 
 	} // namespace system

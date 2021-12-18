@@ -10,7 +10,7 @@ namespace solution
 
 			try
 			{
-				auto path = Directory::inputs / m_config.inputs_asset;
+				auto path = Directory::inputs / m_config.asset;
 
 				std::filesystem::create_directories(path);
 
@@ -27,18 +27,11 @@ namespace solution
 
 				std::stringstream sout;
 
-				auto begin = m_config.skipped_timesteps;
-
-				while (inputs[begin].date_time_close.day != 1)
-				{
-					++begin;
-				}
-
-				for (auto i = begin; i < std::size(inputs); ++i)
+				for (auto i = m_config.skipped_timesteps; i < std::size(inputs); ++i)
 				{
 					const auto & input = inputs[i];
 
-					sout << input.date_time_close << separator;
+					sout << input.date_time_open << separator;
 
 					for (auto j = 0U; j < 7U; ++j)
 					{
@@ -63,16 +56,6 @@ namespace solution
 
 					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_sell_base  << separator;
 					sout << std::setprecision(6) << std::fixed << std::noshowpos << input.volume_sell_quote << separator;
-
-					//for (const auto & [name, value] : input.indicators)
-					//{
-					//	sout << std::setprecision(6) << std::fixed << // ?
-					//		std::showpos << value << separator;
-					//}
-
-					// TODO (save price_aggregated_trades)
-
-					sout << std::showpos << input.movement_tag << '\n';
 				}
 
 				fout << sout.str();
@@ -104,7 +87,7 @@ namespace solution
 
 			try
 			{
-				auto path = Directory::markup / m_config.inputs_asset;
+				auto path = Directory::markup / m_config.asset;
 
 				std::filesystem::create_directories(path);
 
@@ -127,8 +110,7 @@ namespace solution
 					auto min = std::min_element(max, std::next(i),
 						[](const auto & lhs, const auto & rhs) { return (lhs.second < rhs.second); });
 
-					if (max != min && (max->second - min->second) / 
-						m_config.transaction > m_config.min_movement)
+					if (max != min)
 					{
 						for (auto j = max; j != min; ++j)
 						{
@@ -162,7 +144,7 @@ namespace solution
 
 			try
 			{
-				auto path = Directory::result / m_config.inputs_asset;
+				auto path = Directory::result / m_config.asset;
 
 				std::filesystem::create_directories(path);
 
@@ -198,7 +180,7 @@ namespace solution
 
 			try
 			{
-				auto path = Directory::result / m_config.inputs_asset;
+				auto path = Directory::result / m_config.asset;
 
 				std::filesystem::create_directories(path);
 
@@ -259,26 +241,6 @@ namespace solution
 			try
 			{
 				load();
-
-				if (m_config.required_inputs)
-				{
-					handle_inputs();
-				}
-
-				if (m_config.required_backtest)
-				{
-					handle_backtest();
-				}
-
-				if (m_config.required_research)
-				{
-					handle_research();
-				}
-
-				if (m_config.required_markup)
-				{
-					handle_markup();
-				}
 			}
 			catch (const std::exception & exception)
 			{
@@ -345,8 +307,8 @@ namespace solution
 
 			try
 			{
-				m_indicators[source::indicators::AWVB::name] = 
-					std::make_shared < source::indicators::AWVB > (m_config);
+				m_indicators[source::indicators::APWVB::name] = 
+					std::make_shared < source::indicators::APWVB > (m_config);
 
 				m_indicators[source::indicators::EMA::name] =
 					std::make_shared < source::indicators::EMA > (m_config);
@@ -369,11 +331,20 @@ namespace solution
 				m_strategies[source::Strategy::m_name] = 
 					std::make_shared < source::Strategy > (m_config);
 
+				m_strategies[source::strategies::hard::Accelerator::m_name] =
+					std::make_shared < source::strategies::hard::Accelerator > (m_config);
+
 				m_strategies[source::strategies::hard::Assimilator::m_name] = 
 					std::make_shared < source::strategies::hard::Assimilator > (m_config);
 
+				m_strategies[source::strategies::hard::Intersector::m_name] =
+					std::make_shared < source::strategies::hard::Intersector > (m_config);
+
 				m_strategies[source::strategies::hard::Subjugator::m_name] =
 					std::make_shared < source::strategies::hard::Subjugator > (m_config);
+
+				m_strategies[source::strategies::soft::Combinator::m_name] =
+					std::make_shared < source::strategies::soft::Combinator > (m_config, m_database);
 			}
 			catch (const std::exception & exception)
 			{
@@ -413,13 +384,35 @@ namespace solution
 			}
 		}
 
+		void Source::handle()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				if (m_config.required_inputs)
+				{
+					handle_inputs();
+				}
+
+				if (m_config.required_backtest)
+				{
+					handle_backtest();
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
 		void Source::handle_inputs() const
 		{
 			LOGGER(logger);
 
 			try
 			{
-				m_data.save_inputs(load_inputs());
+				m_data.save_inputs(load_inputs(m_config.timeframe_strategy));
 			}
 			catch (const std::exception & exception)
 			{
@@ -438,10 +431,13 @@ namespace solution
 					handle_backtest_fit();
 				}
 
-				auto inputs = load_inputs();
-
+				auto inputs_backtest = load_inputs(m_config.timeframe_backtest);
+				auto inputs_strategy = load_inputs(m_config.timeframe_strategy);
+				
 				{
-					Backtester backtester(m_config, inputs, m_strategies.at(Strategy::m_name));
+					Backtester backtester(m_config, 
+						inputs_backtest, inputs_strategy,
+							m_strategies.at(Strategy::m_name));
 
 					m_result_BH = backtester.run();
 
@@ -456,8 +452,9 @@ namespace solution
 					Data::Directory::result / m_asset / Data::File::trades_BH_data);
 
 				{
-					Backtester backtester(m_config, inputs,
-						m_strategies.at(m_config.test_hard_strategy));
+					Backtester backtester(m_config, 
+						inputs_backtest, inputs_strategy,
+							m_strategies.at(m_config.strategy));
 
 					m_result_HS = backtester.run();
 
@@ -470,24 +467,6 @@ namespace solution
 				std::filesystem::rename(
 					Data::Directory::result / m_asset / Data::File::trades_data,
 					Data::Directory::result / m_asset / Data::File::trades_HS_data);
-
-				/*
-				{
-					Backtester backtester(m_config, inputs,
-						m_strategies.at(m_config.test_soft_strategy));
-
-					m_result_SS = backtester.run();
-
-					m_data.save_result(m_result_SS);
-				}
-
-				std::filesystem::rename(
-					Data::Directory::result / m_asset / Data::File::reward_data,
-					Data::Directory::result / m_asset / Data::File::reward_SS_data);
-				std::filesystem::rename(
-					Data::Directory::result / m_asset / Data::File::trades_data,
-					Data::Directory::result / m_asset / Data::File::trades_SS_data);
-				*/
 
 				make_report();
 			}
@@ -503,70 +482,57 @@ namespace solution
 
 			try
 			{
-				std::vector < std::future < void > > futures;
-
-				std::mutex mutex;
-
 				auto max_reward = 0.0;
 
 				struct Parameters
 				{
-					std::size_t parameter_1 = 0ULL;
-					std::size_t parameter_2 = 0ULL;
+					std::size_t parameter_1 = 0;
+					std::size_t parameter_2 = 0;
+
 					double      parameter_3 = 0.0;
 				};
 
 				Parameters best_parameters;
 
-				for (auto parameter_1 = 25ULL; parameter_1 <= 50; parameter_1 += 5)
+				auto index = 0ULL;
+
+				for (auto parameter_1 = 20ULL; parameter_1 <= 50; parameter_1 += 1)
 				{
-					for (auto parameter_2 = 400ULL; parameter_2 <= 500; parameter_2 += 10)
+					for (auto parameter_2 = 200ULL; parameter_2 <= 500; parameter_2 += 10)
 					{
-						for (auto parameter_3 = 0.000; parameter_3 <= 0.090; parameter_3 += 0.010)
+						for (auto parameter_3 = 0.00; parameter_3 <= 0.50; parameter_3 += 0.05)
 						{
 							m_config.timesteps_prehistory      = parameter_1;
-							m_config.awvb_timesteps_wvb        = parameter_1;
-							m_config.awvb_timesteps_sma        = parameter_2;
-							m_config.assimilator_min_deviation = parameter_3;
+							m_config.apwvb_timesteps_pwvb_long = parameter_1;
+							m_config.apwvb_timesteps_sma_long  = parameter_2;
+							m_config.apwvb_threshold_long      = parameter_3;
 
 							reload_indicators();
 							reload_strategies();
 
-							Backtester backtester(m_config, load_inputs(),
-								m_strategies.at(m_config.test_hard_strategy));
+							Backtester backtester(m_config,
+								load_inputs(m_config.timeframe_backtest),
+								load_inputs(m_config.timeframe_strategy),
+									m_strategies.at(m_config.strategy));
 
 							Parameters parameters = { parameter_1, parameter_2, parameter_3 };
 
-							std::packaged_task < void() > task([backtester = std::move(backtester),
-								&mutex, &max_reward, &best_parameters, parameters]()
-								{
-									auto reward = backtester.run().rewards.back().second;
+							auto reward = backtester.run().rewards.back().second;
 
-									std::scoped_lock lock(mutex);
+							if (reward > max_reward)
+							{
+								max_reward = reward;
 
-									if (reward > max_reward)
-									{
-										max_reward = reward;
-
-										best_parameters = parameters;
-
-										std::cout << max_reward << std::endl; // TODO
-									}
-								});
-
-							task();
-
-							//futures.push_back(boost::asio::post(m_thread_pool, std::move(task)));
+								best_parameters = parameters;
+							}
 						}
 					}
 				}
 
-				std::for_each(std::begin(futures), std::end(futures), [](auto & future) { future.wait(); });
-
 				m_config.timesteps_prehistory      = best_parameters.parameter_1;
-				m_config.awvb_timesteps_wvb        = best_parameters.parameter_1;
-				m_config.awvb_timesteps_sma        = best_parameters.parameter_2;
-				m_config.assimilator_min_deviation = best_parameters.parameter_3;
+				m_config.apwvb_timesteps_pwvb_long = best_parameters.parameter_1;
+				m_config.apwvb_timesteps_sma_long  = best_parameters.parameter_2;
+				m_config.apwvb_threshold_long      = best_parameters.parameter_3;
 
 				reload_indicators();
 				reload_strategies();
@@ -577,50 +543,13 @@ namespace solution
 			}
 		}
 
-		void Source::handle_research() const
+		Source::inputs_container_t Source::load_inputs(const std::string & timeframe, bool all) const
 		{
 			LOGGER(logger);
 
 			try
 			{
-				auto inputs = load_inputs();
-
-				research_volumes(inputs);
-
-				research_volatility(inputs);
-			}
-			catch (const std::exception & exception)
-			{
-				shared::catch_handler < source_exception > (logger, exception);
-			}
-		}
-
-		void Source::handle_markup() const
-		{
-			LOGGER(logger);
-
-			try
-			{
-				auto inputs = load_inputs();
-
-				Backtester backtester(m_config, inputs, 
-					m_strategies.at(m_config.test_hard_strategy));
-
-				m_data.save_markup(backtester.run());
-			}
-			catch (const std::exception & exception)
-			{
-				shared::catch_handler < source_exception > (logger, exception);
-			}
-		}
-
-		Source::inputs_container_t Source::load_inputs() const
-		{
-			LOGGER(logger);
-
-			try
-			{
-				auto klines = load_klines();
+				auto klines = load_klines(timeframe, all);
 				auto orders = load_orders();
 				auto trades = load_trades();
 
@@ -632,7 +561,7 @@ namespace solution
 			}
 		}
 
-		Source::klines_container_t Source::load_klines() const
+		Source::klines_container_t Source::load_klines(const std::string & timeframe, bool all) const
 		{
 			LOGGER(logger);
 
@@ -642,13 +571,15 @@ namespace solution
 
 				klines_container_t klines;
 
-				for (auto year = m_config.inputs_year_begin; year <= m_config.inputs_year_end; ++year)
+				auto inputs_first_year = (all ? 2015LL : m_config.inputs_first_year);
+
+				for (auto year = inputs_first_year; year <= m_config.inputs_last_year; ++year)
 				{
 					for (std::time_t month = 1LL; month <= 12LL; ++month)
 					{
 						auto path = Data::Directory::klines;
 						
-						path /= make_klines_file_name(year, month);
+						path /= make_klines_file_name(year, month, timeframe);
 
 						if (!std::filesystem::exists(path))
 						{
@@ -707,7 +638,7 @@ namespace solution
 			}
 		}
 
-		Source::orders_container_t Source::load_orders() const
+		Source::orders_container_t Source::load_orders(bool all) const
 		{
 			LOGGER(logger);
 
@@ -721,7 +652,7 @@ namespace solution
 			}
 		}
 
-		Source::trades_container_t Source::load_trades() const
+		Source::trades_container_t Source::load_trades(bool all) const
 		{
 			LOGGER(logger);
 
@@ -729,7 +660,9 @@ namespace solution
 			{
 				trades_container_t trades;
 
-				for (auto year = m_config.inputs_year_begin; year <= m_config.inputs_year_end; ++year)
+				auto inputs_first_year = (all ? 2015LL : m_config.inputs_first_year);
+
+				for (auto year = inputs_first_year; year <= m_config.inputs_last_year; ++year)
 				{
 					for (std::time_t month = 1LL; month <= 12LL; ++month)
 					{
@@ -772,7 +705,8 @@ namespace solution
 			}
 		}
 
-		std::string Source::make_klines_file_name(std::time_t year, std::time_t month) const
+		std::string Source::make_klines_file_name(std::time_t year, 
+			std::time_t month, const std::string & timeframe) const
 		{
 			LOGGER(logger, false);
 
@@ -783,8 +717,7 @@ namespace solution
 				std::stringstream sout;
 
 				sout <<
-					m_asset << separator << m_config.inputs_timeframe <<
-					m_config.inputs_timeframe_type << separator << year << separator <<
+					m_asset << separator << timeframe << separator << year << separator <<
 					std::setw(2) << std::setfill('0') << std::right << month << Extension::csv;
 
 				return sout.str();
@@ -956,9 +889,9 @@ namespace solution
 
 				update_indicators(inputs);
 
-				update_price_aggregated_trades(inputs, klines, trades);
+				//update_price_aggregated_trades(inputs, klines, trades); // TODO
 
-				update_movement_tags(inputs);
+				//update_movement_tags(inputs); // TODO
 
 				return inputs;
 			}
@@ -994,6 +927,7 @@ namespace solution
 
 			try
 			{
+				/*
 				const auto timesteps = m_config.timesteps_prehistory;
 
 				if (std::size(klines) != std::size(inputs))
@@ -1056,6 +990,7 @@ namespace solution
 						}
 					}
 				}
+				*/
 			}
 			catch (const std::exception & exception)
 			{
@@ -1069,6 +1004,7 @@ namespace solution
 
 			try
 			{
+				/*
 				const auto epsilon = std::numeric_limits < double > ::epsilon();
 
 				const auto prediction_range = m_config.timesteps_prediction;
@@ -1108,6 +1044,7 @@ namespace solution
 						}
 					}
 				}
+				*/
 			}
 			catch (const std::exception & exception)
 			{
@@ -1140,124 +1077,6 @@ namespace solution
 			}
 		}
 
-		void Source::research_volumes(const inputs_container_t & inputs) const
-		{
-			LOGGER(logger);
-
-			try
-			{
-				const auto timesteps_wvb = m_config.awvb_timesteps_wvb;
-				const auto timesteps_sma = m_config.awvb_timesteps_sma;
-
-				const auto separator = ',';
-
-				auto path = Data::Directory::result / m_asset;
-
-				std::filesystem::create_directories(path);
-
-				path /= Data::File::research_volumes_data;
-
-				std::fstream fout(path, std::ios::out);
-
-				if (!fout)
-				{
-					throw source_exception("cannot open file " + path.string());
-				}
-
-				std::vector < std::pair < Date_Time, double > > deviations;
-
-				deviations.reserve(std::size(inputs));
-
-				for (auto i = timesteps_wvb - 1; i < std::size(inputs); ++i)
-				{
-					auto deviation = 0.0;
-
-					for (auto j = i + 1 - timesteps_wvb; j <= i; ++j)
-					{
-						deviation += (inputs[j].volume_buy_base - inputs[j].volume_sell_base) *
-							(inputs[j].price_high - inputs[j].price_low) / inputs[j].price_open;
-					}
-
-					deviations.push_back(std::make_pair(inputs[i].date_time_close, deviation));
-				}
-
-				for (auto i = timesteps_sma - 1; i < std::size(deviations); ++i)
-				{
-					auto sma = 0.0;
-
-					for (auto j = i + 1 - timesteps_sma; j <= i; ++j)
-					{
-						sma += deviations[j].second;
-					}
-
-					sma /= timesteps_sma;
-
-					char state = 'N';
-
-					if (std::abs(deviations[i].second - sma) / std::abs(sma) >
-						m_config.assimilator_min_deviation)
-					{
-						if (deviations[i].second < sma)
-						{
-							state = 'S';
-						}
-
-						if (deviations[i].second > sma)
-						{
-							state = 'L';
-						}
-					}
-
-					fout << deviations[i].first << separator <<
-						std::setw(9) << std::setfill(' ') << std::right <<
-						std::setprecision(3) << std::fixed << std::showpos << deviations[i].second << separator <<
-						std::setw(9) << std::setfill(' ') << std::right <<
-						std::setprecision(3) << std::fixed << std::showpos << sma << separator << state << "\n";
-				}
-			}
-			catch (const std::exception & exception)
-			{
-				shared::catch_handler < source_exception > (logger, exception);
-			}
-		}
-
-		void Source::research_volatility(const inputs_container_t & inputs) const
-		{
-			LOGGER(logger);
-
-			try
-			{
-				auto path = Data::Directory::result / m_asset;
-
-				std::filesystem::create_directories(path);
-
-				path /= Data::File::research_volatility_data;
-
-				std::fstream fout(path, std::ios::out);
-
-				if (!fout)
-				{
-					throw source_exception("cannot open file " + path.string());
-				}
-
-				double volatility = 0.0;
-
-				for (const auto & input : inputs)
-				{
-					volatility += 100.0 * (input.price_high - input.price_low) / input.price_open;
-				}
-
-				volatility /= std::size(inputs);
-
-				std::cout << std::setw(8) << std::setfill(' ') << std::right << m_asset << " : " <<
-					std::setprecision(3) << std::fixed << std::noshowpos << volatility << std::endl;
-			}
-			catch (const std::exception & exception)
-			{
-				shared::catch_handler < source_exception > (logger, exception);
-			}
-		}
-
 		Source::State Source::handle(State current_state) const
 		{
 			LOGGER(logger);
@@ -1266,10 +1085,10 @@ namespace solution
 			{
 				auto inputs = make_inputs(get_klines(), {}, {});
 
-				auto prehistory = inputs_container_t(std::prev(std::end(inputs), 
+				auto prehistory = std::make_pair(std::prev(std::end(inputs), 
 					m_config.timesteps_prehistory), std::end(inputs));
 
-				return m_strategies.at(m_config.main_strategy)->run(prehistory, current_state);
+				return m_strategies.at(m_config.strategy)->run(prehistory, current_state);
 			}
 			catch (const std::exception & exception)
 			{
@@ -1287,8 +1106,7 @@ namespace solution
 				{
 					const auto size = m_config.skipped_timesteps;
 
-					const auto timeframe = std::to_string(m_config.inputs_timeframe) + 
-						m_config.inputs_timeframe_type;
+					const auto timeframe = m_config.timeframe_strategy;
 
 					return make_klines(boost::python::extract < std::string > (
 						m_python.global()["get_klines"](m_asset.c_str(),
@@ -1408,6 +1226,23 @@ namespace solution
 			try
 			{
 				return {}; // TODO
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < source_exception > (logger, exception);
+			}
+		}
+
+		void Source::update_database(std::shared_ptr < database_t > database)
+		{
+			LOGGER(logger);
+
+			try
+			{
+				m_database = database;
+
+				reload_indicators();
+				reload_strategies();
 			}
 			catch (const std::exception & exception)
 			{

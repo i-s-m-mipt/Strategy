@@ -30,8 +30,6 @@
     "required_backtest": true,
     "required_backtest_fit": false,
     "required_inputs": false,
-    "required_markup": false,
-    "required_research": false,
     "rsi_threshold_long": 50.0,
     "rsi_threshold_short": 50.0,
     "rsi_timesteps_long": 14,
