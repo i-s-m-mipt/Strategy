@@ -77,7 +77,7 @@ namespace solution
 
 		private:
 
-			static inline wchar_t directory[] = L"C:/Libraries/python"; // ?
+			static inline wchar_t directory[] = L"C:/Libraries/python";
 
 		private:
 

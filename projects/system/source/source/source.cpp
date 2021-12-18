@@ -638,13 +638,13 @@ namespace solution
 			}
 		}
 
-		Source::orders_container_t Source::load_orders(bool all) const
+		Source::orders_container_t Source::load_orders(bool all) const // TODO
 		{
 			LOGGER(logger);
 
 			try
 			{
-				return {}; // TODO
+				return {}; 
 			}
 			catch (const std::exception & exception)
 			{
@@ -889,9 +889,9 @@ namespace solution
 
 				update_indicators(inputs);
 
-				//update_price_aggregated_trades(inputs, klines, trades); // TODO
+				//update_price_aggregated_trades(inputs, klines, trades);
 
-				//update_movement_tags(inputs); // TODO
+				//update_movement_tags(inputs);
 
 				return inputs;
 			}
@@ -921,7 +921,7 @@ namespace solution
 		void Source::update_price_aggregated_trades(
 			      inputs_container_t & inputs,
 			const klines_container_t & klines, 
-			const trades_container_t & trades) const
+			const trades_container_t & trades) const // TODO
 		{
 			LOGGER(logger);
 
@@ -998,7 +998,7 @@ namespace solution
 			}
 		}
 
-		void Source::update_movement_tags(inputs_container_t & inputs) const
+		void Source::update_movement_tags(inputs_container_t & inputs) const // TODO
 		{
 			LOGGER(logger);
 
@@ -1131,8 +1131,7 @@ namespace solution
 			{
 				try
 				{
-					return make_orders(boost::python::extract < std::string > (
-						m_python.global()["get_orders"]()));
+					return {};
 				}
 				catch (const boost::python::error_already_set &)
 				{
@@ -1153,8 +1152,7 @@ namespace solution
 			{
 				try
 				{
-					return make_trades(boost::python::extract < std::string > (
-						m_python.global()["get_trades"]()));
+					return {};
 				}
 				catch (const boost::python::error_already_set &)
 				{
@@ -1205,13 +1203,13 @@ namespace solution
 			}
 		}
 
-		Source::orders_container_t Source::make_orders(const std::string & data) const
+		Source::orders_container_t Source::make_orders(const std::string & data) const // TODO
 		{
 			LOGGER(logger);
 
 			try
 			{
-				return {}; // TODO
+				return {};
 			}
 			catch (const std::exception & exception)
 			{
@@ -1219,13 +1217,13 @@ namespace solution
 			}
 		}
 
-		Source::trades_container_t Source::make_trades(const std::string & data) const
+		Source::trades_container_t Source::make_trades(const std::string & data) const // TODO
 		{
 			LOGGER(logger);
 
 			try
 			{
-				return {}; // TODO
+				return {};
 			}
 			catch (const std::exception & exception)
 			{

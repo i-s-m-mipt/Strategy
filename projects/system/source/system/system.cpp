@@ -16,14 +16,12 @@ namespace solution
 
 				load(path, raw_config);
 
-				config.test                   = raw_config[Key::Config::test                  ].get < bool > ();
-				config.required_run           = raw_config[Key::Config::required_run          ].get < bool > ();
-				config.interval               = raw_config[Key::Config::interval              ].get < std::time_t > ();
-				config.max_drawdown           = raw_config[Key::Config::max_drawdown          ].get < double > ();
-				config.benchmark              = raw_config[Key::Config::benchmark             ].get < std::string > ();
-				config.server_start_hour      = raw_config[Key::Config::server_start_hour     ].get < std::time_t > ();
-				config.server_start_minute    = raw_config[Key::Config::server_start_minute   ].get < std::time_t > ();
-				config.required_correlation   = raw_config[Key::Config::required_correlation  ].get < bool > ();
+				config.interval             = raw_config[Key::Config::interval            ].get < std::time_t > ();
+				config.required_correlation = raw_config[Key::Config::required_correlation].get < bool > ();
+				config.required_run         = raw_config[Key::Config::required_run        ].get < bool > ();
+				config.reserve              = raw_config[Key::Config::reserve             ].get < double > ();
+				config.server_start_hour    = raw_config[Key::Config::server_start_hour   ].get < std::time_t > ();
+				config.server_start_minute  = raw_config[Key::Config::server_start_minute ].get < std::time_t > ();
 
 			}
 			catch (const std::exception & exception)
@@ -42,38 +40,51 @@ namespace solution
 
 				load(path, raw_config);
 
-				config.test                          = raw_config[Key::Config::test                         ].get < bool > ();
-				config.required_inputs               = raw_config[Key::Config::required_inputs              ].get < bool > ();
-				config.inputs_year_begin             = raw_config[Key::Config::inputs_year_begin            ].get < std::time_t > ();
-				config.inputs_year_end               = raw_config[Key::Config::inputs_year_end              ].get < std::time_t > ();
-				config.inputs_timeframe              = raw_config[Key::Config::inputs_timeframe             ].get < std::size_t > ();
-				config.inputs_timeframe_type         = raw_config[Key::Config::inputs_timeframe_type        ].get < std::string > ();
-				config.inputs_asset                  = raw_config[Key::Config::inputs_asset                 ].get < std::string > ();
-				config.price_aggregated_trade_step   = raw_config[Key::Config::price_aggregated_trade_step  ].get < double > ();
-				config.price_aggregated_trades_depth = raw_config[Key::Config::price_aggregated_trades_depth].get < std::size_t > ();
-				config.timesteps_prehistory          = raw_config[Key::Config::timesteps_prehistory         ].get < std::size_t > ();
-				config.timesteps_prediction          = raw_config[Key::Config::timesteps_prediction         ].get < std::size_t > ();
-				config.skipped_timesteps             = raw_config[Key::Config::skipped_timesteps            ].get < std::size_t > ();
-				config.min_movement                  = raw_config[Key::Config::min_movement                 ].get < double > ();
-				config.transaction                   = raw_config[Key::Config::transaction                  ].get < double > ();
-				config.commission                    = raw_config[Key::Config::commission                   ].get < double > ();
-				config.stop_loss                     = raw_config[Key::Config::stop_loss                    ].get < double > ();
-				config.test_hard_strategy            = raw_config[Key::Config::test_hard_strategy           ].get < std::string > ();
-				config.test_soft_strategy            = raw_config[Key::Config::test_soft_strategy           ].get < std::string > ();
-				config.required_backtest             = raw_config[Key::Config::required_backtest            ].get < bool > ();
-				config.awvb_timesteps_wvb            = raw_config[Key::Config::awvb_timesteps_wvb           ].get < std::size_t > ();
-				config.awvb_timesteps_sma            = raw_config[Key::Config::awvb_timesteps_sma           ].get < std::size_t > ();
-				config.required_research             = raw_config[Key::Config::required_research            ].get < bool > ();
-				config.assimilator_min_deviation     = raw_config[Key::Config::assimilator_min_deviation    ].get < double > ();
-				config.required_backtest_fit         = raw_config[Key::Config::required_backtest_fit        ].get < bool > ();
-				config.has_reinvestment              = raw_config[Key::Config::has_reinvestment             ].get < bool > ();
-				config.main_strategy                 = raw_config[Key::Config::main_strategy                ].get < std::string > ();
-				config.required_markup               = raw_config[Key::Config::required_markup              ].get < bool > ();
-				config.ema_timesteps                 = raw_config[Key::Config::ema_timesteps                ].get < std::size_t > ();
-				config.rsi_timesteps                 = raw_config[Key::Config::rsi_timesteps                ].get < std::size_t > ();
-				config.rsi_threshold_long            = raw_config[Key::Config::rsi_threshold_long           ].get < double > ();
-				config.rsi_threshold_short           = raw_config[Key::Config::rsi_threshold_short          ].get < double > ();
-				config.stop_loss_relaxation          = raw_config[Key::Config::stop_loss_relaxation         ].get < std::size_t > ();
+				config.accelerator_flat_deviation  = raw_config[Key::Config::accelerator_flat_deviation ].get < double > ();
+				config.accelerator_max_deviation_s = raw_config[Key::Config::accelerator_max_deviation_s].get < double > ();
+				config.accelerator_min_deviation_s = raw_config[Key::Config::accelerator_min_deviation_s].get < double > ();
+				config.accelerator_stop_loss       = raw_config[Key::Config::accelerator_stop_loss      ].get < double > ();
+				config.apwvb_threshold_long        = raw_config[Key::Config::apwvb_threshold_long       ].get < double > ();
+				config.apwvb_threshold_short       = raw_config[Key::Config::apwvb_threshold_short      ].get < double > ();
+				config.apwvb_timesteps_pwvb_long   = raw_config[Key::Config::apwvb_timesteps_pwvb_long  ].get < std::size_t > ();
+				config.apwvb_timesteps_pwvb_short  = raw_config[Key::Config::apwvb_timesteps_pwvb_short ].get < std::size_t > ();
+				config.apwvb_timesteps_sma_long    = raw_config[Key::Config::apwvb_timesteps_sma_long   ].get < std::size_t > ();
+				config.apwvb_timesteps_sma_short   = raw_config[Key::Config::apwvb_timesteps_sma_short  ].get < std::size_t > ();
+				config.asset                       = raw_config[Key::Config::asset                      ].get < std::string > ();
+				config.combinator_neighbors        = raw_config[Key::Config::combinator_neighbors       ].get < std::size_t > ();
+				config.combinator_threshold_long   = raw_config[Key::Config::combinator_threshold_long  ].get < double > ();
+				config.combinator_threshold_short  = raw_config[Key::Config::combinator_threshold_short ].get < double > ();
+				config.commission                  = raw_config[Key::Config::commission                 ].get < double > ();
+				config.ema_timesteps_fast          = raw_config[Key::Config::ema_timesteps_fast         ].get < std::size_t > ();
+				config.ema_timesteps_slow          = raw_config[Key::Config::ema_timesteps_slow         ].get < std::size_t > ();
+				config.has_reinvestment            = raw_config[Key::Config::has_reinvestment           ].get < bool > ();
+				config.inputs_first_year           = raw_config[Key::Config::inputs_first_year          ].get < std::time_t > ();
+				config.inputs_last_year            = raw_config[Key::Config::inputs_last_year           ].get < std::time_t > ();
+				config.investment                  = raw_config[Key::Config::investment                 ].get < double > ();
+				config.level_deviation             = raw_config[Key::Config::level_deviation            ].get < double > ();
+				config.level_max_bias              = raw_config[Key::Config::level_max_bias             ].get < std::size_t > ();
+				config.level_min_bias              = raw_config[Key::Config::level_min_bias             ].get < std::size_t > ();
+				config.permitted_state             = raw_config[Key::Config::permitted_state            ].get < std::string > ();
+				config.profit_rollback_long        = raw_config[Key::Config::profit_rollback_long       ].get < double > ();
+				config.profit_rollback_short       = raw_config[Key::Config::profit_rollback_short      ].get < double > ();
+				config.pulse_threshold             = raw_config[Key::Config::pulse_threshold            ].get < double > ();
+				config.required_backtest           = raw_config[Key::Config::required_backtest          ].get < bool > ();
+				config.required_backtest_fit       = raw_config[Key::Config::required_backtest_fit      ].get < bool > ();
+				config.required_inputs             = raw_config[Key::Config::required_inputs            ].get < bool > ();
+				config.rsi_threshold_long          = raw_config[Key::Config::rsi_threshold_long         ].get < double > ();
+				config.rsi_threshold_short         = raw_config[Key::Config::rsi_threshold_short        ].get < double > ();
+				config.rsi_timesteps_long          = raw_config[Key::Config::rsi_timesteps_long         ].get < std::size_t > ();
+				config.rsi_timesteps_short         = raw_config[Key::Config::rsi_timesteps_short        ].get < std::size_t > ();
+				config.skipped_timesteps           = raw_config[Key::Config::skipped_timesteps          ].get < std::size_t > ();
+				config.stop_loss_long              = raw_config[Key::Config::stop_loss_long             ].get < double > ();
+				config.stop_loss_short             = raw_config[Key::Config::stop_loss_short            ].get < double > ();
+				config.strategy                    = raw_config[Key::Config::strategy                   ].get < std::string > ();
+				config.take_profit_long            = raw_config[Key::Config::take_profit_long           ].get < double > ();
+				config.take_profit_short           = raw_config[Key::Config::take_profit_short          ].get < double > ();
+				config.timeframe_backtest          = raw_config[Key::Config::timeframe_backtest         ].get < std::string > ();
+				config.timeframe_strategy          = raw_config[Key::Config::timeframe_strategy         ].get < std::string > ();
+				config.timesteps_prediction        = raw_config[Key::Config::timesteps_prediction       ].get < std::size_t > ();
+				config.timesteps_prehistory        = raw_config[Key::Config::timesteps_prehistory       ].get < std::size_t > ();
 			}
 			catch (const std::exception & exception)
 			{
@@ -147,38 +158,51 @@ namespace solution
 			{
 				json_t raw_config;
 
-				raw_config[Key::Config::test                         ] = config.test;
-				raw_config[Key::Config::required_inputs              ] = config.required_inputs;
-				raw_config[Key::Config::inputs_year_begin            ] = config.inputs_year_begin;
-				raw_config[Key::Config::inputs_year_end              ] = config.inputs_year_end;
-				raw_config[Key::Config::inputs_timeframe             ] = config.inputs_timeframe;
-				raw_config[Key::Config::inputs_timeframe_type        ] = config.inputs_timeframe_type;
-				raw_config[Key::Config::inputs_asset                 ] = config.inputs_asset;
-				raw_config[Key::Config::price_aggregated_trade_step  ] = config.price_aggregated_trade_step;
-				raw_config[Key::Config::price_aggregated_trades_depth] = config.price_aggregated_trades_depth;
-				raw_config[Key::Config::timesteps_prehistory         ] = config.timesteps_prehistory;
-				raw_config[Key::Config::timesteps_prediction         ] = config.timesteps_prediction;
-				raw_config[Key::Config::skipped_timesteps            ] = config.skipped_timesteps;
-				raw_config[Key::Config::min_movement                 ] = config.min_movement;
-				raw_config[Key::Config::transaction                  ] = config.transaction;
-				raw_config[Key::Config::commission                   ] = config.commission;
-				raw_config[Key::Config::stop_loss                    ] = config.stop_loss;
-				raw_config[Key::Config::test_hard_strategy           ] = config.test_hard_strategy;
-				raw_config[Key::Config::test_soft_strategy           ] = config.test_soft_strategy;
-				raw_config[Key::Config::required_backtest            ] = config.required_backtest;
-				raw_config[Key::Config::awvb_timesteps_wvb           ] = config.awvb_timesteps_wvb;
-				raw_config[Key::Config::awvb_timesteps_sma           ] = config.awvb_timesteps_sma;
-				raw_config[Key::Config::required_research            ] = config.required_research;
-				raw_config[Key::Config::assimilator_min_deviation    ] = config.assimilator_min_deviation;
-				raw_config[Key::Config::required_backtest_fit        ] = config.required_backtest_fit;
-				raw_config[Key::Config::has_reinvestment             ] = config.has_reinvestment;
-				raw_config[Key::Config::main_strategy                ] = config.main_strategy;
-				raw_config[Key::Config::required_markup              ] = config.required_markup;
-				raw_config[Key::Config::ema_timesteps                ] = config.ema_timesteps;
-				raw_config[Key::Config::rsi_timesteps                ] = config.rsi_timesteps;
-				raw_config[Key::Config::rsi_threshold_long           ] = config.rsi_threshold_long;
-				raw_config[Key::Config::rsi_threshold_short          ] = config.rsi_threshold_short;
-				raw_config[Key::Config::stop_loss_relaxation         ] = config.stop_loss_relaxation;
+				raw_config[Key::Config::accelerator_flat_deviation ] = config.accelerator_flat_deviation;
+				raw_config[Key::Config::accelerator_max_deviation_s] = config.accelerator_max_deviation_s;
+				raw_config[Key::Config::accelerator_min_deviation_s] = config.accelerator_min_deviation_s;
+				raw_config[Key::Config::accelerator_stop_loss      ] = config.accelerator_stop_loss;
+				raw_config[Key::Config::apwvb_threshold_long       ] = config.apwvb_threshold_long;
+				raw_config[Key::Config::apwvb_threshold_short      ] = config.apwvb_threshold_short;
+				raw_config[Key::Config::apwvb_timesteps_pwvb_long  ] = config.apwvb_timesteps_pwvb_long;
+				raw_config[Key::Config::apwvb_timesteps_pwvb_short ] = config.apwvb_timesteps_pwvb_short;
+				raw_config[Key::Config::apwvb_timesteps_sma_long   ] = config.apwvb_timesteps_sma_long;
+				raw_config[Key::Config::apwvb_timesteps_sma_short  ] = config.apwvb_timesteps_sma_short;
+				raw_config[Key::Config::asset                      ] = config.asset;
+				raw_config[Key::Config::combinator_neighbors       ] = config.combinator_neighbors;
+				raw_config[Key::Config::combinator_threshold_long  ] = config.combinator_threshold_long;
+				raw_config[Key::Config::combinator_threshold_short ] = config.combinator_threshold_short;
+				raw_config[Key::Config::commission                 ] = config.commission;
+				raw_config[Key::Config::ema_timesteps_fast         ] = config.ema_timesteps_fast;
+				raw_config[Key::Config::ema_timesteps_slow         ] = config.ema_timesteps_slow;
+				raw_config[Key::Config::has_reinvestment           ] = config.has_reinvestment;
+				raw_config[Key::Config::inputs_first_year          ] = config.inputs_first_year;
+				raw_config[Key::Config::inputs_last_year           ] = config.inputs_last_year;
+				raw_config[Key::Config::investment                 ] = config.investment;
+				raw_config[Key::Config::level_deviation            ] = config.level_deviation;
+				raw_config[Key::Config::level_max_bias             ] = config.level_max_bias;
+				raw_config[Key::Config::level_min_bias             ] = config.level_min_bias;
+				raw_config[Key::Config::permitted_state            ] = config.permitted_state;
+				raw_config[Key::Config::profit_rollback_long       ] = config.profit_rollback_long;
+				raw_config[Key::Config::profit_rollback_short      ] = config.profit_rollback_short;
+				raw_config[Key::Config::pulse_threshold            ] = config.pulse_threshold;
+				raw_config[Key::Config::required_backtest          ] = config.required_backtest;
+				raw_config[Key::Config::required_backtest_fit      ] = config.required_backtest_fit;
+				raw_config[Key::Config::required_inputs            ] = config.required_inputs;
+				raw_config[Key::Config::rsi_threshold_long         ] = config.rsi_threshold_long;
+				raw_config[Key::Config::rsi_threshold_short        ] = config.rsi_threshold_short;
+				raw_config[Key::Config::rsi_timesteps_long         ] = config.rsi_timesteps_long;
+				raw_config[Key::Config::rsi_timesteps_short        ] = config.rsi_timesteps_short;
+				raw_config[Key::Config::skipped_timesteps          ] = config.skipped_timesteps;
+				raw_config[Key::Config::stop_loss_long             ] = config.stop_loss_long;
+				raw_config[Key::Config::stop_loss_short            ] = config.stop_loss_short;
+				raw_config[Key::Config::strategy                   ] = config.strategy;
+				raw_config[Key::Config::take_profit_long           ] = config.take_profit_long;
+				raw_config[Key::Config::take_profit_short          ] = config.take_profit_short;
+				raw_config[Key::Config::timeframe_backtest         ] = config.timeframe_backtest;
+				raw_config[Key::Config::timeframe_strategy         ] = config.timeframe_strategy;
+				raw_config[Key::Config::timesteps_prediction       ] = config.timesteps_prediction;
+				raw_config[Key::Config::timesteps_prehistory       ] = config.timesteps_prehistory;
 
 				save(path, raw_config);
 			}
@@ -276,6 +300,8 @@ namespace solution
 
 			try
 			{
+				m_database = std::make_shared < database_t > ();
+
 				load();
 
 				if (m_config.required_correlation)
@@ -400,6 +426,8 @@ namespace solution
 			{
 				m_sources.reserve(std::size(m_assets));
 
+				m_database->reserve(std::size(m_assets));
+
 				for (const auto & asset : m_assets)
 				{
 					Config config;
@@ -407,8 +435,14 @@ namespace solution
 					Data::load_source_config(Data::Directory::config / 
 						asset / Data::File::config_json, config);
 
-					m_sources[asset] = std::make_shared < Source > (std::move(config), m_python);
+					m_sources[asset] = std::make_shared < Source > (config, m_python);
+
+					m_database->push_back(m_sources[asset]->load_inputs(config.timeframe_strategy, true));
 				}
+
+				update_sources();
+
+				handle_sources();
 			}
 			catch (const std::exception & exception)
 			{
@@ -436,6 +470,40 @@ namespace solution
 				catch (const boost::python::error_already_set &)
 				{
 					LOGGER_WRITE_ERROR(logger, shared::Python::exception());
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::update_sources()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				for (auto [asset, source] : m_sources)
+				{
+					source->update_database(m_database);
+				}
+			}
+			catch (const std::exception & exception)
+			{
+				shared::catch_handler < system_exception > (logger, exception);
+			}
+		}
+
+		void System::handle_sources()
+		{
+			LOGGER(logger);
+
+			try
+			{
+				for (auto [asset, source] : m_sources)
+				{
+					source->handle();
 				}
 			}
 			catch (const std::exception & exception)
@@ -542,14 +610,13 @@ namespace solution
 				const auto & config_1 = m_sources.at(asset_1)->config();
 				const auto & config_2 = m_sources.at(asset_2)->config();
 
-				if ((config_1.inputs_timeframe      != config_2.inputs_timeframe     ) ||
-					(config_1.inputs_timeframe_type != config_2.inputs_timeframe_type))
+				if (config_1.timeframe_strategy != config_2.timeframe_strategy)
 				{
 					throw system_exception("invalid timeframes pair");
 				}
 
-				const auto & klines_1 = m_sources.at(asset_1)->load_klines();
-				const auto & klines_2 = m_sources.at(asset_2)->load_klines();
+				const auto & klines_1 = m_sources.at(asset_1)->load_klines(config_1.timeframe_strategy);
+				const auto & klines_2 = m_sources.at(asset_2)->load_klines(config_2.timeframe_strategy);
 
 				auto size = std::min(std::size(klines_1), std::size(klines_2));
 
@@ -585,7 +652,7 @@ namespace solution
 						{
 							m_is_running.store(true);
 
-							wait_until_hour_end();
+							//wait_until_hour_end(); // TODO
 
 							if (!m_is_interrupted.load())
 							{
@@ -689,7 +756,13 @@ namespace solution
 
 				auto required_state = m_sources[asset]->handle(current_state);
 
-				if (current_state != required_state)
+				char states[] = { 'N', 'L', 'S' }; // TODO
+
+				std::cout << std::setw(8) << std::setfill(' ') << std::right << asset << " : " <<
+					states[static_cast < int > (current_state )] << " -> " <<
+					states[static_cast < int > (required_state)] << std::endl; // TODO
+
+				if (false && current_state != required_state) // TODO
 				{
 					for (const auto & client : m_clients)
 					{
@@ -703,8 +776,8 @@ namespace solution
 							auto available_usdt = std::stod(boost::python::extract < std::string > (
 								m_python.global()["get_available_usdt"](client.public_key.c_str())));
 
-							auto position = std::min(client.initial_investments * (1.0 - m_config.max_drawdown) *
-								(m_sources[asset]->config().transaction / 1000.0), available_usdt);
+							auto position = std::min(client.initial_investments * (1.0 - m_config.reserve) *
+								(m_sources[asset]->config().investment / 1000.0), available_usdt);
 
 							auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 

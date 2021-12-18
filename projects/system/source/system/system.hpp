@@ -97,6 +97,8 @@ namespace solution
 
 			using correlation_matrix_t = boost::multi_array < double, 2 > ;
 
+			using database_t = detail::database_t;
+
 		private:
 
 			class Data
@@ -129,45 +131,57 @@ namespace solution
 				{
 					struct Config
 					{
-						static inline const std::string test                          = "test";
-						static inline const std::string required_inputs               = "required_inputs";
-						static inline const std::string inputs_year_begin             = "inputs_year_begin";
-						static inline const std::string inputs_year_end               = "inputs_year_end";
-						static inline const std::string inputs_timeframe              = "inputs_timeframe";
-						static inline const std::string inputs_timeframe_type         = "inputs_timeframe_type";
-						static inline const std::string inputs_asset                  = "inputs_asset";
-						static inline const std::string price_aggregated_trade_step   = "price_aggregated_trade_step";
-						static inline const std::string price_aggregated_trades_depth = "price_aggregated_trades_depth";
-						static inline const std::string timesteps_prehistory          = "timesteps_prehistory";
-						static inline const std::string timesteps_prediction          = "timesteps_prediction";
-						static inline const std::string skipped_timesteps             = "skipped_timesteps";
-						static inline const std::string min_movement                  = "min_movement";
-						static inline const std::string transaction                   = "transaction";
-						static inline const std::string commission                    = "commission";
-						static inline const std::string stop_loss                     = "stop_loss";
-						static inline const std::string test_hard_strategy            = "test_hard_strategy";
-						static inline const std::string test_soft_strategy            = "test_soft_strategy";
-						static inline const std::string required_backtest             = "required_backtest";
-						static inline const std::string awvb_timesteps_wvb            = "awvb_timesteps_wvb";
-						static inline const std::string awvb_timesteps_sma            = "awvb_timesteps_sma";
-						static inline const std::string required_research             = "required_research";
-						static inline const std::string assimilator_min_deviation     = "assimilator_min_deviation";
-						static inline const std::string required_backtest_fit         = "required_backtest_fit";
-						static inline const std::string has_reinvestment              = "has_reinvestment";
-						static inline const std::string required_run                  = "required_run";
-						static inline const std::string interval                      = "interval";
-						static inline const std::string max_drawdown                  = "max_drawdown";
-						static inline const std::string benchmark                     = "benchmark";
-						static inline const std::string main_strategy                 = "main_strategy";
-						static inline const std::string server_start_hour             = "server_start_hour";
-						static inline const std::string server_start_minute           = "server_start_minute";
-						static inline const std::string required_markup               = "required_markup";
-						static inline const std::string required_correlation          = "required_correlation";
-						static inline const std::string ema_timesteps                 = "ema_timesteps";
-						static inline const std::string rsi_timesteps                 = "rsi_timesteps";
-						static inline const std::string rsi_threshold_long            = "rsi_threshold_long";
-						static inline const std::string rsi_threshold_short           = "rsi_threshold_short";
-						static inline const std::string stop_loss_relaxation          = "stop_loss_relaxation";
+						static inline const std::string accelerator_flat_deviation  = "accelerator_flat_deviation";
+						static inline const std::string accelerator_max_deviation_s = "accelerator_max_deviation_s";
+						static inline const std::string accelerator_min_deviation_s = "accelerator_min_deviation_s";
+						static inline const std::string accelerator_stop_loss       = "accelerator_stop_loss";
+						static inline const std::string apwvb_threshold_long        = "apwvb_threshold_long";
+						static inline const std::string apwvb_threshold_short       = "apwvb_threshold_short";
+						static inline const std::string apwvb_timesteps_pwvb_long   = "apwvb_timesteps_pwvb_long";
+						static inline const std::string apwvb_timesteps_pwvb_short  = "apwvb_timesteps_pwvb_short";
+						static inline const std::string apwvb_timesteps_sma_long    = "apwvb_timesteps_sma_long";
+						static inline const std::string apwvb_timesteps_sma_short   = "apwvb_timesteps_sma_short";
+						static inline const std::string asset                       = "asset";
+						static inline const std::string combinator_neighbors        = "combinator_neighbors";
+						static inline const std::string combinator_threshold_long   = "combinator_threshold_long";
+						static inline const std::string combinator_threshold_short  = "combinator_threshold_short";
+						static inline const std::string commission                  = "commission";
+						static inline const std::string ema_timesteps_fast          = "ema_timesteps_fast";
+						static inline const std::string ema_timesteps_slow          = "ema_timesteps_slow";
+						static inline const std::string has_reinvestment            = "has_reinvestment";
+						static inline const std::string inputs_first_year           = "inputs_first_year";
+						static inline const std::string inputs_last_year            = "inputs_last_year";
+						static inline const std::string investment                  = "investment";
+						static inline const std::string level_deviation             = "level_deviation";
+						static inline const std::string level_max_bias              = "level_max_bias";
+						static inline const std::string level_min_bias              = "level_min_bias";
+						static inline const std::string permitted_state             = "permitted_state";
+						static inline const std::string profit_rollback_long        = "profit_rollback_long";
+						static inline const std::string profit_rollback_short       = "profit_rollback_short";
+						static inline const std::string pulse_threshold             = "pulse_threshold";
+						static inline const std::string required_backtest           = "required_backtest";
+						static inline const std::string required_backtest_fit       = "required_backtest_fit";
+						static inline const std::string required_inputs             = "required_inputs";
+						static inline const std::string rsi_threshold_long          = "rsi_threshold_long";
+						static inline const std::string rsi_threshold_short         = "rsi_threshold_short";
+						static inline const std::string rsi_timesteps_long          = "rsi_timesteps_long";
+						static inline const std::string rsi_timesteps_short         = "rsi_timesteps_short";
+						static inline const std::string skipped_timesteps           = "skipped_timesteps";
+						static inline const std::string stop_loss_long              = "stop_loss_long";
+						static inline const std::string stop_loss_short             = "stop_loss_short";
+						static inline const std::string strategy                    = "strategy";
+						static inline const std::string take_profit_long            = "take_profit_long";
+						static inline const std::string take_profit_short           = "take_profit_short";
+						static inline const std::string timeframe_backtest          = "timeframe_backtest";
+						static inline const std::string timeframe_strategy          = "timeframe_strategy";
+						static inline const std::string timesteps_prediction        = "timesteps_prediction";
+						static inline const std::string timesteps_prehistory        = "timesteps_prehistory";
+						static inline const std::string interval                    = "interval";
+						static inline const std::string required_correlation        = "required_correlation";
+						static inline const std::string required_run                = "required_run";
+						static inline const std::string reserve                     = "reserve";
+						static inline const std::string server_start_hour           = "server_start_hour";
+						static inline const std::string server_start_minute         = "server_start_minute";
 					};
 
 					struct Client
@@ -248,6 +262,12 @@ namespace solution
 
 		private:
 
+			void update_sources();
+
+			void handle_sources();
+
+		private:
+
 			void save_sources() const;
 
 		private:
@@ -307,6 +327,8 @@ namespace solution
 			std::atomic < bool > m_is_running;
 
 			shared::Python m_python;
+
+			std::shared_ptr < database_t > m_database;
 		};
 
 	} // namespace system
