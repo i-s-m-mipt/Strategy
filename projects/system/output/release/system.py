@@ -62,7 +62,7 @@ def make_deviations(reward, config):
        reward["date"][len(reward) - 2].split("/")[0]):
         times_y.append(reward["time"][len(reward) - 1])
     
-    transaction = config["transaction"]
+    transaction = config["investment"]
 
     deviations_m = []
     
@@ -197,18 +197,18 @@ def make_statictics_table(reward_HS, reward_BH, trades_HS, config):
     
     table = dict()
 
-    table["Traded instrument"    ] = config["inputs_asset"].upper()
-    table["Backtesting period"   ] = str(config["inputs_year_begin"]) +  " - " + str(config["inputs_year_end"])
-    table["Working timeframe"    ] = config["strategy_timeframe"].upper()
-    table["Strategy version"     ] = config["test_hard_strategy"]
-    table["Initial investments"  ] = ("%.2f" % config["transaction"])
+    table["Traded instrument"    ] = config["asset"].upper()
+    table["Backtesting period"   ] = str(config["inputs_first_year"]) +  " - " + str(config["inputs_last_year"])
+    table["Working timeframe"    ] = config["timeframe_strategy"].upper()
+    table["Strategy version"     ] = config["strategy"]
+    table["Initial investments"  ] = ("%.2f" % config["investment"])
     table["Has reinvestment"     ] = str(config["has_reinvestment"])
     table["Strategy profit"      ] = ("%.2f" % reward_HS["reward"][len(reward_HS) - 1])
-    table["Total profitability"  ] = ("%.2f" % (reward_HS["reward"][len(reward_HS) - 1] / config["transaction"] * 100)) + " %"
+    table["Total profitability"  ] = ("%.2f" % (reward_HS["reward"][len(reward_HS) - 1] / config["investment"] * 100)) + " %"
     table["Maximum drawdown"     ] = "undefined"
     table["Benchmark B&H"        ] = ("%.2f" % reward_BH["reward"][len(reward_BH) - 1])
     table["Trading fee rate"     ] = str(config["commission"] * 100) + " %"
-    table["Fixed stop-loss"      ] = str(config["stop_loss"] * 100) + " %"
+    table["Fixed stop-loss"      ] = "undefined"
     
     table["Longs quantity"       ] = str(l_positions_in_total)
     table["Shorts quantity"      ] = str(s_positions_in_total)
@@ -326,7 +326,7 @@ def make_plot(reward_HS, reward_BH, config):
     plt.plot(reward_HS["time"], reward_HS["reward"], color = "green")
     plt.plot(reward_BH["time"], reward_BH["reward"], color = "black")
     
-    plt.legend(["Strategy \"" + config["test_hard_strategy"] + "\"", "Benchmark B&H"])
+    plt.legend(["Strategy \"" + config["strategy"] + "\"", "Benchmark B&H"])
     
     #plt.xlabel("Year",   labelpad = 0.0 )
     #plt.ylabel("Profit", labelpad = 0.0 )
@@ -337,7 +337,7 @@ def make_plot(reward_HS, reward_BH, config):
     plt.tick_params(axis = "x", direction = "in", which = "both")
     #plt.figure(figsize = (40, 30))
     
-    plt.savefig("system/result/" + config["inputs_asset"] + "/reward.png", dpi = 400)
+    plt.savefig("system/result/" + config["asset"] + "/reward.png", dpi = 400)
 
     plt.close()
 
@@ -361,14 +361,14 @@ def make_report(path_reward_HS, path_trades_HS, path_reward_BH, path_config):
     
     document.append_page(page)
 
-    paragraph_1 = Paragraph("Backtesting results of strategy \"" + config["test_hard_strategy"] + "\" for " +
-        config["inputs_asset"].upper() + " in " + config["strategy_timeframe"].upper() + " timeframe",
+    paragraph_1 = Paragraph("Backtesting results of strategy \"" + config["strategy"] + "\" for " +
+        config["asset"].upper() + " in " + config["timeframe_strategy"].upper() + " timeframe",
         font = "Helvetica-Bold", font_size = Decimal(16.1))
 
     paragraph_2 = Paragraph("Monthly percentage changes in the volume of investments used for trading",
         font = "Helvetica-Bold", font_size = Decimal(16.1))
 
-    paragraph_3 = Paragraph("Comparison of returns between strategy \"" + config["test_hard_strategy"] + "\" and benchmark B&H",
+    paragraph_3 = Paragraph("Comparison of returns between strategy \"" + config["strategy"] + "\" and benchmark B&H",
         font = "Helvetica-Bold", font_size = Decimal(16.0))
     
     fields, statistics_table = make_statictics_table(reward_HS, reward_BH, trades_HS, config)
@@ -395,7 +395,7 @@ def make_report(path_reward_HS, path_trades_HS, path_reward_BH, path_config):
 
     make_plot(reward_HS, reward_BH, config)
     
-    plot = PILImage.open("system/result/" + config["inputs_asset"] + "/reward.png")
+    plot = PILImage.open("system/result/" + config["asset"] + "/reward.png")
 
     chart = Image(plot, width = Decimal(680), height = Decimal(511))
 
@@ -408,7 +408,7 @@ def make_report(path_reward_HS, path_trades_HS, path_reward_BH, path_config):
     table_1._do_layout_without_padding(page, Rectangle(10, 509, 575, 300))
     table_2._do_layout_without_padding(page, Rectangle(10, 537, 575, 0))
 
-    with open("system/result/" + config["inputs_asset"] + "/" + config["inputs_asset"] + ".pdf", "wb") as file:  
+    with open("system/result/" + config["asset"] + "/" + config["asset"] + ".pdf", "wb") as file:  
         PDF.dumps(file, document)
 
 # =============================================================================
