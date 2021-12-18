@@ -93,6 +93,7 @@
 #endif // #if !defined(_MAC) && (defined(_68K_) || defined(_MPPC_))
 
 #include <ctime>
+#include <cstdlib>
 #include <string>
 
 namespace solution
@@ -101,71 +102,92 @@ namespace solution
     {
         struct Config
         {
-            bool test;
+            double accelerator_flat_deviation;
 
-            bool required_inputs;
+            double accelerator_max_deviation_s;
+            double accelerator_min_deviation_s;
 
-            std::time_t inputs_year_begin;
-            std::time_t inputs_year_end;
-            std::size_t inputs_timeframe;
-            std::string inputs_timeframe_type;
-            std::string inputs_asset;
+            double accelerator_stop_loss;
 
-            double price_aggregated_trade_step;
+            double apwvb_threshold_long;
+            double apwvb_threshold_short;
 
-            std::size_t price_aggregated_trades_depth;
+            std::size_t apwvb_timesteps_pwvb_long;
+            std::size_t apwvb_timesteps_pwvb_short;
 
-            std::size_t timesteps_prehistory;
-            std::size_t timesteps_prediction;
+            std::size_t apwvb_timesteps_sma_long;
+            std::size_t apwvb_timesteps_sma_short;
 
-            std::size_t skipped_timesteps;
+            std::string asset;
 
-            double min_movement;
+            std::size_t combinator_neighbors;
 
-            double transaction;
+            double combinator_threshold_long;
+            double combinator_threshold_short;
+
             double commission;
-            double stop_loss;
 
-            std::string test_hard_strategy;
-            std::string test_soft_strategy;
-
-            bool required_backtest;
-
-            std::size_t awvb_timesteps_wvb;
-            std::size_t awvb_timesteps_sma;
-
-            bool required_research;
-
-            double assimilator_min_deviation;
-
-            bool required_backtest_fit;
+            std::size_t ema_timesteps_fast;
+            std::size_t ema_timesteps_slow;
 
             bool has_reinvestment;
 
-            bool required_run;
+            std::time_t inputs_first_year;
+            std::time_t inputs_last_year;
 
-            std::time_t interval;
+            double investment;
 
-            double max_drawdown;
+            double level_deviation;
 
-            std::string benchmark;
+            std::size_t level_max_bias;
+            std::size_t level_min_bias;
 
-            std::string main_strategy;
+            std::string permitted_state;
 
-            std::time_t server_start_hour;
-            std::time_t server_start_minute;
+            double profit_rollback_long;
+            double profit_rollback_short;
 
+            double pulse_threshold;
+
+            bool required_backtest;
+            bool required_backtest_fit;
+            bool required_inputs;
             bool required_markup;
-
-            bool required_correlation;
-
-            std::size_t ema_timesteps;
-            std::size_t rsi_timesteps;
+            bool required_research;
 
             double rsi_threshold_long;
             double rsi_threshold_short;
 
-            std::size_t stop_loss_relaxation;
+            std::size_t rsi_timesteps_long;
+            std::size_t rsi_timesteps_short;
+
+            std::size_t skipped_timesteps;
+
+            double stop_loss_long;
+            double stop_loss_short;
+
+            std::string strategy;
+
+            double take_profit_long;
+            double take_profit_short;
+            
+            std::string timeframe_backtest;
+            std::string timeframe_strategy;
+            
+            std::size_t timesteps_prediction;
+            std::size_t timesteps_prehistory;
+
+            // ====================================
+
+            std::time_t interval;
+
+            bool required_correlation;
+            bool required_run;
+
+            double reserve;
+
+            std::time_t server_start_hour;
+            std::time_t server_start_minute;
         };
 
     } // namespace system
