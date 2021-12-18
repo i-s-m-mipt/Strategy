@@ -12,17 +12,26 @@
 #include <cmath>
 #include <exception>
 #include <fstream>
+#include <functional>
+#include <future>
+#include <iterator>
+#include <memory>
+#include <mutex>
 #include <numeric>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <thread>
+#include <utility>
 #include <vector>
 
-#include "../indicators/awvb/awvb.hpp"
-#include "../indicators/ema/ema.hpp"
+#include <boost/asio.hpp>
+
+#include "../indicators/apwvb/apwvb.hpp"
 #include "../indicators/rsi/rsi.hpp"
 
 #include "../../config/config.hpp"
+#include "../../detail/detail.hpp"
 
 #include "../../detail/inputs/inputs.hpp"
 
@@ -57,6 +66,10 @@ namespace solution
 
 				using inputs_container_t = detail::inputs_container_t;
 
+				using iterator_t = inputs_container_t::const_iterator;
+
+				using frame_t = std::pair < iterator_t, iterator_t > ;
+
 			public:
 
 				enum class State
@@ -80,7 +93,7 @@ namespace solution
 					return Strategy::m_name;
 				}
 
-				virtual State run(const inputs_container_t & inputs, State current_state) const
+				virtual State run(frame_t frame, State current_state) const
 				{
 					return State::L;
 				}
