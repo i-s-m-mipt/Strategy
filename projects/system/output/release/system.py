@@ -2,6 +2,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy             as np
 import pandas            as pd
+import time
 
 from borb.io.read.types                                       import Decimal
 from borb.pdf.canvas.color.color                              import X11Color
@@ -473,13 +474,19 @@ class Connector(Spot):
         return trade
 
     def get_klines(self, symbol: str, limit: str, interval: str = "4h") -> str:
+        
         while True:
+            
             try:
+                
                 klines_as_lists = self.klines(symbol, interval, limit = int(limit))
                 klines_as_dicts = [self._transform_kline(kline) for kline in klines_as_lists]
+                
                 return json.dumps(klines_as_dicts)
+            
             except:
-                print('Error occured, trying again..')
+                
+                time.sleep(1)
 
 
     def get_trades(self, symbol: str, n: int) -> str:
