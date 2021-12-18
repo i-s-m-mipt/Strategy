@@ -19,22 +19,8 @@ namespace solution
 			{
 			public:
 
-				using indicators_container_t = std::map < std::string, double > ;
-
-			public:
-
-				struct Aggregated_Trade
-				{
-					double volume_buy_base;
-					double volume_buy_quote;
-					double volume_sell_base;
-					double volume_sell_quote;
-				};
-
-				struct Order
-				{
-					// TODO
-				};
+				using indicators_container_t = std::map < std::string, 
+					std::map < std::string, double > > ;
 
 			public:
 
@@ -61,23 +47,11 @@ namespace solution
 			public:
 
 				indicators_container_t indicators;
-
-			public:
-
-				std::vector < Aggregated_Trade > price_aggregated_trades;
-				
-			public:
-
-				// TODO (orders)
-
-			public:
-
-				int movement_tag = 0;
-
-				// TODO (regression_tags, classification_tag)
 			};
 
 			using inputs_container_t = std::vector < Input > ;
+
+			using database_t = std::vector < inputs_container_t > ;
 
 		} // namespace detail
 

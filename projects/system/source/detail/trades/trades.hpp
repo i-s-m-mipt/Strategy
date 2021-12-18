@@ -28,7 +28,7 @@ namespace solution
 
 				std::string is_buyer_maker;
 
-				std::string is_best_match; // ignored
+				std::string is_best_match;
 			};
 
 			template < typename Iterator >

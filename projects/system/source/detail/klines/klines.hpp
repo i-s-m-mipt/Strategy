@@ -30,12 +30,12 @@ namespace solution
 
 				double volume_quote;
 
-				std::size_t n_trades = 0;
+				std::size_t n_trades;
 
 				double volume_buy_base;
 				double volume_buy_quote;
 
-				double ignore = 0.0;
+				double ignore;
 			};
 
 			template < typename Iterator >

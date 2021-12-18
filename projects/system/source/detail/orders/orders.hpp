@@ -17,7 +17,7 @@ namespace solution
 		{
 			struct Order
 			{
-				// TODO
+				// ...
 			};
 
 		} // namespace detail
