@@ -61,26 +61,26 @@ namespace solution
 
 				try
 				{
-					const auto begin = make_begin();
+					const auto begin = make_backtest_begin();
 
 					Result result;
 
-					result.rewards.reserve(std::size(m_inputs));
+					result.rewards.reserve(std::size(m_inputs_backtest));
 
-					auto position = m_config.transaction;
+					auto position = m_config.investment;
 
 					result.trades.push_back(Result::Trade());
 
-					result.trades.back().begin = m_inputs[begin].date_time_close;
+					result.trades.back().begin = m_inputs_backtest[begin].date_time_close;
 					result.trades.back().state = State::L;
 
 					auto total_reward = 0.0;
 					auto trade_reward = 0.0;
 
-					for (auto i = begin; i < std::size(m_inputs) - 1; ++i)
+					for (auto i = begin; i < std::size(m_inputs_backtest) - 1; ++i)
 					{
-						auto price_deviation = (m_inputs[i + 1].price_close -
-							m_inputs[i].price_close) / m_inputs[i].price_close;
+						auto price_deviation = (m_inputs_backtest[i + 1].price_close -
+							m_inputs_backtest[i].price_close) / m_inputs_backtest[i].price_close;
 
 						auto delta = price_deviation * position;
 
@@ -89,10 +89,10 @@ namespace solution
 						total_reward += delta;
 						trade_reward += delta;
 
-						result.rewards.push_back(std::make_pair(m_inputs[i + 1].date_time_close, total_reward));
+						result.rewards.push_back(std::make_pair(m_inputs_backtest[i + 1].date_time_close, total_reward));
 					}
 
-					result.trades.back().end = m_inputs.back().date_time_close;
+					result.trades.back().end = m_inputs_backtest.back().date_time_close;
 					result.trades.back().reward = trade_reward;
 
 					return result;
@@ -109,87 +109,140 @@ namespace solution
 
 				try
 				{
-					const auto begin = make_begin();
-
 					const auto commission = m_config.commission;
 
-					const auto stop_loss_relaxation = m_config.stop_loss_relaxation;
-
-					Result result;
-
-					result.rewards.reserve(std::size(m_inputs));
-
-					auto transaction = m_config.transaction;
+					auto investment = m_config.investment;
 
 					auto total_reward = 0.0;
 					auto trade_reward = 0.0;
 
-					auto current_state = State::N;
+					auto index = make_strategy_begin();
 
-					auto current_stop_loss_relaxation = 0ULL;
+					Result result;
+
+					result.rewards.reserve(std::size(m_inputs_backtest));
+
+					auto current_state = State::N;
 
 					auto position = 0.0;
 
-					auto counter = 0ULL;
+					auto price_trade     = 0.0;
+					auto price_delta_tsl = 0.0;
+					auto price_tsl       = 0.0;
+					auto price_tp        = 0.0;
+					auto price_delta_ttp = 0.0;
 
-					for (auto i = begin; i < std::size(m_inputs) - 1; ++i)
+					for (auto i = make_backtest_begin(); i < std::size(m_inputs_backtest) - 1; ++i)
 					{
-						update_transaction(transaction, total_reward);
-
-						auto required_state = m_strategy->run(
-							make_prehistory(m_inputs, i), current_state);
-
-						if (((required_state == State::N) && (current_state != State::N)) ||
-							((required_state == State::L) && (current_state == State::S)) ||
-							((required_state == State::S) && (current_state == State::L)) ||
-							((trade_reward < -1.0 * m_config.stop_loss * transaction) && 
-								(current_state != State::N)))
+						if (current_state != State::N)
 						{
-							if (trade_reward < -1.0 * m_config.stop_loss * transaction)
+							if (((current_state == State::L) && (m_inputs_backtest[i].price_close > price_tp)) ||
+								((current_state == State::S) && (m_inputs_backtest[i].price_close < price_tp)))
 							{
-								current_stop_loss_relaxation = stop_loss_relaxation;
-
-								++counter;
+								price_delta_tsl = price_delta_ttp;
 							}
 
-							auto delta = -commission * std::abs(position);
+							if (current_state == State::L)
+							{
+								price_tsl = std::max(price_tsl, m_inputs_backtest[i].price_close - price_delta_tsl);
+							}
+							else
+							{
+								price_tsl = std::min(price_tsl, m_inputs_backtest[i].price_close + price_delta_tsl);
+							}
 
-							position = 0.0;
+							if (((current_state == State::L) && (m_inputs_backtest[i].price_close < price_tsl)) ||
+								((current_state == State::S) && (m_inputs_backtest[i].price_close > price_tsl)))
+							{
+								auto delta = -commission * std::abs(position);
 
-							current_state = State::N;
+								position = 0.0;
 
-							result.trades.back().end = m_inputs[i].date_time_close;
-							result.trades.back().reward = trade_reward + delta;
+								current_state = State::N;
 
-							trade_reward = 0.0;
+								result.trades.back().end = m_inputs_backtest[i].date_time_close;
+								result.trades.back().reward = trade_reward + delta;
 
-							total_reward += delta;
+								trade_reward = 0.0;
+
+								total_reward += delta;
+
+								price_trade     = 0.0;
+								price_delta_tsl = 0.0;
+								price_tsl       = 0.0;
+								price_tp        = 0.0;
+								price_delta_ttp = 0.0;
+							}
 						}
-						
-						if (((required_state == State::L) && (current_state == State::N) && 
-								(current_stop_loss_relaxation == 0)) ||
-							((required_state == State::S) && (current_state == State::N) && 
-								(current_stop_loss_relaxation == 0)))
+
+						if (m_inputs_backtest[i].date_time_close >= m_inputs_strategy[index].date_time_close)
 						{
-							position = (required_state == State::L ? +transaction : -transaction);
+							update_transaction(investment, total_reward);
 
-							current_state = required_state;
+							auto required_state = m_strategy->run(make_prehistory(index), current_state);
 
-							auto delta = -commission * std::abs(position);
+							if (((required_state == State::N) && (current_state != State::N)) ||
+								((required_state == State::L) && (current_state == State::S)) ||
+								((required_state == State::S) && (current_state == State::L)))
+							{
+								auto delta = -commission * std::abs(position);
 
-							result.trades.push_back(Result::Trade());
+								position = 0.0;
 
-							result.trades.back().begin = m_inputs[i].date_time_close;
-							result.trades.back().state = current_state;
+								current_state = State::N;
 
-							trade_reward += delta;
-							total_reward += delta;
+								result.trades.back().end = m_inputs_strategy[index].date_time_close;
+								result.trades.back().reward = trade_reward + delta;
+
+								trade_reward = 0.0;
+
+								total_reward += delta;
+							}
+
+							if (((required_state == State::L) && (current_state == State::N)) ||
+								((required_state == State::S) && (current_state == State::N)))
+							{
+								position = (required_state == State::L ? +investment : -investment);
+
+								current_state = required_state;
+
+								auto delta = -commission * std::abs(position);
+
+								result.trades.push_back(Result::Trade());
+
+								result.trades.back().begin = m_inputs_strategy[index].date_time_close;
+								result.trades.back().state = current_state;
+
+								trade_reward += delta;
+								total_reward += delta;
+
+								price_trade = m_inputs_strategy[index].price_close;
+
+								if (current_state == State::L)
+								{
+									price_delta_tsl = price_trade * m_config.stop_loss_long;
+									price_delta_ttp = price_trade * m_config.profit_rollback_long;
+
+									price_tsl = price_trade - price_delta_tsl;
+									price_tp = price_trade * (1.0 + m_config.take_profit_long);
+								}
+								else
+								{
+									price_delta_tsl = price_trade * m_config.stop_loss_short;
+									price_delta_ttp = price_trade * m_config.profit_rollback_short;
+
+									price_tsl = price_trade + price_delta_tsl;
+									price_tp = price_trade * (1.0 - m_config.take_profit_short);
+								}
+							}
+
+							++index;
 						}
 
 						if (current_state != State::N)
 						{
-							auto price_deviation = (m_inputs[i + 1].price_close - 
-								m_inputs[i].price_close) / m_inputs[i].price_close;
+							auto price_deviation = (m_inputs_backtest[i + 1].price_close -
+								m_inputs_backtest[i].price_close) / m_inputs_backtest[i].price_close;
 
 							auto delta = price_deviation * position;
 
@@ -199,23 +252,16 @@ namespace solution
 							trade_reward += delta;
 						}
 
-						result.rewards.push_back(std::make_pair(m_inputs[i + 1].date_time_close, total_reward));
-
-						if (current_stop_loss_relaxation > 0)
-						{
-							--current_stop_loss_relaxation;
-						}
+						result.rewards.push_back(std::make_pair(m_inputs_backtest[i + 1].date_time_close, total_reward));
 					}
 
 					if (current_state != State::N)
 					{
-						result.trades.back().end = m_inputs.back().date_time_close;
+						result.trades.back().end = m_inputs_strategy.back().date_time_close;
 						result.trades.back().reward = trade_reward;
 					}
 
 					verify(result);
-
-					LOGGER_WRITE(logger, std::to_string(counter));
 
 					return result;
 				}
@@ -225,7 +271,7 @@ namespace solution
 				}
 			}
 
-			std::size_t Backtester::make_begin() const
+			std::size_t Backtester::make_strategy_begin() const
 			{
 				LOGGER(logger, false);
 
@@ -233,7 +279,28 @@ namespace solution
 				{
 					auto begin = m_config.skipped_timesteps;
 
-					while (m_inputs[begin].date_time_close.day != 1)
+					while (m_inputs_strategy[begin].date_time_close.day != 1)
+					{
+						++begin;
+					}
+
+					return begin;
+				}
+				catch (const std::exception & exception)
+				{
+					shared::catch_handler < backtester_exception > (logger, exception);
+				}
+			}
+
+			std::size_t Backtester::make_backtest_begin() const
+			{
+				LOGGER(logger, false);
+
+				try
+				{
+					auto begin = m_config.skipped_timesteps * 15; // TODO
+
+					while (m_inputs_backtest[begin].date_time_close.day != 1)
 					{
 						++begin;
 					}
@@ -250,20 +317,19 @@ namespace solution
 			{
 				if (m_config.has_reinvestment)
 				{
-					transaction = m_config.transaction + total_reward;
+					transaction = m_config.investment + total_reward;
 				}
 			}
 
-			Backtester::inputs_container_t Backtester::make_prehistory(
-				const inputs_container_t & inputs, std::size_t index) const
+			Backtester::frame_t Backtester::make_prehistory(std::size_t index) const
 			{
 				LOGGER(logger, false);
 
 				try
 				{
-					return inputs_container_t(
-						std::next(std::begin(m_inputs), index + 1 - m_config.timesteps_prehistory),
-						std::next(std::begin(m_inputs), index + 1));
+					return std::make_pair(
+						std::next(std::begin(m_inputs_strategy), index + 1 - m_config.timesteps_prehistory),
+						std::next(std::begin(m_inputs_strategy), index + 1));
 				}
 				catch (const std::exception & exception)
 				{

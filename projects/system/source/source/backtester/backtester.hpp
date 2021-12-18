@@ -51,6 +51,8 @@ namespace solution
 
 				using inputs_container_t = detail::inputs_container_t;
 
+				using frame_t = Strategy::frame_t;
+
 				using State = Strategy::State;
 
 			public:
@@ -78,9 +80,12 @@ namespace solution
 
 			public:
 
-				explicit Backtester(const Config & config, const inputs_container_t & inputs,
-					std::shared_ptr < Strategy > strategy) :
-						m_config(config), m_inputs(inputs), m_strategy(strategy)
+				explicit Backtester(const Config & config, 
+					const inputs_container_t & inputs_backtest,
+					const inputs_container_t & inputs_strategy,
+					std::shared_ptr < Strategy > strategy) : m_config(config), 
+						m_inputs_backtest(inputs_backtest),
+						m_inputs_strategy(inputs_strategy), m_strategy(strategy)
 				{
 					initialize();
 				}
@@ -115,11 +120,13 @@ namespace solution
 
 			private:
 
-				std::size_t make_begin() const;
+				std::size_t make_strategy_begin() const;
+
+				std::size_t make_backtest_begin() const;
 
 				void update_transaction(double & transaction, double total_reward) const noexcept;
 
-				inputs_container_t make_prehistory(const inputs_container_t & inputs, std::size_t index) const;
+				frame_t make_prehistory(std::size_t index) const;
 
 				void verify(const Result & result) const;
 
@@ -129,7 +136,8 @@ namespace solution
 
 			private:
 
-				inputs_container_t m_inputs;
+				inputs_container_t m_inputs_backtest;
+				inputs_container_t m_inputs_strategy;
 
 				std::shared_ptr < Strategy > m_strategy;
 			};
