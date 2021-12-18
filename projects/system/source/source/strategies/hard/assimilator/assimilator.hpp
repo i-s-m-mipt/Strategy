@@ -23,7 +23,8 @@ namespace solution
 					{
 					public:
 
-						explicit Assimilator(const Config & config) noexcept : Strategy(config)
+						explicit Assimilator(const Config & config) noexcept : 
+							Strategy(config)/*, m_previous_volume_delta(+1.0)*/
 						{}
 
 						virtual ~Assimilator() noexcept = default;
@@ -35,11 +36,15 @@ namespace solution
 							return Assimilator::m_name;
 						}
 
-						virtual State run(const inputs_container_t & inputs, State current_state) const override;
+						virtual State run(frame_t frame, State current_state) const override;
 
 					public:
 
 						static inline const std::string m_name = "Assimilator";
+
+					private:
+
+						/*mutable double m_previous_volume_delta;*/
 					};
 
 				} // namespace hard
@@ -52,4 +57,4 @@ namespace solution
 
 } // namespace solution
 
-#endif // #ifndef SOLUTION_SYSTEM_STRATEGIES_HARD_ASSIMILATOR_HPP
+#endif // #ifndef SOLUTION_SYSTEM_SOURCE_STRATEGIES_HARD_ASSIMILATOR_HPP
