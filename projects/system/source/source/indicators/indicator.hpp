@@ -56,6 +56,17 @@ namespace solution
 
 			public:
 
+				struct Key
+				{
+					static inline const std::string L = "L";
+					static inline const std::string S = "S";
+
+					static inline const std::string fast = "fast";
+					static inline const std::string slow = "slow";
+				};
+
+			public:
+
 				explicit Indicator(const Config & config) noexcept : m_config(config)
 				{}
 

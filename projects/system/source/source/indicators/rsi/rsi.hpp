@@ -30,6 +30,11 @@ namespace solution
 
 					virtual void run(inputs_container_t & inputs) const override;
 
+				private:
+
+					void run_implementation(inputs_container_t & inputs,
+						std::size_t timesteps, const std::string & key) const;
+
 				public:
 
 					static inline const std::string name = "RSI";

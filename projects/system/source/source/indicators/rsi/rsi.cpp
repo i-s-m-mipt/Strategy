@@ -14,9 +14,25 @@ namespace solution
 
 					try
 					{
+						run_implementation(inputs, m_config.rsi_timesteps_long,  Key::L);
+						run_implementation(inputs, m_config.rsi_timesteps_short, Key::S);
+					}
+					catch (const std::exception & exception)
+					{
+						shared::catch_handler < indicator_exception > (logger, exception);
+					}
+				}
+
+				void RSI::run_implementation(inputs_container_t & inputs, 
+					std::size_t timesteps, const std::string & key) const
+				{
+					LOGGER(logger);
+
+					try
+					{
 						const auto epsilon = std::numeric_limits < double > ::epsilon();
 
-						const auto k = 2.0 / (m_config.rsi_timesteps + 1.0);
+						const auto k = 2.0 / (timesteps + 1.0);
 
 						auto ema_U = 0.0;
 						auto ema_D = 0.0;
@@ -61,7 +77,7 @@ namespace solution
 								value = 100.0 * ema_U / (ema_U + ema_D);
 							}
 
-							inputs[i].indicators[name] = value;
+							inputs[i].indicators[name][key] = value;
 						}
 					}
 					catch (const std::exception & exception)
