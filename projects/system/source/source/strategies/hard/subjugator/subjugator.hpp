@@ -21,6 +21,22 @@ namespace solution
 				{
 					class Subjugator final : public Strategy
 					{
+					private:
+
+						struct Level
+						{
+							iterator_t input;
+
+							std::size_t locality;
+
+							double price_low;
+							double price_high;
+						};
+
+					private:
+
+						using levels_container_t = std::vector < Level > ;
+
 					public:
 
 						explicit Subjugator(const Config & config) noexcept : Strategy(config)
@@ -35,7 +51,16 @@ namespace solution
 							return Subjugator::m_name;
 						}
 
-						virtual State run(const inputs_container_t & inputs, State current_state) const override;
+						virtual State run(frame_t frame, State current_state) const override;
+
+					private:
+
+						levels_container_t make_levels(frame_t frame) const;
+
+						void make_level(levels_container_t & levels, 
+							iterator_t extremum, std::size_t locality) const;
+
+						bool is_violated(const Level & level, frame_t frame) const;
 
 					public:
 
