@@ -173,13 +173,15 @@
     <ClCompile Include="..\source\detail\trades\trades.cpp" />
     <ClCompile Include="..\source\main.cpp" />
     <ClCompile Include="..\source\source\backtester\backtester.cpp" />
-    <ClCompile Include="..\source\source\indicators\awvb\awvb.cpp" />
-    <ClCompile Include="..\source\source\indicators\ema\ema.cpp" />
+    <ClCompile Include="..\source\source\indicators\apwvb\apwvb.cpp" />
     <ClCompile Include="..\source\source\indicators\indicator.cpp" />
     <ClCompile Include="..\source\source\indicators\rsi\rsi.cpp" />
     <ClCompile Include="..\source\source\source.cpp" />
+    <ClCompile Include="..\source\source\strategies\hard\accelerator\accelerator.cpp" />
     <ClCompile Include="..\source\source\strategies\hard\assimilator\assimilator.cpp" />
+    <ClCompile Include="..\source\source\strategies\hard\intersector\intersector.cpp" />
     <ClCompile Include="..\source\source\strategies\hard\subjugator\subjugator.cpp" />
+    <ClCompile Include="..\source\source\strategies\soft\combinator\combinator.cpp" />
     <ClCompile Include="..\source\source\strategies\strategy.cpp" />
     <ClCompile Include="..\source\system\system.cpp" />
   </ItemGroup>
@@ -195,13 +197,15 @@
     <ClInclude Include="..\source\detail\orders\orders.hpp" />
     <ClInclude Include="..\source\detail\trades\trades.hpp" />
     <ClInclude Include="..\source\source\backtester\backtester.hpp" />
-    <ClInclude Include="..\source\source\indicators\awvb\awvb.hpp" />
-    <ClInclude Include="..\source\source\indicators\ema\ema.hpp" />
+    <ClInclude Include="..\source\source\indicators\apwvb\apwvb.hpp" />
     <ClInclude Include="..\source\source\indicators\indicator.hpp" />
     <ClInclude Include="..\source\source\indicators\rsi\rsi.hpp" />
     <ClInclude Include="..\source\source\source.hpp" />
+    <ClInclude Include="..\source\source\strategies\hard\accelerator\accelerator.hpp" />
     <ClInclude Include="..\source\source\strategies\hard\assimilator\assimilator.hpp" />
+    <ClInclude Include="..\source\source\strategies\hard\intersector\intersector.hpp" />
     <ClInclude Include="..\source\source\strategies\hard\subjugator\subjugator.hpp" />
+    <ClInclude Include="..\source\source\strategies\soft\combinator\combinator.hpp" />
     <ClInclude Include="..\source\source\strategies\strategy.hpp" />
     <ClInclude Include="..\source\system\system.hpp" />
   </ItemGroup>

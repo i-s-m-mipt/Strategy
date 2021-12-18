@@ -43,9 +43,6 @@
     <Filter Include="source\source\strategies">
       <UniqueIdentifier>{f446fbd1-9f96-46a4-b158-88df3f3d7732}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\source\indicators\awvb">
-      <UniqueIdentifier>{3f80981d-0f52-4445-862d-9505429d96bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="source\source\strategies\hard">
       <UniqueIdentifier>{53d9c271-6d05-4f0d-a896-e60b58fe7a46}</UniqueIdentifier>
     </Filter>
@@ -55,14 +52,23 @@
     <Filter Include="source\source\strategies\hard\assimilator">
       <UniqueIdentifier>{0de5d6b2-8863-4372-802d-e7416811a0c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source\source\strategies\hard\subjugator">
-      <UniqueIdentifier>{326f5296-864e-4580-bd6e-792c87c3dae4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="source\source\indicators\ema">
-      <UniqueIdentifier>{c0d00ff2-0eed-4a98-875c-c25cb3ba4253}</UniqueIdentifier>
-    </Filter>
     <Filter Include="source\source\indicators\rsi">
       <UniqueIdentifier>{97fe9588-b384-4cd9-8c1c-8221015f92b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\source\indicators\apwvb">
+      <UniqueIdentifier>{3f80981d-0f52-4445-862d-9505429d96bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\source\strategies\soft\combinator">
+      <UniqueIdentifier>{414b402f-f1f7-49c1-99b8-36338cb3b401}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\source\strategies\hard\subjugator">
+      <UniqueIdentifier>{e1ceaaf7-87e8-4fa8-9faa-f13493ab2fb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\source\strategies\hard\accelerator">
+      <UniqueIdentifier>{3cd47973-22f8-4c07-86e8-8437ca4aeef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\source\strategies\hard\intersector">
+      <UniqueIdentifier>{2da9b972-5a66-48a4-88bf-aa23778de9e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -99,9 +105,6 @@
     <ClCompile Include="..\source\source\backtester\backtester.cpp">
       <Filter>source\source\backtester</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\source\indicators\awvb\awvb.cpp">
-      <Filter>source\source\indicators\awvb</Filter>
-    </ClCompile>
     <ClCompile Include="..\source\source\strategies\hard\assimilator\assimilator.cpp">
       <Filter>source\source\strategies\hard\assimilator</Filter>
     </ClCompile>
@@ -111,14 +114,23 @@
     <ClCompile Include="..\source\source\indicators\indicator.cpp">
       <Filter>source\source\indicators</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\source\indicators\rsi\rsi.cpp">
+      <Filter>source\source\indicators\rsi</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\source\indicators\apwvb\apwvb.cpp">
+      <Filter>source\source\indicators\apwvb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\source\strategies\soft\combinator\combinator.cpp">
+      <Filter>source\source\strategies\soft\combinator</Filter>
+    </ClCompile>
     <ClCompile Include="..\source\source\strategies\hard\subjugator\subjugator.cpp">
       <Filter>source\source\strategies\hard\subjugator</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\source\indicators\ema\ema.cpp">
-      <Filter>source\source\indicators\ema</Filter>
+    <ClCompile Include="..\source\source\strategies\hard\accelerator\accelerator.cpp">
+      <Filter>source\source\strategies\hard\accelerator</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\source\indicators\rsi\rsi.cpp">
-      <Filter>source\source\indicators\rsi</Filter>
+    <ClCompile Include="..\source\source\strategies\hard\intersector\intersector.cpp">
+      <Filter>source\source\strategies\hard\intersector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,9 +167,6 @@
     <ClInclude Include="..\source\source\backtester\backtester.hpp">
       <Filter>source\source\backtester</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\source\indicators\awvb\awvb.hpp">
-      <Filter>source\source\indicators\awvb</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\source\indicators\indicator.hpp">
       <Filter>source\source\indicators</Filter>
     </ClInclude>
@@ -167,14 +176,23 @@
     <ClInclude Include="..\source\source\strategies\strategy.hpp">
       <Filter>source\source\strategies</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\source\indicators\rsi\rsi.hpp">
+      <Filter>source\source\indicators\rsi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\source\indicators\apwvb\apwvb.hpp">
+      <Filter>source\source\indicators\apwvb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\source\strategies\soft\combinator\combinator.hpp">
+      <Filter>source\source\strategies\soft\combinator</Filter>
+    </ClInclude>
     <ClInclude Include="..\source\source\strategies\hard\subjugator\subjugator.hpp">
       <Filter>source\source\strategies\hard\subjugator</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\source\indicators\ema\ema.hpp">
-      <Filter>source\source\indicators\ema</Filter>
+    <ClInclude Include="..\source\source\strategies\hard\accelerator\accelerator.hpp">
+      <Filter>source\source\strategies\hard\accelerator</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\source\indicators\rsi\rsi.hpp">
-      <Filter>source\source\indicators\rsi</Filter>
+    <ClInclude Include="..\source\source\strategies\hard\intersector\intersector.hpp">
+      <Filter>source\source\strategies\hard\intersector</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
