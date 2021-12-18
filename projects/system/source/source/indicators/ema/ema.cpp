@@ -40,10 +40,10 @@ namespace solution
 								(1.0 - k) * inputs[i - 1].indicators[name][key];
 						}
 					}
-				}
-				catch (const std::exception & exception)
-				{
-					shared::catch_handler < indicator_exception > (logger, exception);
+					catch (const std::exception & exception)
+					{
+						shared::catch_handler < indicator_exception > (logger, exception);
+					}
 				}
 
 			} // namespace indicators

@@ -70,6 +70,9 @@
     <Filter Include="source\source\strategies\hard\intersector">
       <UniqueIdentifier>{2da9b972-5a66-48a4-88bf-aa23778de9e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\source\indicators\ema">
+      <UniqueIdentifier>{10777f91-3c56-4209-9b90-16a254c19469}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.cpp">
@@ -132,6 +135,9 @@
     <ClCompile Include="..\source\source\strategies\hard\intersector\intersector.cpp">
       <Filter>source\source\strategies\hard\intersector</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\source\indicators\ema\ema.cpp">
+      <Filter>source\source\indicators\ema</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\system\system.hpp">
@@ -193,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="..\source\source\strategies\hard\intersector\intersector.hpp">
       <Filter>source\source\strategies\hard\intersector</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\source\indicators\ema\ema.hpp">
+      <Filter>source\source\indicators\ema</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
