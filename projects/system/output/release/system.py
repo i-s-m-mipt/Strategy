@@ -972,7 +972,10 @@ class Connector(Spot):
     def get_current_state(self, symbol: str):
 
         asset = symbol.replace("USDT", "")
-        data = self.get_asset(asset)
+        data = None
+        for balance in self.margin_account()["userAssets"]:
+            if asset == balance['asset']:
+                data = balance
         precision = Connector.precisions[symbol]
         if time() - Connector.prices_time > 10 or not Connector.prices:
             Connector.prices = {data['symbol']: float(pdata['price']) for pdata in self.ticker_price()}
